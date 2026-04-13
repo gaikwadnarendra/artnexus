@@ -1,0 +1,116 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- BANNER -->
+<section class="banner-area relative" id="home"style="
+background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+url('{% static 'img/banner.jpg' %}') center/cover no-repeat;
+padding:100px 0;
+text-align:center;
+color:white;
+animation: fadeDown 1s ease;
+">
+
+<style>
+@keyframes fadeDown {
+  from {opacity:0; transform:translateY(-30px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeUp {
+  from {opacity:0; transform:translateY(40px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+/* Success icon animation */
+@keyframes pop {
+  0% {transform: scale(0);}
+  80% {transform: scale(1.2);}
+  100% {transform: scale(1);}
+}
+</style>
+
+<div class="container">
+  <h1 style="font-size:50px;font-weight:700;color:#fff;">Thank You</h1>
+  <p>
+    <a href="{% url 'index' %}" style="color:#ccc;">Home</a> →
+    <a href="#" style="color:#fff;">Success</a>
+  </p>
+</div>
+</section>
+
+
+<!-- THANK YOU CONTENT -->
+<section class="contact-page-area section-gap"
+style="background:#0f0f0f;padding:80px 20px;color:white;">
+
+<div class="container">
+  <div class="row justify-content-center">
+
+    <div class="col-lg-8 text-center"
+         style="animation:fadeUp 1.2s ease;">
+
+      <!-- CARD -->
+      <div style="
+      background:#1a1a1a;
+      padding:40px;
+      border-radius:20px;
+      box-shadow:0 15px 40px rgba(0,0,0,0.5);
+      ">
+
+        <!-- Success Icon -->
+        <div style="
+        font-size:60px;
+        color:#00ffcc;
+        animation: pop 0.6s ease;
+        ">
+          ✔
+        </div>
+
+        <h1 style="margin-top:20px;font-weight:700;color:#fff;">
+          Thank You!!
+        </h1>
+
+        <hr style="border-color:#333;">
+
+        <p style="font-size:18px;color:#ccc;">
+          Your enquiry number is 
+          <strong style="color:#00ffcc;">
+            {{ enquirynumber }}
+          </strong>
+        </p>
+
+        <p style="color:#aaa;">
+          We will contact you soon.
+        </p>
+
+        <!-- Button -->
+        <a href="{% url 'index' %}"
+           style="
+           display:inline-block;
+           margin-top:20px;
+           background:#fff;
+           color:#000;
+           padding:10px 25px;
+           border-radius:25px;
+           text-decoration:none;
+           font-weight:600;
+           transition:0.3s;
+           "
+           onmouseover="this.style.transform='scale(1.1)'"
+           onmouseout="this.style.transform='scale(1)'">
+           Back to Home
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</section>
+
+{% endblock %}

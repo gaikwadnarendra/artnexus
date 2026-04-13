@@ -1,0 +1,153 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- BANNER -->
+<section class="banner-area relative" id="home"
+style="
+background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+url('{% static 'img/banner.jpg' %}') center/cover no-repeat;
+padding:100px 0;
+text-align:center;
+color:white;
+animation: fadeDown 1s ease;
+">
+
+<style>
+@keyframes fadeDown {
+  from {opacity:0; transform:translateY(-30px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeUp {
+  from {opacity:0; transform:translateY(40px);}
+  to {opacity:1; transform:translateY(0);}
+}
+</style>
+
+<div class="container">
+  <h1 style="font-size:50px;font-weight:700;color: #f1efef;">Art Products</h1>
+  <p>
+    <a href="{% url 'index' %}" style="color:#ccc;">Home</a> →
+    <a href="#" style="color:#fff;">Art Products</a>
+  </p>
+</div>
+</section>
+
+
+<!-- PRODUCTS -->
+<section class="upcoming-exibition-area section-gap"
+style="background:#0f0f0f;padding:80px 20px;color:white;">
+
+<div class="container">
+
+  <!-- Title -->
+  <div style="text-align:center;margin-bottom:50px;animation:fadeUp 1s ease;">
+    <h1 style="font-size:40px;font-weight:700;color: #f1efef;">Art Products</h1>
+    <p style="color:#aaa;">Explore creative artworks from talented artists</p>
+  </div>
+
+  <div class="row">
+
+    {% for i in artproducts %}
+
+    <div class="col-lg-4 col-md-6 single-exhibition"
+         style="margin-bottom:30px;animation:fadeUp 1.2s ease;">
+
+      <div style="
+      background:#1a1a1a;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 15px 40px rgba(0,0,0,0.5);
+      transition:0.4s;
+      "
+      onmouseover="this.style.transform='translateY(-10px)'"
+      onmouseout="this.style.transform='translateY(0)'">
+
+        <!-- Image -->
+        <div style="overflow:hidden;">
+          <img src="{{i.images.url}}" 
+               style="width:100%;height:220px;object-fit:cover;transition:0.5s;"
+               onmouseover="this.style.transform='scale(1.1)'"
+               onmouseout="this.style.transform='scale(1)'">
+        </div>
+
+        <!-- Content -->
+        <div style="padding:20px;">
+
+          <p style="font-size:12px;color:#888;">{{i.created_at}}</p>
+
+          <h4 style="font-weight:600;">
+            <a href="#" style="color:white;text-decoration:none;">
+              {{i.title}}
+            </a>
+          </h4>
+
+          <p style="color:#aaa;font-size:14px;">by {{i.artist.name}}</p>
+
+          <p style="font-size:14px;color:#ccc;">
+            {{i.description|slice:":120"}}...
+          </p>
+
+          <p style="color:#bbb;font-size:13px;">
+            Medium: {{i.artmedium.artmedium}}
+          </p>
+
+          <!-- Price + Button -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+            
+            <span style="color:#00ffcc;font-weight:600;">
+              ${{i.sellingprice}}
+            </span>
+
+            <a href="{% url 'view_singleproduct' i.id %}"
+               style="
+               background:#fff;
+               color:#000;
+               padding:6px 15px;
+               border-radius:20px;
+               font-size:12px;
+               text-decoration:none;
+               transition:0.3s;
+               "
+               onmouseover="this.style.transform='scale(1.1)'"
+               onmouseout="this.style.transform='scale(1)'">
+               View
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {% endfor %}
+
+  </div>
+
+  <!-- PAGINATION -->
+  <div style="text-align:center;margin-top:40px;animation:fadeUp 1.5s ease;">
+    
+    {% if artproducts.has_previous %}
+      <a href="?page=1" style="color:#ccc;margin:5px;">« first</a>
+      <a href="?page={{ artproducts.previous_page_number }}" style="color:#ccc;margin:5px;">previous</a>
+    {% endif %}
+
+    <span style="color:white;margin:5px;">
+      Page {{ artproducts.number }} of {{ artproducts.paginator.num_pages }}
+    </span>
+
+    {% if artproducts.has_next %}
+      <a href="?page={{ artproducts.next_page_number }}" style="color:#ccc;margin:5px;">next</a>
+      <a href="?page={{ artproducts.paginator.num_pages }}" style="color:#ccc;margin:5px;">last »</a>
+    {% endif %}
+
+  </div>
+
+</div>
+</section>
+
+{% endblock %}

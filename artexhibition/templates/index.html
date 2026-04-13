@@ -1,0 +1,132 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- GLOBAL STYLE -->
+<style>
+body { font-family: 'Poppins', sans-serif; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(40px);} 
+  to { opacity:1; transform:translateY(0);} 
+}
+
+@keyframes zoomIn {
+  from { transform:scale(0.9); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+
+/* Glass Effect */
+.glass {
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+}
+</style>
+
+<!-- HERO SECTION -->
+<section style="height:100vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;position:relative;overflow:hidden;">
+
+  <div style="animation:fadeUp 1.5s ease;max-width:800px;">
+    <h1 style="font-size:70px;font-weight:700;letter-spacing:3px;">ArtNexus</h1>
+    <p style="margin-top:20px;font-size:18px;line-height:1.8;opacity:0.9;">
+      A modern digital space where creativity meets innovation. Explore stunning artworks, connect with artists, and experience exhibitions like never before.
+    </p>
+
+    <div style="margin-top:30px;">
+      <a href="{% url 'art_product_list' %}">
+        <button style="padding:12px 30px;border:none;border-radius:30px;background:white;color:#c33764;font-weight:600;margin-right:10px;cursor:pointer;transition:0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">Explore</button>
+      </a>
+      <a href="{% url 'contactus' %}">
+        <button style="padding:12px 30px;border:2px solid white;border-radius:30px;background:transparent;color:white;font-weight:600;cursor:pointer;transition:0.3s;" onmouseover="this.style.background='white';this.style.color='#c33764'" onmouseout="this.style.background='transparent';this.style.color='white'">Join Now</button>
+      </a>
+    </div>
+  </div>
+
+</section>
+
+<!-- FEATURES -->
+<section style="padding:80px 20px;background:#f4f6f9;">
+  <h2 style="text-align:center;font-size:40px;margin-bottom:50px;">Why ArtNexus?</h2>
+
+  <div style="display:flex;gap:30px;justify-content:center;flex-wrap:wrap;">
+
+    <div style="width:300px;padding:30px;border-radius:20px;background:white;box-shadow:0 10px 30px rgba(0,0,0,0.1);text-align:center;animation:fadeUp 1s ease;transition:0.4s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+      <h3>🎨 Creative Platform</h3>
+      <p>Showcase your talent and connect with global artists.</p>
+    </div>
+
+    <div style="width:300px;padding:30px;border-radius:20px;background:white;box-shadow:0 10px 30px rgba(0,0,0,0.1);text-align:center;animation:fadeUp 1.3s ease;transition:0.4s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+      <h3>🌍 Global Reach</h3>
+      <p>Explore artworks from different cultures worldwide.</p>
+    </div>
+
+    <div style="width:300px;padding:30px;border-radius:20px;background:white;box-shadow:0 10px 30px rgba(0,0,0,0.1);text-align:center;animation:fadeUp 1.6s ease;transition:0.4s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+      <h3>🚀 Live Exhibitions</h3>
+      <p>Participate in interactive online exhibitions.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ARTWORKS -->
+<section style="padding:80px 20px;background:white;">
+  <h2 style="text-align:center;font-size:40px;margin-bottom:50px;">Featured Artworks</h2>
+
+  <div style="display:flex;flex-wrap:wrap;gap:30px;justify-content:center;">
+
+    {% for i in artproducts1 %}
+
+    <div style="width:300px;border-radius:20px;overflow:hidden;background:white;box-shadow:0 15px 35px rgba(0,0,0,0.1);transition:0.4s;animation:zoomIn 0.8s ease;" 
+         onmouseover="this.style.transform='scale(1.05)'" 
+         onmouseout="this.style.transform='scale(1)'">
+
+      <div style="overflow:hidden;">
+        <img src="{{i.images.url}}" style="width:100%;height:220px;object-fit:cover;transition:0.5s;" 
+             onmouseover="this.style.transform='scale(1.1)'" 
+             onmouseout="this.style.transform='scale(1)'">
+      </div>
+
+      <div style="padding:20px;">
+        <h4 style="font-weight:600;">
+          <a href="{% url 'view_singleproduct' i.id %}" style="text-decoration:none;color:#333;">
+            {{i.title}}
+          </a>
+        </h4>
+
+        <p style="color:#888;font-size:14px;margin:5px 0;">by {{i.artist.name}}</p>
+
+        <p style="font-size:14px;color:#555;">{{i.description|slice:":120"}}...</p>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+          <span style="font-size:12px;color:#aaa;">{{i.created_at}}</span>
+          <!-- <button style="border:none;background:#c33764;color:white;padding:6px 15px;border-radius:20px;font-size:12px;cursor:pointer;">View</button> -->
+        </div>
+      </div>
+
+    </div>
+
+    {% endfor %}
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:80px 20px;background:linear-gradient(135deg,#c33764,#1d2671);color:white;text-align:center;">
+  <h2 style="font-size:40px;">Join ArtNexus Today</h2>
+  <p style="margin-top:15px;opacity:0.9;">Be part of the creative revolution.</p>
+  <a href="{% url 'art_product_list' %}">
+  <button style="margin-top:25px;padding:12px 30px;border:none;border-radius:30px;background:white;color:#c33764;font-weight:600;cursor:pointer;transition:0.3s;"
+      onmouseover="this.style.transform='scale(1.1)'"
+      onmouseout="this.style.transform='scale(1)'">
+      Get Started
+    </button>
+  </a>
+</section>
+
+{% endblock %}

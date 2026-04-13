@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Enquiry Details</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item active">Enquiry Details</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+
+        <!-- ✅ Messages -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <!-- ✅ Enquiry Table -->
+        <table class="table table-bordered">
+
+          <tr>
+            <th>Enquiry Number</th>
+            <td colspan="3">{{ view_enq.enquirynumber }}</td>
+          </tr>
+
+          <tr>
+            <th>Full Name</th>
+            <td>{{ view_enq.fullname }}</td>
+
+            <th>Art Name</th>
+            <td>
+              {{ view_enq.prod_id.title }} <br>
+              <a href="{% url 'view_product' view_enq.prod_id.id %}" target="_blank">View Details</a>
+            </td>
+          </tr>
+
+          <tr>
+            <th>Reference Number</th>
+            <td>{{ view_enq.prod_id.referencenumber }}</td>
+
+            <th>Email</th>
+            <td>{{ view_enq.email }}</td>
+          </tr>
+
+          <tr>
+            <th>Mobile</th>
+            <td>{{ view_enq.mobnum }}</td>
+
+            <th>Date</th>
+            <td>{{ view_enq.enquiry_date }}</td>
+          </tr>
+
+          <tr>
+            <th>Message</th>
+            <td>{{ view_enq.message }}</td>
+
+            <th>Status</th>
+            <td>
+              {% if view_enq.status == '' %}
+                <span class="badge badge-warning">Not Answered</span>
+              {% else %}
+                <span class="badge badge-success">Answered</span>
+              {% endif %}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Remark</th>
+            <td colspan="3">
+              {% if view_enq.status == '' %}
+                <span class="text-muted">Not Answered Yet</span>
+              {% else %}
+                {{ view_enq.remark }}
+              {% endif %}
+            </td>
+          </tr>
+
+        </table>
+
+        <!-- ✅ Action Button -->
+        {% if view_enq.status == '' %}
+        <div class="text-center mt-3">
+          <!-- <button class="btn btn-primary" data-toggle="modal" data-target="#replyModal">
+            Take Action
+          </button> -->
+          <button class="btn btn-primary" onclick="openModal()">
+              Take Action
+          </button>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ✅ Modal -->
+<div class="modal fade" id="replyModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Reply to Enquiry</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <form method="POST" action="{% url 'update-enquiry-remark' %}">
+        {% csrf_token %}
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Remark</label>
+            <textarea name="remark" class="form-control" rows="5" required></textarea>
+            <input type="hidden" name="enq_id" value="{{ view_enq.id }}">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<script>
+function openModal() {
+    $('#replyModal').modal('show');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Add Artist</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item active">Add Artist</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- jquery validation -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Add Artist</h3>
+            </div>
+            <br>
+            <!-- /.card-header -->
+            {% if messages %}
+            {% for message in messages %}
+             {% if message.tags == 'error' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+             </button>
+              </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+               {% if messages %}
+            {% for message in messages %}
+             {% if message.tags == 'success' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+             </button>
+              </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <form id="quickForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Name</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="name" name="name"  type="text" required="true">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Mobile Number</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="mobnum" maxlength="10" name="mobnum"  type="text" required="true" pattern="[0-9]+">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="email" name="email"  type="email" required="true">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Education Details</label>
+                    <div class="col-sm-10">
+                     
+                      <textarea class="form-control" name="edudetails" required="true"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Award Details</label>
+                    <div class="col-sm-10">
+                    
+                      <textarea class="form-control" name="awarddetails" required="true"></textarea>
+                    </div>
+                  </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Image</label>
+                    <div class="col-sm-10">
+                       <input type="file" class="form-control" name="images" id="images" value="" required="true">
+                    </div>
+                  </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+          </div>
+        <!--/.col (left) -->
+        <!-- right column -->
+        <div class="col-md-6">
+
+        </div>
+        <!--/.col (right) -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>{% endblock %}

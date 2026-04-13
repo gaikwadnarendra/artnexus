@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Admin Profile</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item active">Admin Profile</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- jquery validation -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Admin Profile</h3>
+            </div>
+            <!-- /.card-header -->
+            {% if messages %}
+            {% for message in messages %}
+             {% if message.tags == 'error' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+             </button>
+              </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+               {% if messages %}
+            {% for message in messages %}
+             {% if message.tags == 'success' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+             </button>
+              </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <form id="quickForm" method="POST" action="{% url 'admin_profile_update' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Profile Pic</label>
+                  <input type="file" class="form-control" name="profile_pic">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">First Name</label>
+                  <input type="text" class="form-control" name="first_name" value="{{user.first_name}}">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" value="{{user.last_name}}">
+                  </div>
+                <div class="form-group">
+                    <label for="exampleInputConfirmPassword1">Email</label>
+                    <input type="email" class="form-control" readonly="True" name="email" value="{{user.email}}">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputConfirmPassword1">Username</label>
+                      <input type="text" class="form-control" readonly="True" name="username" value="{{user.username}}">
+                    </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+          </div>
+        <!--/.col (left) -->
+        <!-- right column -->
+        <div class="col-md-6">
+
+        </div>
+        <!--/.col (right) -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>{% endblock %}

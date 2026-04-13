@@ -1,0 +1,122 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- BANNER -->
+<section class="banner-area relative" id="home"
+style="
+background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+url('{% static 'img/banner.jpg' %}') center/cover no-repeat;
+padding:100px 0;
+text-align:center;
+color:white;
+animation: fadeDown 1s ease;
+">
+
+<style>
+@keyframes fadeDown {
+  from {opacity:0; transform:translateY(-30px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeUp {
+  from {opacity:0; transform:translateY(40px);}
+  to {opacity:1; transform:translateY(0);}
+}
+</style>
+
+<div class="container">
+  <h1 style="font-size:50px;font-weight:700;color: #f1efef;">Contact Us</h1>
+  <p>
+    <a href="{% url 'index' %}" style="color:#ccc;">Home</a> →
+    <a href="#" style="color:#fff;">Contact Us</a>
+  </p>
+</div>
+</section>
+
+
+<!-- CONTACT SECTION -->
+<section class="contact-page-area section-gap"
+style="background:#0f0f0f;padding:80px 20px;color:white;">
+
+<div class="container">
+  <div class="row">
+
+    <!-- LEFT INFO -->
+    <div class="col-lg-4 d-flex flex-column address-wrap">
+
+      <!-- Address -->
+      <div class="single-contact-address d-flex flex-row"
+           style="margin-bottom:20px;animation:fadeUp 1s ease;">
+        
+        <div class="icon" style="font-size:25px;color:#00ffcc;margin-right:15px;">
+          <span class="lnr lnr-home"></span>
+        </div>
+
+        <div class="contact-details">
+          <h5 style="font-weight:600;color: #f1efef;">Address</h5>
+          <p style="color:#aaa;">{{ page.address }}</p>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="single-contact-address d-flex flex-row"
+           style="margin-bottom:20px;animation:fadeUp 1.2s ease;">
+        
+        <div class="icon" style="font-size:25px;color:#00ffcc;margin-right:15px;">
+          <span class="lnr lnr-phone-handset"></span>
+        </div>
+
+        <div class="contact-details">
+          <h5 style="font-weight:600;color: #f1efef;">Phone Number</h5>
+          <p style="color:#aaa;">{{ page.mobilenumber }}</p>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="single-contact-address d-flex flex-row"
+           style="animation:fadeUp 1.4s ease;">
+        
+        <div class="icon" style="font-size:25px;color:#00ffcc;margin-right:15px;">
+          <span class="lnr lnr-envelope"></span>
+        </div>
+
+        <div class="contact-details">
+          <h5 style="font-weight:600;color: #f1efef;">Email</h5>
+          <p style="color:#aaa;">{{ page.email }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="col-lg-8"
+         style="animation:fadeUp 1.5s ease;">
+
+      <div style="
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 15px 40px rgba(0,0,0,0.5);
+      ">
+
+        <img src="{% static 'img/pages/about-img.jpg'%}" 
+             style="
+             width:100%;
+             height:100%;
+             object-fit:cover;
+             transition:0.5s;
+             "
+             onmouseover="this.style.transform='scale(1.05)'"
+             onmouseout="this.style.transform='scale(1)'">
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,197 @@
+ <!-- partial:partials/_sidebar.html -->
+ {% load static %}
+ <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- Brand Logo -->
+  <a href="{% url 'dashboard' %}" class="brand-link">
+    
+    <span class="brand-text font-weight-dark">ArtNexus</span>
+  </a>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="{{user.profile_pic.url}}" class="img-circle elevation-2">
+      </div>
+      <div class="info">
+        <a href="{% url 'admin_profile' %}" class="d-block">{{user.first_name}} {{user.last_name}}</a>
+      </div>
+    </div>
+
+    <!-- SidebarSearch Form -->
+   
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+             with font-awesome or any other icon font library -->
+  
+        <li class="nav-item">
+          <a href="{% url 'dashboard' %}"  class="nav-link active">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+              Dashboard
+              
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-copy"></i>
+            <p>
+             Artist
+              <i class="fas fa-angle-left right"></i>
+             
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'add_artist' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Artist</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'manage_artist' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Manage Artist</p>
+              </a>
+            </li>
+          
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-chart-pie"></i>
+            <p>
+              Art Type
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'add_arttype' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Type</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'manage_arttype' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Manage Type</p>
+              </a>
+            </li>
+          
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-tree"></i>
+            <p>
+              Art Medium
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'add_artmedium' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Medium</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'manage_artmedium' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Manage Medium</p>
+              </a>
+            </li>
+      
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-edit"></i>
+            <p>
+              Art Products
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'add_artproduct' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Art Products</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'manage_artproduct' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Manage Art Products</p>
+              </a>
+            </li>
+          
+           
+          </ul>
+        </li>
+      
+        <li class="nav-item">
+          <a href="{% url 'website_update' %}" class="nav-link">
+            <i class="nav-icon far fa-calendar-alt"></i>
+            <p>
+              Website Pages
+           
+            </p>
+          </a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon far fa-envelope"></i>
+            <p>
+              Enquiry
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'totalenquiry' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Total Enquiry</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'unanswered_enquiry' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Unanswered Enquiry</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'answered_enquiry' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Answered Enquiry</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+       
+        <li class="nav-item">
+          <a href="{% url 'search_enquiry' %}" class="nav-link">
+            <i class="nav-icon fas fa-search"></i>
+            <p>
+              Search
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+     
+        </li>
+       
+      </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

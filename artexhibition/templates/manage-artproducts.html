@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Manage Art Products</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item active">Manage Art Products</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>    <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                {% if messages %}
+                {% for message in messages %}
+                 {% if message.tags == 'error' %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                 </button>
+                  </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                   {% if messages %}
+                {% for message in messages %}
+                 {% if message.tags == 'success' %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                 </button>
+                  </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+              <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>S.NO</th>
+                  
+                       <th>Reference Number</th>
+                          <th>Title</th>
+                           <th>Image</th>
+                          <th>Creation Date</th>
+                         
+                                <th>Action</th>
+                      </tr>
+                </thead>
+                <tbody>
+                    {% for i in products %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{i.referencenumber}}
+                  </td>
+                  <td>{{i.title}}</td>
+                  <td> <img src="{{i.images}}" width="100" height="100"></td>
+                  <td>{{i.creationdate}}</td>
+                  <td><a href="{% url 'view_artproduct' i.id %}" class="btn btn-success">
+                    EDIT</a> <a href="{% url 'delete_artproduct' i.id %}" class="btn btn-danger">
+                        DELETE</a></td>
+                </tr>{% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>S.NO</th>
+                  
+                       <th>Reference Number</th>
+                          <th>Title</th>
+                           <th>Image</th>
+                          <th>Creation Date</th>
+                         
+                                <th>Action</th>
+                      </tr>
+                </tfoot>
+              </table>
+              <div class="pagination" style="padding-top: 10px;text-align: center;">
+                <span class="step-links">
+                    {% if products.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ products.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ products.number }} of {{ products.paginator.num_pages }}.
+                    </span>
+            
+                    {% if products.has_next %}
+                        <a href="?page={{ products.next_page_number }}">next</a>
+                        <a href="?page={{ products.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+            </div>
+          
+            <!-- /.card-body -->
+          </div>
+          
+          <!-- /.card -->
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>{% endblock %}
+  

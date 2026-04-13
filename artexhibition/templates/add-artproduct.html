@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Add Art Products</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item active">Add Art Products</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- jquery validation -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Add Art Products</h3>
+            </div>
+            <br>
+            <!-- /.card-header -->
+            {% if messages %}
+            {% for message in messages %}
+             {% if message.tags == 'error' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+             </button>
+              </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+               {% if messages %}
+            {% for message in messages %}
+             {% if message.tags == 'success' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+             </button>
+              </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="title" name="title"  type="text" required="true">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Main Image</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="images" name="images"  type="file" required="true">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Image 1</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="image1" name="image1"  type="file" >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Image 2</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="image2" name="image2"  type="file" >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Image 3</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="image3" name="image3"  type="file">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Image 4</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="image4" name="image4"  type="file">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Dimension</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="dimension" name="dimension"  type="text" required="true">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Orientation</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="orientation" name="orientation"  required="true">
+                            <option value="">Choose orientation</option>
+                            <option value="Potrait">Potrait</option>
+                            <option value="Landscape">Landscape</option>
+                            
+                          </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Size</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="size" name="size"  required="true">
+                            <option value="">Choose Size</option>
+                            <option value="Small">Small</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Large">Large</option>
+                          </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Artist</label>
+                    <div class="col-sm-10">
+                        <select id="artist" name="artist" class="form-control">
+                            <option value="">Select Artist</option>
+                            {% for artist in artists %}
+                                <option value="{{ artist.id }}">{{ artist.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Art Type</label>
+                    <div class="col-sm-10">
+                        <select id="arttype" name="arttype" class="form-control">
+                            <option value="">Select Art Type</option>
+                            {% for arttype in arttypes %}
+                                <option value="{{ arttype.id }}">{{ arttype.arttype }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Art Medium</label>
+                    <div class="col-sm-10">
+                        <select id="artmedium" name="artmedium" class="form-control">
+                            <option value="">Select Art Medium</option>
+                            {% for artmedium in artmediums %}
+                                <option value="{{ artmedium.id }}">{{ artmedium.artmedium }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Selling Price</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="sellingprice" name="sellingprice"  type="text" required="true">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control " id="description" type="text" name="description" rows="12" cols="4" required="true"></textarea>
+                    </div>
+                  </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+          </div>
+        <!--/.col (left) -->
+        <!-- right column -->
+        <div class="col-md-6">
+
+        </div>
+        <!--/.col (right) -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>{% endblock %}
