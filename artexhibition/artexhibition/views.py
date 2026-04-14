@@ -123,6 +123,9 @@ def chatbot(request):
                     timeout=10,
                 )
 
+                print(f"OpenRouter Status: {res.status_code}")
+                print(f"OpenRouter Response: {res.text}")
+
                 if res.status_code == 200:
                     content = res.json()["choices"][0]["message"]["content"]
                     filters = json.loads(content)
