@@ -28,16 +28,30 @@ from django.conf import settings
 from artapp.models import Artproducts
 
 
-#Temprory 
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
+#temporary
+from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 
+User = get_user_model()
+
 def fix_admin(request):
-    u = User.objects.get(username='admin')
-    u.password = make_password('admin123')
-    u.save()
-    return HttpResponse("Admin password reset done")
+    try:
+        user = User.objects.filter(username__iexact='admin').first()
+
+        if user:
+            user.set_password('admin123')
+            user.save()
+            return HttpResponse("Password Reset Done ✅")
+        else:
+            User.objects.create_superuser(
+                username='admin',
+                email='admin@gmail.com',
+                password='admin123'
+            )
+            return HttpResponse("Admin Created ✅")
+
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}")
 
 
 @csrf_exempt
@@ -541,14 +555,14 @@ def ADMIN_PROFILE_UPDATE(request):
     return render(request, 'profile.html')
 
 
-# login_required(login_url='/')
+login_required(login_url='/')
 def CHANGE_PASSWORD(request):
      context ={}
      ch = User.objects.filter(id = request.user.id)
      
      if len(ch)>0:
             data = User.objects.get(id = request.user.id)
-            context["data"]:data            
+            context["data"]= data            
      if request.method == "POST":        
         current = request.POST["cpwd"]
         new_pas = request.POST['npwd']
