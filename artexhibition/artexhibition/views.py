@@ -1107,7 +1107,7 @@ def UPDATE_ENQUIRY_REMARK(request):
         )
 
         email.attach_alternative(html_content, "text/html")
-        email.send()
+        email.send(fail_silently=True)
 
         messages.success(request, "Reply sent + Email delivered")
         return redirect('answered_enquiry')
