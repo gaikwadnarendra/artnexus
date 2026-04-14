@@ -541,7 +541,7 @@ def ADMIN_PROFILE_UPDATE(request):
     return render(request, 'profile.html')
 
 
-login_required(login_url='/')
+# login_required(login_url='/')
 def CHANGE_PASSWORD(request):
      context ={}
      ch = User.objects.filter(id = request.user.id)
