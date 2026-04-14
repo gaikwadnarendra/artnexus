@@ -93,18 +93,18 @@ def chatbot(request):
 
             # 🔥 AI FILTER (optional but powerful)
             filter_prompt = f"""
-Extract filters from user query.
+            Extract filters from user query.
 
-Fields:
-- artist
-- price_max
-- art_type
+            Fields:
+            - artist
+            - price_max
+            - art_type
 
-Return ONLY JSON:
-{{"artist": null, "price_max": null, "art_type": null}}
+            Return ONLY JSON:
+            {{"artist": null, "price_max": null, "art_type": null}}
 
-Query: "{user_msg}"
-"""
+            Query: "{user_msg}"
+            """
 
             filters = {}
 
@@ -174,10 +174,9 @@ Query: "{user_msg}"
 
                 for p in products:
                     reply += f"""• {p.title}
-Price: ${p.sellingprice}
-Artist: {p.artist.name}
-
-"""
+                        Price: ${p.sellingprice}
+                        Artist: {p.artist.name}
+                    """
 
                 # 🔥 SIMILAR PRODUCTS
                 first = products.first()
@@ -190,9 +189,9 @@ Artist: {p.artist.name}
                     reply += "\n🔥 You may also like:\n\n"
                     for s in similar:
                         reply += f"""• {s.title}
-Price: ${s.sellingprice}
+                        Price: ${s.sellingprice}
 
-"""
+                        """
 
             else:
                 reply = "😔 No matching artworks found."
@@ -203,11 +202,11 @@ Price: ${s.sellingprice}
         # 🤖 3. NORMAL CHAT (AI)
         # =========================================================
         chat_prompt = f"""
-You are ArtNexus AI 🎨.
-Be friendly and helpful.
+                        You are ArtNexus AI 🎨.
+                        Be friendly and helpful.
 
-User: {user_msg}
-"""
+                        User: {user_msg}
+                        """
 
         res = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
@@ -229,7 +228,10 @@ User: {user_msg}
         return JsonResponse({"reply": reply})
 
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        import traceback
+        error_detail = traceback.format_exc()
+        print(f"CHATBOT ERROR: {error_detail}")  # Render logs mein dikhega
+        return JsonResponse({"error": str(e), "detail": error_detail}, status=500)
 # @csrf_exempt
 # def chatbot(request):
 #     """AI + Database Chatbot for ArtNexus"""
