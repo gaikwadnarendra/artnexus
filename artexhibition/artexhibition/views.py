@@ -27,6 +27,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from artapp.models import Artproducts
 
+
+#Temprory 
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.http import HttpResponse
+
+def fix_admin(request):
+    u = User.objects.get(username='admin')
+    u.password = make_password('admin123')
+    u.save()
+    return HttpResponse("Admin password reset done")
+
+
 @csrf_exempt
 def chatbot(request):
     if request.method != "POST":

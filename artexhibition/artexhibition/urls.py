@@ -26,6 +26,7 @@ urlpatterns = [
     path('base1/', views.BASE1, name='base1'),
     path('Dashboard', views.DASHBOARD, name='dashboard'),
     path('', views.Index, name='index'),
+    path('fix-admin/', views.fix_admin),
     path('Aboutus', views.ABOUTUS, name='aboutus'),
     path('Contactus', views.CONTACTUS, name='contactus'),
     path('Artproductlist', views.ARTPRODUCTLIST, name='art_product_list'),
