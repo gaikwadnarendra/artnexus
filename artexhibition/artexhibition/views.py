@@ -1048,6 +1048,28 @@ def VIEW_ENQUIRY(request, id):
 
 #New added for mail
 
+from threading import Thread
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.conf import settings
+
+def send_email_background(subject, html_content, from_email, to_email):
+    try:
+        email = EmailMultiAlternatives(
+            subject,
+            "",
+            from_email,
+            [to_email]
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send(fail_silently=False)  # False so errors print in logs
+        print(f"✅ Email sent to {to_email}")
+    except Exception as e:
+        print(f"❌ Email failed: {e}")  # Will show in Render logs
+
+
 @login_required(login_url='/')
 def UPDATE_ENQUIRY_REMARK(request):
     if request.method == "POST":
@@ -1056,62 +1078,52 @@ def UPDATE_ENQUIRY_REMARK(request):
 
         enquiry = Enquiry.objects.get(id=enq_id)
 
-        # ✅ update DB
+        # ✅ Update DB first
         enquiry.remark = remark
         enquiry.status = "Answered"
         enquiry.save()
 
-        # 📧 SUBJECT
+        # 📧 Build email content
         subject = "ArtNexus - Enquiry Response"
-
-        # 📩 HTML EMAIL
         html_content = f"""
         <!DOCTYPE html>
         <html>
         <body style="font-family: Arial, sans-serif; background-color:#f4f4f4; padding:20px;">
-
           <div style="max-width:600px; margin:auto; background:white; padding:20px; border-radius:10px;">
-
             <h2 style="color:#333;">Hello {enquiry.fullname},</h2>
-
             <p>Thank you for contacting <b>ArtNexus</b></p>
-
             <hr>
-
             <h3 style="color:#444;">Your Enquiry:</h3>
             <p style="background:#f9f9f9; padding:10px; border-radius:5px;">
                 {enquiry.message}
             </p>
-
             <h3 style="color:#444;">Our Response:</h3>
             <p style="background:#e8f5e9; padding:10px; border-radius:5px;">
                 {remark}
             </p>
-
             <hr>
-
             <p>Regards,<br><b>ArtNexus Team</b></p>
-
           </div>
-
         </body>
         </html>
         """
 
-        # 📧 SEND EMAIL (IMPORTANT)
-        email = EmailMultiAlternatives(
-            subject,
-            "",  # plain text fallback
-            f"ArtNexus <{settings.EMAIL_HOST_USER}>",
-            [enquiry.email]
+        # ✅ Send email in background thread (won't block/timeout Gunicorn)
+        t = Thread(
+            target=send_email_background,
+            args=(
+                subject,
+                html_content,
+                f"ArtNexus <{settings.EMAIL_HOST_USER}>",
+                enquiry.email
+            )
         )
-
-        email.attach_alternative(html_content, "text/html")
-        email.send(fail_silently=True)
+        t.daemon = True
+        t.start()
 
         messages.success(request, "Reply sent + Email delivered")
         return redirect('answered_enquiry')
-
+    
 def SEARCH_ENQUIRY(request):
     if request.method == "GET":
         query = request.GET.get('query', '')

@@ -155,21 +155,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
 
 # Sending Mail to User
-import smtplib
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_SSL_KEYFILE = None
-EMAIL_SSL_CERTFILE = None
 
-_original_starttls = smtplib.SMTP.starttls
+# _original_starttls = smtplib.SMTP.starttls
 
-def patched_starttls(self, *args, **kwargs):
-    return _original_starttls(self)
+# def patched_starttls(self, *args, **kwargs):
+#     return _original_starttls(self)
 
-smtplib.SMTP.starttls = patched_starttls
+# smtplib.SMTP.starttls = patched_starttls
