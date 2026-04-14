@@ -152,9 +152,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # load_dotenv()
 
 # HF_TOKEN = os.getenv("HF_TOKEN")
-from dotenv import load_dotenv
-load_dotenv()
-OPENROUTER_API_KEY = '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'
+OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
 
 # Sending Mail to User
 import smtplib
