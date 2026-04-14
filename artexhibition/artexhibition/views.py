@@ -317,6 +317,8 @@ def chatbot(request):
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+                "HTTP-Referer": "https://artnexus.onrender.com",
+                "X-Title": "ArtNexus",
                 "Content-Type": "application/json",
             },
             json={
