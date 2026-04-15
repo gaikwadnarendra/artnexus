@@ -1056,19 +1056,17 @@ from django.shortcuts import redirect
 from django.conf import settings
 
 def send_email_background(subject, html_content, from_email, to_email):
+    import logging
+    logger = logging.getLogger(__name__)
     try:
-        email = EmailMultiAlternatives(
-            subject,
-            "",
-            from_email,
-            [to_email]
-        )
+        email = EmailMultiAlternatives(subject, "", from_email, [to_email])
         email.attach_alternative(html_content, "text/html")
-        email.send(fail_silently=False)  # False so errors print in logs
-        print(f"✅ Email sent to {to_email}")
+        email.send(fail_silently=False)
+        logger.error(f"✅ EMAIL SENT TO: {to_email}")  # error level so it shows in Render
+        print(f"✅ EMAIL SENT TO: {to_email}", flush=True)
     except Exception as e:
-        print(f"❌ Email failed: {e}")  # Will show in Render logs
-
+        logger.error(f"❌ EMAIL FAILED: {str(e)}")
+        print(f"❌ EMAIL FAILED: {str(e)}", flush=True)
 
 @login_required(login_url='/')
 def UPDATE_ENQUIRY_REMARK(request):
