@@ -3,16 +3,6 @@
 
 {% block content %}
 
-<!-- BANNER -->
-<section class="banner-area relative" id="home"style="
-background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-url('{% static 'img/banner.jpg' %}') center/cover no-repeat;
-padding:100px 0;
-text-align:center;
-color:white;
-animation: fadeDown 1s ease;
-">
-
 <style>
 @keyframes fadeDown {
   from {opacity:0; transform:translateY(-30px);}
@@ -24,93 +14,195 @@ animation: fadeDown 1s ease;
   to {opacity:1; transform:translateY(0);}
 }
 
-/* Success icon animation */
 @keyframes pop {
   0% {transform: scale(0);}
   80% {transform: scale(1.2);}
   100% {transform: scale(1);}
 }
+
+/* Banner */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+    url('{% static "img/banner.jpg" %}') center/cover no-repeat;
+  padding: 100px 20px;
+  text-align: center;
+  color: white;
+  animation: fadeDown 1s ease;
+}
+
+.banner-area h1 {
+  font-size: 50px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.banner-area p a {
+  color: #ccc;
+  transition: 0.3s;
+}
+
+.banner-area p a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Thank You Section */
+.thankyou-section {
+  background: #0f0f0f;
+  padding: 80px 20px;
+  color: white;
+}
+
+/* Card */
+.thankyou-card {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+/* Success Icon */
+.success-icon {
+  font-size: 60px;
+  color: #00ffcc;
+  animation: pop 0.6s ease;
+  line-height: 1;
+}
+
+.thankyou-card h1 {
+  margin-top: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.thankyou-card hr {
+  border-color: #333;
+}
+
+.enquiry-number {
+  font-size: 18px;
+  color: #ccc;
+}
+
+.enquiry-number strong {
+  color: #00ffcc;
+}
+
+/* Button */
+.home-btn {
+  display: inline-block;
+  margin-top: 20px;
+  background: #fff;
+  color: #000;
+  padding: 10px 25px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.home-btn:hover {
+  transform: scale(1.1);
+  color: #000;
+  background: #00ffcc;
+}
+
+/* ✅ Mobile Responsive */
+@media (max-width: 768px) {
+  .banner-area {
+    padding: 70px 15px;
+  }
+
+  .banner-area h1 {
+    font-size: 30px;
+  }
+
+  .thankyou-section {
+    padding: 50px 15px;
+  }
+
+  .thankyou-card {
+    padding: 25px 20px;
+  }
+
+  .success-icon {
+    font-size: 50px;
+  }
+
+  .thankyou-card h1 {
+    font-size: 26px;
+  }
+
+  .enquiry-number {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-area h1 {
+    font-size: 24px;
+  }
+
+  .thankyou-card h1 {
+    font-size: 22px;
+  }
+
+  .success-icon {
+    font-size: 40px;
+  }
+
+  .home-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+}
 </style>
 
-<div class="container">
-  <h1 style="font-size:50px;font-weight:700;color:#fff;">Thank You</h1>
-  <p>
-    <a href="{% url 'index' %}" style="color:#ccc;">Home</a> →
-    <a href="#" style="color:#fff;">Success</a>
-  </p>
-</div>
+<!-- BANNER -->
+<section class="banner-area" id="home">
+  <div class="container">
+    <h1>Thank You</h1>
+    <p>
+      <a href="{% url 'index' %}">Home</a> →
+      <a href="#">Success</a>
+    </p>
+  </div>
 </section>
 
-
 <!-- THANK YOU CONTENT -->
-<section class="contact-page-area section-gap"
-style="background:#0f0f0f;padding:80px 20px;color:white;">
+<section class="thankyou-section" id="thankyou">
+  <div class="container">
+    <div class="row justify-content-center">
 
-<div class="container">
-  <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 col-sm-12 text-center"
+           style="animation: fadeUp 1.2s ease;">
 
-    <div class="col-lg-8 text-center"
-         style="animation:fadeUp 1.2s ease;">
+        <div class="thankyou-card">
 
-      <!-- CARD -->
-      <div style="
-      background:#1a1a1a;
-      padding:40px;
-      border-radius:20px;
-      box-shadow:0 15px 40px rgba(0,0,0,0.5);
-      ">
+          <!-- Success Icon -->
+          <div class="success-icon">✔</div>
 
-        <!-- Success Icon -->
-        <div style="
-        font-size:60px;
-        color:#00ffcc;
-        animation: pop 0.6s ease;
-        ">
-          ✔
+          <h1>Thank You!!</h1>
+
+          <hr>
+
+          <p class="enquiry-number">
+            Your enquiry number is
+            <strong>{{ enquirynumber }}</strong>
+          </p>
+
+          <p style="color:#aaa;">We will contact you soon.</p>
+
+          <!-- Button -->
+          <a href="{% url 'index' %}" class="home-btn">
+            Back to Home
+          </a>
+
         </div>
 
-        <h1 style="margin-top:20px;font-weight:700;color:#fff;">
-          Thank You!!
-        </h1>
-
-        <hr style="border-color:#333;">
-
-        <p style="font-size:18px;color:#ccc;">
-          Your enquiry number is 
-          <strong style="color:#00ffcc;">
-            {{ enquirynumber }}
-          </strong>
-        </p>
-
-        <p style="color:#aaa;">
-          We will contact you soon.
-        </p>
-
-        <!-- Button -->
-        <a href="{% url 'index' %}"
-           style="
-           display:inline-block;
-           margin-top:20px;
-           background:#fff;
-           color:#000;
-           padding:10px 25px;
-           border-radius:25px;
-           text-decoration:none;
-           font-weight:600;
-           transition:0.3s;
-           "
-           onmouseover="this.style.transform='scale(1.1)'"
-           onmouseout="this.style.transform='scale(1)'">
-           Back to Home
-        </a>
-
       </div>
-
     </div>
-
   </div>
-</div>
-
 </section>
 
 {% endblock %}

@@ -3,17 +3,6 @@
 
 {% block content %}
 
-<!-- BANNER -->
-<section class="banner-area relative" id="home"
-style="
-background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-url('{% static 'img/banner.jpg' %}') center/cover no-repeat;
-padding:100px 0;
-text-align:center;
-color:white;
-animation: fadeDown 1s ease;
-">
-
 <style>
 @keyframes fadeDown {
   from {opacity:0; transform:translateY(-30px);}
@@ -24,99 +13,179 @@ animation: fadeDown 1s ease;
   from {opacity:0; transform:translateY(40px);}
   to {opacity:1; transform:translateY(0);}
 }
+
+/* Banner */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+    url('{% static "img/banner.jpg" %}') center/cover no-repeat;
+  padding: 100px 20px;
+  text-align: center;
+  color: white;
+  animation: fadeDown 1s ease;
+}
+
+.banner-area h1 {
+  font-size: 50px;
+  font-weight: 700;
+  color: #f1efef;
+}
+
+.banner-area p a {
+  color: #ccc;
+  transition: 0.3s;
+}
+
+.banner-area p a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Contact Section */
+.contact-section {
+  background: #0f0f0f;
+  padding: 80px 20px;
+  color: white;
+}
+
+/* Contact Info Cards */
+.single-contact-address {
+  margin-bottom: 25px;
+  animation: fadeUp 1s ease;
+}
+
+.contact-icon {
+  font-size: 25px;
+  color: #00ffcc;
+  margin-right: 15px;
+  min-width: 35px;
+}
+
+.contact-details h5 {
+  font-weight: 600;
+  color: #f1efef;
+  margin-bottom: 5px;
+}
+
+.contact-details p {
+  color: #aaa;
+  margin: 0;
+}
+
+/* Contact Image */
+.contact-img-wrap {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  animation: fadeUp 1.5s ease;
+  height: 100%;
+}
+
+.contact-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.5s;
+  display: block;
+}
+
+.contact-img-wrap img:hover {
+  transform: scale(1.05);
+}
+
+/* ✅ Mobile Responsive */
+@media (max-width: 768px) {
+  .banner-area {
+    padding: 70px 15px;
+  }
+
+  .banner-area h1 {
+    font-size: 30px;
+  }
+
+  .contact-section {
+    padding: 50px 15px;
+  }
+
+  .contact-img-wrap {
+    margin-top: 30px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-area h1 {
+    font-size: 24px;
+  }
+
+  .contact-icon {
+    font-size: 20px;
+  }
+}
 </style>
 
-<div class="container">
-  <h1 style="font-size:50px;font-weight:700;color: #f1efef;">Contact Us</h1>
-  <p>
-    <a href="{% url 'index' %}" style="color:#ccc;">Home</a> →
-    <a href="#" style="color:#fff;">Contact Us</a>
-  </p>
-</div>
+<!-- BANNER -->
+<section class="banner-area" id="home">
+  <div class="container">
+    <h1>Contact Us</h1>
+    <p>
+      <a href="{% url 'index' %}">Home</a> →
+      <a href="#">Contact Us</a>
+    </p>
+  </div>
 </section>
 
-
 <!-- CONTACT SECTION -->
-<section class="contact-page-area section-gap"
-style="background:#0f0f0f;padding:80px 20px;color:white;">
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="row align-items-center">
 
-<div class="container">
-  <div class="row">
+      <!-- LEFT INFO -->
+      <div class="col-lg-4 col-md-12 mb-4">
 
-    <!-- LEFT INFO -->
-    <div class="col-lg-4 d-flex flex-column address-wrap">
-
-      <!-- Address -->
-      <div class="single-contact-address d-flex flex-row"
-           style="margin-bottom:20px;animation:fadeUp 1s ease;">
-        
-        <div class="icon" style="font-size:25px;color:#00ffcc;margin-right:15px;">
-          <span class="lnr lnr-home"></span>
+        <!-- Address -->
+        <div class="single-contact-address d-flex flex-row">
+          <div class="contact-icon">
+            <span class="lnr lnr-home"></span>
+          </div>
+          <div class="contact-details">
+            <h5>Address</h5>
+            <p>{{ page.address }}</p>
+          </div>
         </div>
 
-        <div class="contact-details">
-          <h5 style="font-weight:600;color: #f1efef;">Address</h5>
-          <p style="color:#aaa;">{{ page.address }}</p>
+        <!-- Phone -->
+        <div class="single-contact-address d-flex flex-row">
+          <div class="contact-icon">
+            <span class="lnr lnr-phone-handset"></span>
+          </div>
+          <div class="contact-details">
+            <h5>Phone Number</h5>
+            <p>{{ page.mobilenumber }}</p>
+          </div>
         </div>
+
+        <!-- Email -->
+        <div class="single-contact-address d-flex flex-row">
+          <div class="contact-icon">
+            <span class="lnr lnr-envelope"></span>
+          </div>
+          <div class="contact-details">
+            <h5>Email</h5>
+            <p>{{ page.email }}</p>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Phone -->
-      <div class="single-contact-address d-flex flex-row"
-           style="margin-bottom:20px;animation:fadeUp 1.2s ease;">
-        
-        <div class="icon" style="font-size:25px;color:#00ffcc;margin-right:15px;">
-          <span class="lnr lnr-phone-handset"></span>
+      <!-- RIGHT IMAGE -->
+      <div class="col-lg-8 col-md-12">
+        <div class="contact-img-wrap">
+          <img src="{% static 'img/pages/about-img.jpg' %}" alt="Contact ArtNexus">
         </div>
-
-        <div class="contact-details">
-          <h5 style="font-weight:600;color: #f1efef;">Phone Number</h5>
-          <p style="color:#aaa;">{{ page.mobilenumber }}</p>
-        </div>
-      </div>
-
-      <!-- Email -->
-      <div class="single-contact-address d-flex flex-row"
-           style="animation:fadeUp 1.4s ease;">
-        
-        <div class="icon" style="font-size:25px;color:#00ffcc;margin-right:15px;">
-          <span class="lnr lnr-envelope"></span>
-        </div>
-
-        <div class="contact-details">
-          <h5 style="font-weight:600;color: #f1efef;">Email</h5>
-          <p style="color:#aaa;">{{ page.email }}</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- RIGHT IMAGE -->
-    <div class="col-lg-8"
-         style="animation:fadeUp 1.5s ease;">
-
-      <div style="
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:0 15px 40px rgba(0,0,0,0.5);
-      ">
-
-        <img src="{% static 'img/pages/about-img.jpg'%}" 
-             style="
-             width:100%;
-             height:100%;
-             object-fit:cover;
-             transition:0.5s;
-             "
-             onmouseover="this.style.transform='scale(1.05)'"
-             onmouseout="this.style.transform='scale(1)'">
-
       </div>
 
     </div>
-
   </div>
-</div>
-
 </section>
 
 {% endblock %}

@@ -3,17 +3,6 @@
 
 {% block content %}
 
-<!-- BANNER -->
-<section class="banner-area relative" id="home"
-style="
-background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-url('{% static 'img/banner.jpg' %}') center/cover no-repeat;
-padding:100px 0;
-text-align:center;
-color:white;
-animation: fadeDown 1s ease;
-">
-
 <style>
 @keyframes fadeDown {
   from {opacity:0; transform:translateY(-30px);}
@@ -23,6 +12,47 @@ animation: fadeDown 1s ease;
 @keyframes fadeUp {
   from {opacity:0; transform:translateY(40px);}
   to {opacity:1; transform:translateY(0);}
+}
+
+/* Banner */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+    url('{% static "img/banner.jpg" %}') center/cover no-repeat;
+  padding: 100px 20px;
+  text-align: center;
+  color: white;
+  animation: fadeDown 1s ease;
+}
+
+.banner-area h1 {
+  font-size: 50px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.banner-area p a {
+  color: #ccc;
+  transition: 0.3s;
+}
+
+.banner-area p a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Form Section */
+.enquiry-section {
+  background: #0f0f0f;
+  padding: 80px 20px;
+  color: white;
+}
+
+/* Form Card */
+.enquiry-card {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
 }
 
 /* Input Styling */
@@ -42,6 +72,11 @@ animation: fadeDown 1s ease;
   color: white;
 }
 
+/* Placeholder color */
+.form-control::placeholder {
+  color: #888;
+}
+
 /* Button */
 .primary-btn {
   background: #00ffcc;
@@ -50,112 +85,139 @@ animation: fadeDown 1s ease;
   padding: 10px 25px;
   font-weight: 600;
   transition: 0.3s;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .primary-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   background: #00e6b8;
 }
 
 /* Title */
-.title h3 {
+.enquiry-title h3 {
   color: white;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* ✅ Mobile Responsive */
+@media (max-width: 768px) {
+  .banner-area {
+    padding: 70px 15px;
+  }
+
+  .banner-area h1 {
+    font-size: 30px;
+  }
+
+  .enquiry-section {
+    padding: 50px 15px;
+  }
+
+  .enquiry-card {
+    padding: 20px;
+  }
+
+  .enquiry-title h3 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-area h1 {
+    font-size: 24px;
+  }
+
+  .enquiry-title h3 {
+    font-size: 16px;
+  }
 }
 </style>
 
-<div class="container">
-  <h1 style="font-size:50px;font-weight:700; color:#fff;">Enquiry</h1>
-  <p>
-    <a href="{% url 'index' %}" style="color:#ccc;">Home</a> →
-    <a href="#" style="color:#fff;">Enquiry</a>
-  </p>
-</div>
+<!-- BANNER -->
+<section class="banner-area" id="home">
+  <div class="container">
+    <h1>Enquiry</h1>
+    <p>
+      <a href="{% url 'index' %}">Home</a> →
+      <a href="#">Enquiry</a>
+    </p>
+  </div>
 </section>
 
-
 <!-- FORM -->
-<section class="contact-page-area section-gap"
-style="background:#0f0f0f;padding:80px 20px;color:white;">
+<section class="enquiry-section" id="enquiry">
+  <div class="container">
 
-<div class="container">
+    <!-- Title -->
+    <div class="enquiry-title text-center mb-4" style="animation: fadeUp 1s ease;">
+      <h3>Enquiry For Product ({{ sinprod.title }} : {{ sinprod.referencenumber }})</h3>
+    </div>
 
-  <!-- Title -->
-  <div class="title text-center"
-       style="animation:fadeUp 1s ease;">
-    
-    <h3 class="mb-10">
-      Enquiry For Product ({{sinprod.title}} : {{sinprod.referencenumber}})
-    </h3>
-  </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 col-sm-12" style="animation: fadeUp 1.3s ease;">
 
-  <div class="row justify-content-center">
+        <div class="enquiry-card">
 
-    <div class="col-lg-8"
-         style="animation:fadeUp 1.3s ease;">
+          <form action="{% url 'enquiry_details' %}" method="POST">
+            {% csrf_token %}
 
-      <div style="
-      background:#1a1a1a;
-      padding:30px;
-      border-radius:20px;
-      box-shadow:0 15px 40px rgba(0,0,0,0.5);
-      ">
+            <input name="prod_id" type="hidden" value="{{ sinprod.id }}">
 
-        <form action="{% url 'enquiry_details' %}" method="POST">
-          {% csrf_token %}
+            <div class="row">
 
-          <div class="row">
+              <!-- LEFT -->
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <input name="fullname"
+                         placeholder="Enter your name"
+                         class="form-control mb-3"
+                         required type="text">
+                </div>
 
-            <!-- LEFT -->
-            <div class="col-lg-6 form-group">
+                <div class="form-group">
+                  <input name="email"
+                         placeholder="Enter email"
+                         class="form-control mb-3"
+                         required type="email">
+                </div>
 
-              <input name="fullname"
-                     placeholder="Enter your name"
-                     class="form-control mb-3"
-                     required type="text">
+                <div class="form-group">
+                  <input name="mobnum"
+                         maxlength="10"
+                         placeholder="Enter mobile number"
+                         class="form-control mb-3"
+                         required type="text">
+                </div>
+              </div>
 
-              <input name="prod_id"
-                     type="hidden"
-                     value="{{sinprod.id}}">
+              <!-- RIGHT -->
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <textarea class="form-control mb-3"
+                            name="message"
+                            placeholder="Your Message"
+                            required
+                            style="height:150px;"></textarea>
+                </div>
 
-              <input name="email"
-                     placeholder="Enter email"
-                     class="form-control mb-3"
-                     required type="email">
-
-              <input name="mobnum"
-                     maxlength="10"
-                     placeholder="Enter mobile number"
-                     class="form-control mb-3"
-                     required type="text">
-
-            </div>
-
-            <!-- RIGHT -->
-            <div class="col-lg-6 form-group">
-
-              <textarea class="form-control mb-3"
-                        name="message"
-                        placeholder="Your Message"
-                        required
-                        style="height:150px;"></textarea>
-
-              <button class="primary-btn mt-2" style="float:right;">
-                Send Enquiry
-              </button>
+                <button type="submit" class="primary-btn">
+                  Send Enquiry
+                </button>
+              </div>
 
             </div>
 
-          </div>
+          </form>
 
-        </form>
-
+        </div>
       </div>
-
     </div>
 
   </div>
-
-</div>
 </section>
 
 {% endblock %}

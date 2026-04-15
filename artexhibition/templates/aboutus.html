@@ -3,17 +3,6 @@
 
 {% block content %}
 
-<!-- BANNER -->
-<section class="banner-area relative" id="home"
-style="
-background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-url('{% static 'img/pages/about-img.jpg' %}') center/cover no-repeat;
-padding:100px 0;
-text-align:center;
-color:white;
-animation: fadeDown 1s ease;
-">
-
 <style>
 /* Animations */
 @keyframes fadeDown {
@@ -26,11 +15,21 @@ animation: fadeDown 1s ease;
   to {opacity:1; transform:translateY(0);}
 }
 
-/* Text styling */
+/* Banner */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+    url('{% static "img/pages/about-img.jpg" %}') center/cover no-repeat;
+  padding: 100px 20px;
+  text-align: center;
+  color: white;
+  animation: fadeDown 1s ease;
+}
+
 .banner-area h1 {
   font-size: 50px;
   font-weight: 700;
   letter-spacing: 2px;
+  color: #f1efef;
 }
 
 .banner-area p a {
@@ -42,74 +41,123 @@ animation: fadeDown 1s ease;
   color: #fff;
   text-decoration: underline;
 }
+
+/* About Section */
+.about-section {
+  padding: 80px 20px;
+  background: #0f0f0f;
+  color: rgb(235, 229, 229);
+}
+
+.about-title h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #f1efef;
+}
+
+.about-img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transition: 0.5s;
+}
+
+.about-img:hover {
+  transform: scale(1.05);
+}
+
+.about-card {
+  background: rgba(255,255,255,0.05);
+  padding: 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* ✅ Mobile Responsive */
+@media (max-width: 768px) {
+  .banner-area {
+    padding: 70px 15px;
+  }
+
+  .banner-area h1 {
+    font-size: 30px;
+    letter-spacing: 1px;
+  }
+
+  .about-title h1 {
+    font-size: 24px;
+  }
+
+  .about-card {
+    margin-top: 25px;
+    padding: 20px;
+  }
+
+  .about-img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-area h1 {
+    font-size: 24px;
+  }
+
+  .about-title h1 {
+    font-size: 20px;
+  }
+
+  .about-section {
+    padding: 50px 15px;
+  }
+}
 </style>
 
-<div class="container">
-  <h1 style="color: #f1efef;">About Us</h1>
-  <p>
-    <a href="{% url 'index' %}">Home</a> → 
-    <a href="{% url 'aboutus'%}">About Us</a>
-  </p>
-</div>
+<!-- BANNER -->
+<section class="banner-area" id="home">
+  <div class="container">
+    <h1>About Us</h1>
+    <p>
+      <a href="{% url 'index' %}">Home</a> →
+      <a href="{% url 'aboutus' %}">About Us</a>
+    </p>
+  </div>
 </section>
 
-
 <!-- ABOUT SECTION -->
-<section class="section-gap info-area" id="about"
-style="padding:80px 20px;background:#0f0f0f;color:rgb(235, 229, 229);">
+<section class="about-section" id="about">
+  <div class="container">
 
-<div class="container">
-
-  <!-- Title -->
-  <div style="text-align:center;margin-bottom:50px;animation:fadeUp 1s ease;">
-    <h1 style="font-size:40px;font-weight:700;color: #f1efef;">Few words about our Art Exhibition</h1>
-    <p style="color:#f1efef;">Experience creativity in a modern digital space</p>
-  </div>
-
-  <!-- Content -->
-  <div class="row align-items-center">
-
-    <!-- Image -->
-    <div class="col-lg-6 col-md-12 text-center"
-         style="animation:fadeUp 1.2s ease;">
-         
-      <img src="{% static 'img/pages/about-img.jpg'%}" 
-           style="
-           width:100%;
-           max-width:500px;
-           border-radius:20px;
-           box-shadow:0 15px 40px rgba(0,0,0,0.5);
-           transition:0.5s;
-           "
-           onmouseover="this.style.transform='scale(1.05)'"
-           onmouseout="this.style.transform='scale(1)'">
+    <!-- Title -->
+    <div class="about-title text-center mb-5" style="animation: fadeUp 1s ease;">
+      <h1>Few words about our Art Exhibition</h1>
+      <p style="color:#f1efef;">Experience creativity in a modern digital space</p>
     </div>
 
-    <!-- Text -->
-    <div class="col-lg-6 col-md-12"
-         style="animation:fadeUp 1.5s ease;">
-      
-      <div style="
-      background: rgba(255,255,255,0.05);
-      padding:30px;
-      border-radius:20px;
-      backdrop-filter: blur(10px);
-      box-shadow:0 10px 30px rgba(0,0,0,0.3);
-      ">
+    <!-- Content -->
+    <div class="row align-items-center">
 
-        <h2 style="font-weight:600;margin-bottom:20px;color: #f1efef;">About Us</h2>
+      <!-- Image -->
+      <div class="col-lg-6 col-md-12 text-center mb-4" style="animation: fadeUp 1.2s ease;">
+        <img src="{% static 'img/pages/about-img.jpg' %}"
+             class="about-img"
+             alt="About ArtNexus">
+      </div>
 
-        <p style="color:#dfdada;line-height:1.8;">
-          {{ page.aboutus }}
-        </p>
-
+      <!-- Text -->
+      <div class="col-lg-6 col-md-12" style="animation: fadeUp 1.5s ease;">
+        <div class="about-card">
+          <h2 style="font-weight:600; margin-bottom:20px; color:#f1efef;">About Us</h2>
+          <p style="color:#dfdada; line-height:1.8;">
+            {{ page.aboutus }}
+          </p>
+        </div>
       </div>
 
     </div>
-
   </div>
-
-</div>
 </section>
 
 {% endblock %}

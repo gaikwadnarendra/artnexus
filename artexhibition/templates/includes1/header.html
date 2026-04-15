@@ -1,13 +1,4 @@
 {% load static %}
-<header id="header" id="home"style="
-background: rgba(255, 255, 255, 0.26)
-position: sticky;
-top: 0;
-z-index: 999;
-backdrop-filter: blur(10px);
-box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-animation: fadeDown 0.8s ease;
-">
 
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -17,15 +8,9 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Header animation */
 @keyframes fadeDown {
   from { opacity:0; transform: translateY(-30px); }
   to { opacity:1; transform: translateY(0); }
-}
-
-/* Nav animation */
-.nav-menu li {
-  animation: fadeUp 0.6s ease;
 }
 
 @keyframes fadeUp {
@@ -33,16 +18,65 @@ body {
   to { opacity:1; transform: translateY(0); }
 }
 
-/* Links */
+/* ✅ Header */
+#header {
+  background: rgba(0, 0, 0, 0.75);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+  animation: fadeDown 0.8s ease;
+  padding: 15px 0;
+}
+
+/* ✅ Logo */
+#logo a {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: #fff;
+  text-decoration: none;
+  transition: 0.3s;
+  display: inline-block;
+}
+
+#logo a:hover {
+  transform: scale(1.08);
+  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+}
+
+/* ✅ Nav Menu - Desktop */
+.nav-menu {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li {
+  animation: fadeUp 0.6s ease;
+  transition: 0.3s;
+  position: relative;
+}
+
+.nav-menu li:hover {
+  transform: translateY(-3px);
+}
+
 .nav-menu li a {
   position: relative;
   color: #fff;
   font-weight: 500;
   letter-spacing: 0.5px;
   transition: 0.3s;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-/* Glow hover */
 .nav-menu li a:hover {
   color: #aaa;
   text-shadow: 0 0 8px rgba(255,255,255,0.5);
@@ -64,33 +98,44 @@ body {
   width: 100%;
 }
 
-/* Dropdown animation */
-.menu-has-children ul {
-  background: #1a1a1a;
-  border-radius: 12px;
-  display: none;
-  padding: 10px 0;
-  transform: translateY(10px);
-  opacity: 0;
-  transition: 0.3s;
-}
-
-.menu-has-children:hover ul {
-  display: block;
-  transform: translateY(0);
-  opacity: 1;
+/* ✅ Dropdown */
+.menu-has-children {
+  position: relative;
 }
 
 .menu-has-children > a::after {
-    display: none !important;
-    content: none !important;
+  display: none !important;
+  content: none !important;
 }
-/* Dropdown items */
+
+.menu-has-children ul {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #1a1a1a;
+  border-radius: 12px;
+  min-width: 160px;
+  padding: 10px 0;
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.menu-has-children:hover ul {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
 .menu-has-children ul li a {
   color: #ddd;
   padding: 8px 15px;
   display: block;
   transition: 0.3s;
+  font-size: 14px;
 }
 
 .menu-has-children ul li a:hover {
@@ -99,83 +144,208 @@ body {
   padding-left: 20px;
 }
 
-/* Logo styling */
-#logo a {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 30px;
-  letter-spacing: 2px;
-  color: #fff;
+/* ✅ Hamburger Button */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 5px;
+}
+
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px;
   transition: 0.3s;
 }
 
-/* Logo glow */
-#logo a:hover {
-  transform: scale(1.08);
-  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+/* Hamburger → X animation */
+.hamburger.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
 }
 
-/* Menu layout */
-.nav-menu {
-  display: flex;
-  gap: 28px;
-  align-items: center;
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
 }
 
-/* Lift effect */
-.nav-menu li {
-  transition: 0.3s;
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
-.nav-menu li:hover {
-  transform: translateY(-3px);
+/* ✅ Mobile Menu */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  #nav-menu-container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    z-index: 998;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  #nav-menu-container.open {
+    display: block;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .nav-menu li {
+    width: 100%;
+    border-bottom: 1px solid #222;
+    padding: 8px 0;
+  }
+
+  .nav-menu li:last-child {
+    border-bottom: none;
+  }
+
+  .nav-menu li a {
+    font-size: 16px;
+    display: block;
+    padding: 5px 0;
+  }
+
+  /* Mobile Dropdown */
+  .menu-has-children ul {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    background: #111;
+    border-radius: 8px;
+    margin-top: 8px;
+    display: none;
+    padding: 5px 0;
+  }
+
+  .menu-has-children.open ul {
+    display: block;
+  }
+
+  .menu-has-children ul li {
+    border-bottom: none;
+    padding: 0;
+  }
+
+  .menu-has-children ul li a {
+    font-size: 14px;
+    padding: 8px 15px;
+    color: #bbb;
+  }
+
+  #logo a {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  #logo a {
+    font-size: 20px;
+  }
 }
 </style>
 
-<div class="container">
-  <div class="row align-items-center justify-content-between d-flex">
-    
-    <!-- Logo -->
-    <div id="logo">
-      <a href="{% url 'index' %}">ArtNexus</a>
+<header id="header">
+  <div class="container">
+    <div class="row align-items-center justify-content-between d-flex" style="position:relative;">
+
+      <!-- Logo -->
+      <div id="logo">
+        <a href="{% url 'index' %}">ArtNexus</a>
+      </div>
+
+      <!-- ✅ Hamburger Button (Mobile Only) -->
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Navigation -->
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+
+          <li class="menu-active">
+            <a href="{% url 'index' %}">Home</a>
+          </li>
+
+          <li>
+            <a href="{% url 'aboutus' %}">About</a>
+          </li>
+
+          <li>
+            <a href="{% url 'art_product_list' %}">Art Product</a>
+          </li>
+
+          <li>
+            <a href="{% url 'contactus' %}">Contact</a>
+          </li>
+
+          <!-- Art Type Dropdown -->
+          <li class="menu-has-children" id="artTypeMenu">
+            <a href="#">Art Type ▼</a>
+            <ul>
+              {% for arttype in arttypes %}
+              <li>
+                <a href="{% url 'arttype_detail' id=arttype.id %}">
+                  {{ arttype.arttype }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+
+        </ul>
+      </nav>
+
     </div>
-
-    <!-- Navigation -->
-    <nav id="nav-menu-container">
-      <ul class="nav-menu">
-        
-        <li class="menu-active">
-          <a href="{% url 'index' %}">Home</a>
-        </li>
-
-        <li>
-          <a href="{% url 'aboutus' %}">About</a>
-        </li>
-
-        <li>
-          <a href="{% url 'art_product_list' %}">Art Product</a>
-        </li>
-
-        <li>
-          <a href="{% url 'contactus' %}">Contact</a>
-        </li>
-
-        <li class="menu-has-children">
-          <a href="#">Art Type ▼</a>
-          <ul>
-            {% for arttype in arttypes %}
-            <li>
-              <a href="{% url 'arttype_detail' id=arttype.id %}">
-                {{ arttype.arttype }}
-              </a>
-            </li>
-            {% endfor %}
-          </ul>
-        </li>
-
-      </ul>
-    </nav>
-
   </div>
-</div>
 </header>
+
+<script>
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu-container');
+  const artTypeMenu = document.getElementById('artTypeMenu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('open');
+  });
+
+  // Mobile - Art Type dropdown toggle
+  artTypeMenu.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768) {
+      e.stopPropagation();
+      this.classList.toggle('open');
+    }
+  });
+
+  // Close menu on link click (mobile)
+  document.querySelectorAll('.nav-menu li a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('open');
+      }
+    });
+  });
+</script>

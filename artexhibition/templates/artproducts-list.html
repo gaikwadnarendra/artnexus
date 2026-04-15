@@ -3,16 +3,6 @@
 
 {% block content %}
 
-<!-- BANNER -->
-<section class="banner-area relative" id="home"style="
-background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-url('{% static 'img/banner.jpg' %}') center/cover no-repeat;
-padding:100px 0;
-text-align:center;
-color:white;
-animation: fadeDown 1s ease;
-">
-
 <style>
 @keyframes fadeDown {
   from {opacity:0; transform:translateY(-30px);}
@@ -23,130 +13,259 @@ animation: fadeDown 1s ease;
   from {opacity:0; transform:translateY(40px);}
   to {opacity:1; transform:translateY(0);}
 }
+
+/* Banner */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+    url('{% static "img/banner.jpg" %}') center/cover no-repeat;
+  padding: 100px 20px;
+  text-align: center;
+  color: white;
+  animation: fadeDown 1s ease;
+}
+
+.banner-area h1 {
+  font-size: 50px;
+  font-weight: 700;
+  color: white;
+}
+
+.banner-area p a {
+  color: #ccc;
+  transition: 0.3s;
+}
+
+.banner-area p a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Products Section */
+.products-section {
+  background: #0f0f0f;
+  padding: 80px 20px;
+  color: white;
+}
+
+.section-title h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: white;
+}
+
+.section-title p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #00ffcc;
+}
+
+/* Product Card */
+.product-card {
+  background: #1a1a1a;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transition: 0.4s;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+}
+
+.product-card .card-img {
+  overflow: hidden;
+}
+
+.product-card .card-img img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: 0.5s;
+  display: block;
+}
+
+.product-card .card-img img:hover {
+  transform: scale(1.1);
+}
+
+.product-card .card-body-custom {
+  padding: 20px;
+}
+
+.product-card .card-body-custom h4 a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.product-card .card-body-custom h4 a:hover {
+  color: #00ffcc;
+}
+
+.card-footer-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.price-tag {
+  color: #00ffcc;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.view-btn {
+  background: #fff;
+  color: #000;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-decoration: none;
+  transition: 0.3s;
+  display: inline-block;
+}
+
+.view-btn:hover {
+  transform: scale(1.1);
+  color: #000;
+}
+
+/* No Products */
+.no-products {
+  font-size: 22px;
+  color: #ff4d4d;
+  background: #1a1a1a;
+  padding: 20px 40px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+/* ✅ Mobile Responsive */
+@media (max-width: 768px) {
+  .banner-area {
+    padding: 70px 15px;
+  }
+
+  .banner-area h1 {
+    font-size: 30px;
+  }
+
+  .products-section {
+    padding: 50px 15px;
+  }
+
+  .section-title h1 {
+    font-size: 26px;
+  }
+
+  .section-title p {
+    font-size: 15px;
+  }
+
+  .product-card .card-img img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-area h1 {
+    font-size: 24px;
+  }
+
+  .section-title h1 {
+    font-size: 22px;
+  }
+
+  .product-card .card-img img {
+    height: 160px;
+  }
+
+  .no-products {
+    font-size: 16px;
+    padding: 15px 20px;
+  }
+}
 </style>
 
-<div class="container">
-  <h1 style="font-size:50px;font-weight:700;color: #f1efef;">Art Products</h1>
-  <p>
-    <a href="{% url 'index' %}" style="color:#ccc;">Home</a> →
-    <a href="#" style="color:#fff;">Art Products</a>
-  </p>
-</div>
+<!-- BANNER -->
+<section class="banner-area" id="home">
+  <div class="container">
+    <h1>Art Products</h1>
+    <p>
+      <a href="{% url 'index' %}">Home</a> →
+      <a href="#">Art Products</a>
+    </p>
+  </div>
 </section>
 
-
 <!-- PRODUCTS -->
-<section class="upcoming-exibition-area section-gap"
-style="background:#0f0f0f;padding:80px 20px;color:white;">
+<section class="products-section" id="products">
+  <div class="container">
 
-<div class="container">
-
-  <!-- Title -->
-  <div style="text-align:center;margin-bottom:50px;animation:fadeUp 1s ease;">
-    <h1 style="font-size:40px;font-weight:700;color: #f1efef;">Art Products</h1>
-    <p style="color:#aaa;">Explore creative artworks from talented artists</p>
-  </div>
-
-  <div class="row">
-
-    {% for i in artproducts %}
-
-    <div class="col-lg-4 col-md-6 single-exhibition"
-         style="margin-bottom:30px;animation:fadeUp 1.2s ease;">
-
-      <div style="
-      background:#1a1a1a;
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:0 15px 40px rgba(0,0,0,0.5);
-      transition:0.4s;
-      "
-      onmouseover="this.style.transform='translateY(-10px)'"
-      onmouseout="this.style.transform='translateY(0)'">
-
-        <!-- Image -->
-        <div style="overflow:hidden;">
-          <img src="{{i.images.url}}" 
-               style="width:100%;height:220px;object-fit:cover;transition:0.5s;"
-               onmouseover="this.style.transform='scale(1.1)'"
-               onmouseout="this.style.transform='scale(1)'">
-        </div>
-
-        <!-- Content -->
-        <div style="padding:20px;">
-
-          <p style="font-size:12px;color:#888;">{{i.created_at}}</p>
-
-          <h4 style="font-weight:600;">
-            <a href="#" style="color:white;text-decoration:none;">
-              {{i.title}}
-            </a>
-          </h4>
-
-          <p style="color:#aaa;font-size:14px;">by {{i.artist.name}}</p>
-
-          <p style="font-size:14px;color:#ccc;">
-            {{i.description|slice:":120"}}...
-          </p>
-
-          <p style="color:#bbb;font-size:13px;">
-            Medium: {{i.artmedium.artmedium}}
-          </p>
-
-          <!-- Price + Button -->
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
-            
-            <span style="color:#00ffcc;font-weight:600;">
-              ${{i.sellingprice}}
-            </span>
-
-            <a href="{% url 'view_singleproduct' i.id %}"
-               style="
-               background:#fff;
-               color:#000;
-               padding:6px 15px;
-               border-radius:20px;
-               font-size:12px;
-               text-decoration:none;
-               transition:0.3s;
-               "
-               onmouseover="this.style.transform='scale(1.1)'"
-               onmouseout="this.style.transform='scale(1)'">
-               View
-            </a>
-
-          </div>
-
-        </div>
-
-      </div>
-
+    <!-- Title -->
+    <div class="section-title text-center mb-5" style="animation: fadeUp 1s ease;">
+      <h1>Art Products</h1>
+      <p>{{ arttype_id.arttype }}</p>
     </div>
 
-    {% endfor %}
+    <div class="row">
 
+      {% if artproducts %}
+
+        {% for i in artproducts %}
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" style="animation: fadeUp 1.2s ease;">
+          <div class="product-card">
+
+            <!-- Image -->
+            <div class="card-img">
+              <img src="{{ i.images.url }}" alt="{{ i.title }}">
+            </div>
+
+            <!-- Content -->
+            <div class="card-body-custom">
+
+              <p style="font-size:12px; color:#888;">{{ i.created_at }}</p>
+
+              <h4>
+                <a href="#">{{ i.title }}</a>
+              </h4>
+
+              <p style="color:#aaa; font-size:14px;">by {{ i.artist.name }}</p>
+
+              <p style="font-size:14px; color:#ccc;">
+                {{ i.description|slice:":120" }}...
+              </p>
+
+              <p style="color:#bbb; font-size:13px;">
+                Medium: {{ i.artmedium.artmedium }}
+              </p>
+
+              <!-- Price + Button -->
+              <div class="card-footer-custom">
+                <span class="price-tag">${{ i.sellingprice }}</span>
+                <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      {% else %}
+
+        <!-- NO DATA -->
+        <div class="col-12 text-center" style="animation: fadeUp 1.2s ease;">
+          <p class="no-products">No Products Available 😔</p>
+        </div>
+
+      {% endif %}
+
+    </div>
   </div>
-
-  <!-- PAGINATION -->
-  <div style="text-align:center;margin-top:40px;animation:fadeUp 1.5s ease;">
-    
-    {% if artproducts.has_previous %}
-      <a href="?page=1" style="color:#ccc;margin:5px;">« first</a>
-      <a href="?page={{ artproducts.previous_page_number }}" style="color:#ccc;margin:5px;">previous</a>
-    {% endif %}
-
-    <span style="color:white;margin:5px;">
-      Page {{ artproducts.number }} of {{ artproducts.paginator.num_pages }}
-    </span>
-
-    {% if artproducts.has_next %}
-      <a href="?page={{ artproducts.next_page_number }}" style="color:#ccc;margin:5px;">next</a>
-      <a href="?page={{ artproducts.paginator.num_pages }}" style="color:#ccc;margin:5px;">last »</a>
-    {% endif %}
-
-  </div>
-
-</div>
 </section>
 
 {% endblock %}
