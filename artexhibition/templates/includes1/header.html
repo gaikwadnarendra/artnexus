@@ -27,7 +27,13 @@ body {
   backdrop-filter: blur(10px);
   box-shadow: 0 5px 25px rgba(0,0,0,0.5);
   animation: fadeDown 0.8s ease;
-  padding: 15px 0;
+  padding: 12px 0;
+}
+
+/* ✅ Header Row - never wrap */
+#header .row {
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
 /* ✅ Logo */
@@ -39,7 +45,10 @@ body {
   color: #fff;
   text-decoration: none;
   transition: 0.3s;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
 }
 
 #logo a:hover {
@@ -50,11 +59,12 @@ body {
 /* ✅ Nav Menu - Desktop */
 .nav-menu {
   display: flex;
-  gap: 25px;
+  gap: 15px;
   align-items: center;
   list-style: none;
   margin: 0;
   padding: 0;
+  flex-wrap: nowrap;
 }
 
 .nav-menu li {
@@ -71,7 +81,8 @@ body {
   position: relative;
   color: #fff;
   font-weight: 500;
-  letter-spacing: 0.5px;
+  font-size: 13px;
+  letter-spacing: 0.3px;
   transition: 0.3s;
   text-decoration: none;
   white-space: nowrap;
@@ -144,6 +155,45 @@ body {
   padding-left: 20px;
 }
 
+/* ✅ Wishlist heart style */
+.nav-menu li a.wishlist-link {
+  color: #ff6b9d;
+}
+
+.nav-menu li a.wishlist-link:hover {
+  color: #c33764;
+}
+
+/* ✅ Login / Register buttons */
+.nav-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  transition: 0.3s !important;
+}
+
+.nav-btn-login {
+  border: 1px solid #fff;
+  color: #fff !important;
+}
+
+.nav-btn-login:hover {
+  background: #fff !important;
+  color: #1d2671 !important;
+}
+
+.nav-btn-register {
+  background: linear-gradient(135deg, #c33764, #1d2671);
+  color: #fff !important;
+  border: none;
+}
+
+.nav-btn-register:hover {
+  opacity: 0.85;
+  transform: scale(1.05) !important;
+}
+
 /* ✅ Hamburger Button */
 .hamburger {
   display: none;
@@ -153,6 +203,7 @@ body {
   background: none;
   border: none;
   padding: 5px;
+  flex-shrink: 0;
 }
 
 .hamburger span {
@@ -177,6 +228,31 @@ body {
   transform: translateY(-8px) rotate(-45deg);
 }
 
+/* ✅ Medium screens - shrink nav */
+@media (max-width: 1100px) {
+  .nav-menu {
+    gap: 10px;
+  }
+  .nav-menu li a {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 992px) {
+  .nav-menu {
+    gap: 8px;
+  }
+  .nav-menu li a {
+    font-size: 11px;
+  }
+  #logo a span {
+    font-size: 16px;
+  }
+  #logo img {
+    height: 35px !important;
+  }
+}
+
 /* ✅ Mobile Menu */
 @media (max-width: 768px) {
   .hamburger {
@@ -189,7 +265,7 @@ body {
     top: 100%;
     left: 0;
     width: 100%;
-    background: rgba(46, 45, 45, 0.95);
+    background: rgba(20, 20, 20, 0.97);
     backdrop-filter: blur(10px);
     padding: 20px;
     z-index: 998;
@@ -218,9 +294,18 @@ body {
   }
 
   .nav-menu li a {
-    font-size: 16px;
+    font-size: 15px !important;
     display: block;
     padding: 5px 0;
+  }
+
+  /* Reset button styles on mobile */
+  .nav-btn {
+    padding: 0;
+    border-radius: 0;
+    border: none !important;
+    background: transparent !important;
+    color: #fff !important;
   }
 
   /* Mobile Dropdown */
@@ -246,39 +331,43 @@ body {
   }
 
   .menu-has-children ul li a {
-    font-size: 14px;
+    font-size: 14px !important;
     padding: 8px 15px;
     color: #bbb;
   }
 
-  #logo a {
-    font-size: 22px;
+  #logo a span {
+    font-size: 18px;
+  }
+
+  #logo img {
+    height: 38px !important;
   }
 }
 
 @media (max-width: 480px) {
-  #logo a {
-    font-size: 20px;
+  #logo a span {
+    font-size: 16px;
+  }
+  #logo img {
+    height: 32px !important;
   }
 }
 </style>
 
 <header id="header">
   <div class="container">
-    <div class="row align-items-center justify-content-between d-flex" style="position:relative;">
+    <div class="row align-items-center justify-content-between d-flex flex-nowrap" style="position:relative;">
 
       <!-- Logo -->
       <div id="logo">
         <a href="{% url 'index' %}" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
-          
-          <img src="{% static 'img/logo.png' %}" 
-              alt="ArtNexus Logo"
-              style="height:45px;">
-
+          <img src="{% static 'img/logo.png' %}"
+               alt="ArtNexus Logo"
+               style="height:45px;">
           <span style="font-size:20px;font-weight:700;color:#c33764;">
             ArtNexus
           </span>
-
         </a>
       </div>
 
@@ -293,21 +382,13 @@ body {
       <nav id="nav-menu-container">
         <ul class="nav-menu">
 
-          <li class="menu-active">
-            <a href="{% url 'index' %}">Home</a>
-          </li>
+          <li><a href="{% url 'index' %}">Home</a></li>
 
-          <li>
-            <a href="{% url 'aboutus' %}">About</a>
-          </li>
+          <li><a href="{% url 'aboutus' %}">About</a></li>
 
-          <li>
-            <a href="{% url 'art_product_list' %}">Art Product</a>
-          </li>
+          <li><a href="{% url 'art_product_list' %}">Art Product</a></li>
 
-          <li>
-            <a href="{% url 'contactus' %}">Contact</a>
-          </li>
+          <li><a href="{% url 'contactus' %}">Contact</a></li>
 
           <!-- Art Type Dropdown -->
           <li class="menu-has-children" id="artTypeMenu">
@@ -322,22 +403,22 @@ body {
               {% endfor %}
             </ul>
           </li>
+
           {% if user.is_authenticated %}
             <li>
-              <a href="{% url 'wishlist' %}">❤️ Wishlist</a>
+              <a href="{% url 'wishlist' %}" class="wishlist-link">❤️ Wishlist</a>
             </li>
             <li>
-              <a href="{% url 'user_logout' %}">Logout</a>
+              <a href="{% url 'user_logout' %}" class="nav-btn nav-btn-login">Logout</a>
             </li>
           {% else %}
             <li>
-              <a href="{% url 'user_login' %}">Login</a>
+              <a href="{% url 'user_login' %}" class="nav-btn nav-btn-login">Login</a>
             </li>
             <li>
-              <a href="{% url 'register' %}">Register</a>
+              <a href="{% url 'register' %}" class="nav-btn nav-btn-register">Register</a>
             </li>
           {% endif %}
-
 
         </ul>
       </nav>
@@ -347,7 +428,6 @@ body {
 </header>
 
 <script>
-  // Hamburger toggle
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('nav-menu-container');
   const artTypeMenu = document.getElementById('artTypeMenu');
