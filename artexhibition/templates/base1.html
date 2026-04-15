@@ -194,13 +194,15 @@
     </style>
 
     </head>
-    <body>
+    <body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0;">
 
         {% include 'includes1/header.html' %}
 
 
-        {% block content %}
-        {% endblock %}
+         <main style="flex: 1;">
+            {% block content %}
+            {% endblock %}
+        </main>
         {% include 'includes1/footer.html' %}	
 
         <script src="{% static 'js/vendor/jquery-2.2.4.min.js'%}"></script>
