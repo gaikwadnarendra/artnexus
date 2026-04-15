@@ -205,88 +205,181 @@
     <script src="{% static 'js/vendor/bootstrap.min.js'%}"></script>
     <script src="{% static 'js/main.js'%}"></script>
 
-    <!-- CHAT BUTTON -->
+    <!-- 💬 Chat Button -->
     <div id="chat-btn" onclick="toggleChat()">
-        💬 <span id="notif-dot"></span>
+    💬
+    <span id="notif-dot"></span>
     </div>
 
-    <!-- CHAT BOX -->
+    <!-- 💬 Chatbox -->
     <div id="chat-box">
-        <div id="chat-header">
-            🤖 ArtNexus Bot
-            <span onclick="toggleChat()">✖</span>
-        </div>
-        <div id="chat-body"></div>
-        <div id="chat-footer">
-            <input type="text" id="msg" placeholder="Type message...">
-            <button onclick="sendMsg()">➤</button>
-        </div>
+    <div id="chat-header">
+        🤖 ArtNexus Bot
+        <span onclick="toggleChat()">✖</span>
+    </div>
+
+    <div id="chat-body"></div>
+
+    <div id="chat-footer">
+        <input type="text" id="msg" placeholder="Type message...">
+        <button onclick="sendMsg()">➤</button>
+    </div>
     </div>
 
     <script>
     let messages = [];
 
+    // ENTER KEY
     document.getElementById("msg").addEventListener("keypress", function(e) {
-        if (e.key === "Enter") sendMsg();
+    if (e.key === "Enter") sendMsg();
     });
 
+    // TOGGLE CHAT
     function toggleChat() {
-        let box = document.getElementById("chat-box");
-        box.classList.toggle("active");
-        document.getElementById("notif-dot").style.display = "none";
+    let box = document.getElementById("chat-box");
+    box.classList.toggle("active");
+    document.getElementById("notif-dot").style.display = "none";
     }
 
+    // NOTIFICATION
+    function showNotification() {
+    let box = document.getElementById("chat-box");
+    if (!box.classList.contains("active")) {
+        document.getElementById("notif-dot").style.display = "block";
+    }
+    }
+
+    // ADD MESSAGE
     function addMessage(content, type) {
-        let chat = document.getElementById("chat-body");
+    let chat = document.getElementById("chat-body");
+    let msgDiv = document.createElement("div");
+    msgDiv.classList.add("msg", type);
 
-        let msgDiv = document.createElement("div");
-        msgDiv.classList.add("msg", type);
+    let bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    bubble.innerHTML = content;
 
-        let bubble = document.createElement("div");
-        bubble.classList.add("bubble");
-        bubble.innerHTML = content;
+    msgDiv.appendChild(bubble);
+    chat.appendChild(msgDiv);
+    chat.scrollTop = chat.scrollHeight;
 
-        msgDiv.appendChild(bubble);
-        chat.appendChild(msgDiv);
-
-        chat.scrollTop = chat.scrollHeight;
-        return bubble;
+    return bubble;
     }
 
-    function sendMsg() {
-        let input = document.getElementById("msg");
-        let msg = input.value.trim();
-        if (!msg) return;
-
-        addMessage(msg, "user");
-        input.value = "";
-
-        let typing = addMessage("Typing...", "bot");
-
-        fetch("/chatbot/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify({ message: msg })
-        })
-        .then(res => res.json())
-        .then(data => {
-            typing.innerHTML = data.reply;
-        });
+    // FORMAT RESPONSE
+    function formatResponse(text) {
+    return text
+        .replace(/!\[(.*?)\]\((.*?)\)/g, "<br><img src='$2' style='max-width:100%; border-radius:10px; margin-top:5px;'/>")
+        .replace(/\n/g, "<br>")
+        .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+        .replace(/\*(.*?)\*/g, "<i>$1</i>");
     }
 
-    function getCookie(name) {
-        let cookieValue = null;
-        document.cookie.split(';').forEach(c => {
-            c = c.trim();
-            if (c.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(c.substring(name.length + 1));
+    // TYPE EFFECT
+    function typeEffect(element, html, speed = 15) {
+    element.innerHTML = "";
+
+    let temp = document.createElement("div");
+    temp.innerHTML = html;
+
+    let nodes = Array.from(temp.childNodes);
+    let i = 0;
+
+    function typeNode() {
+        if (i >= nodes.length) return;
+
+        let node = nodes[i];
+
+        if (node.nodeType === 3) {
+        let text = node.textContent;
+        let j = 0;
+
+        let span = document.createElement("span");
+        element.appendChild(span);
+
+        function typeChar() {
+            if (j < text.length) {
+            span.textContent += text[j];
+            j++;
+            setTimeout(typeChar, speed);
+            } else {
+            i++;
+            typeNode();
             }
-        });
-        return cookieValue;
+        }
+
+        typeChar();
+        } else {
+        element.appendChild(node.cloneNode(true));
+        i++;
+        typeNode();
+        }
     }
+
+    typeNode();
+    }
+
+    // SEND MESSAGE
+    function sendMsg() {
+    let input = document.getElementById("msg");
+    let msg = input.value.trim();
+
+    if (!msg) return;
+
+    addMessage(msg, "user");
+    messages.push({ role: "user", content: msg });
+
+    input.value = "";
+
+    // TYPING DOTS
+    let typingBubble = addMessage(
+        "<div class='typing-dots'><span>.</span><span>.</span><span>.</span></div>",
+        "bot"
+    );
+
+    fetch("/chatbot/", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify({ messages: messages })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let formatted = formatResponse(data.reply);
+
+        typingBubble.innerHTML = "";
+
+        setTimeout(() => {
+        typeEffect(typingBubble, formatted);
+        }, 300);
+
+        messages.push({ role: "assistant", content: data.reply });
+        showNotification();
+    });
+    }
+
+    // CSRF
+    function getCookie(name) {
+    let cookieValue = null;
+
+    document.cookie.split(';').forEach(c => {
+        c = c.trim();
+        if (c.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(c.substring(name.length + 1));
+        }
+    });
+
+    return cookieValue;
+    }
+
+    // AUTO WELCOME
+    window.onload = function() {
+    setTimeout(() => {
+        addMessage("👋 Welcome to ArtNexus! How can I help you?", "bot");
+    }, 800);
+    };
     </script>
 
 </body>
