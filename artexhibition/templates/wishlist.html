@@ -1,31 +1,132 @@
-{% extends 'base.html' %}
+{% extends 'base1.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2>My Wishlist</h2>
 
-  {% if wishlist_items %}
-    <div class="row">
-      {% for item in wishlist_items %}
-      <div class="col-md-4 mb-4">
-        <div class="card">
-          <img src="{{ item.product.images.url }}" class="card-img-top" alt="{{ item.product.title }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ item.product.title }}</h5>
-            <p class="card-text">₹{{ item.product.sellingprice }}</p>
-            <p class="card-text text-muted">{{ item.product.dimension }} | {{ item.product.orientation }}</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body { font-family: 'Poppins', sans-serif; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(40px);}
+  to { opacity:1; transform:translateY(0);}
+}
+
+@keyframes zoomIn {
+  from { transform:scale(0.9); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+</style>
+
+<!-- BANNER -->
+<section style="height:40vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;">
+  <div style="animation:fadeUp 1.2s ease;">
+    <h1 style="font-size:50px;font-weight:700;letter-spacing:3px;">My Wishlist</h1>
+    <p style="font-size:16px;opacity:0.85;">
+      <a href="{% url 'index' %}" style="color:white;text-decoration:none;">Home</a> → Wishlist
+    </p>
+  </div>
+</section>
+
+<!-- WISHLIST SECTION -->
+<section style="padding:80px 20px;background:#f4f6f9;min-height:60vh;">
+  <div style="max-width:1200px;margin:auto;">
+
+    {% if messages %}
+      {% for message in messages %}
+        <div style="background:#fff3cd;border:1px solid #ffc107;padding:12px 20px;border-radius:10px;margin-bottom:20px;text-align:center;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if wishlist_items %}
+
+      <h2 style="text-align:center;font-size:35px;margin-bottom:50px;">
+        Your Saved Artworks ❤️
+      </h2>
+
+      <div style="display:flex;flex-wrap:wrap;gap:30px;justify-content:center;">
+
+        {% for item in wishlist_items %}
+
+        <div style="width:300px;border-radius:20px;overflow:hidden;background:white;box-shadow:0 15px 35px rgba(0,0,0,0.1);transition:0.4s;animation:zoomIn 0.8s ease;"
+             onmouseover="this.style.transform='scale(1.05)'"
+             onmouseout="this.style.transform='scale(1)'">
+
+          <div style="overflow:hidden;">
+            <img src="{{ item.product.images.url }}"
+                 style="width:100%;height:220px;object-fit:cover;transition:0.5s;"
+                 onmouseover="this.style.transform='scale(1.1)'"
+                 onmouseout="this.style.transform='scale(1)'"
+                 alt="{{ item.product.title }}">
+          </div>
+
+          <div style="padding:20px;">
+            <h4 style="font-weight:600;">
+              <a href="{% url 'view_singleproduct' item.product.id %}" style="text-decoration:none;color:#333;">
+                {{ item.product.title }}
+              </a>
+            </h4>
+
             {% if item.product.artist %}
-              <p class="card-text"><small>By {{ item.product.artist }}</small></p>
+              <p style="color:#888;font-size:14px;margin:5px 0;">by {{ item.product.artist.name }}</p>
             {% endif %}
-            <a href="{% url 'remove_from_wishlist' item.product.id %}" class="btn btn-danger btn-sm">Remove</a>
-            <a href="{% url 'product_detail' item.product.id %}" class="btn btn-primary btn-sm">View</a>
+
+            <p style="font-size:15px;font-weight:600;color:#c33764;margin:8px 0;">
+              ₹{{ item.product.sellingprice }}
+            </p>
+
+            <p style="font-size:13px;color:#777;">
+              {{ item.product.dimension }} | {{ item.product.orientation }}
+            </p>
+
+            <p style="font-size:13px;color:#555;margin-top:8px;">
+              {{ item.product.description|slice:":100" }}...
+            </p>
+
+            <div style="display:flex;gap:10px;margin-top:15px;">
+              <a href="{% url 'view_singleproduct' item.product.id %}"
+                 style="flex:1;text-align:center;padding:8px 0;border-radius:20px;background:#1d2671;color:white;text-decoration:none;font-size:13px;font-weight:600;transition:0.3s;"
+                 onmouseover="this.style.background='#c33764'"
+                 onmouseout="this.style.background='#1d2671'">
+                View
+              </a>
+              <a href="{% url 'remove_from_wishlist' item.product.id %}"
+                 style="flex:1;text-align:center;padding:8px 0;border-radius:20px;background:#f8d7da;color:#c33764;text-decoration:none;font-size:13px;font-weight:600;transition:0.3s;border:1px solid #c33764;"
+                 onmouseover="this.style.background='#c33764';this.style.color='white'"
+                 onmouseout="this.style.background='#f8d7da';this.style.color='#c33764'">
+                Remove ✕
+              </a>
+            </div>
+
           </div>
         </div>
+
+        {% endfor %}
+
       </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p>Your wishlist is empty. <a href="/">Browse products</a></p>
-  {% endif %}
-</div>
+
+    {% else %}
+
+      <!-- EMPTY STATE -->
+      <div style="text-align:center;padding:80px 20px;animation:fadeUp 1s ease;">
+        <div style="font-size:80px;">🎨</div>
+        <h3 style="font-size:28px;margin-top:20px;color:#333;">Your wishlist is empty</h3>
+        <p style="color:#888;margin-top:10px;">Explore our collection and save artworks you love.</p>
+        <a href="{% url 'art_product_list' %}">
+          <button style="margin-top:25px;padding:12px 30px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-weight:600;cursor:pointer;font-size:15px;transition:0.3s;"
+                  onmouseover="this.style.transform='scale(1.1)'"
+                  onmouseout="this.style.transform='scale(1)'">
+            Browse Artworks
+          </button>
+        </a>
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
 {% endblock %}
