@@ -269,7 +269,17 @@ body {
 
       <!-- Logo -->
       <div id="logo">
-        <a href="{% url 'index' %}">ArtNexus</a>
+        <a href="{% url 'index' %}" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+          
+          <img src="{% static 'img/logo.png' %}" 
+              alt="ArtNexus Logo"
+              style="height:45px;">
+
+          <span style="font-size:20px;font-weight:700;color:#c33764;">
+            ArtNexus
+          </span>
+
+        </a>
       </div>
 
       <!-- ✅ Hamburger Button (Mobile Only) -->

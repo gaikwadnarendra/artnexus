@@ -3,164 +3,115 @@
 
 {% block content %}
 
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-@keyframes fadeDown {
-  from {opacity:0; transform:translateY(-30px);}
-  to {opacity:1; transform:translateY(0);}
-}
+body { font-family: 'Poppins', sans-serif; }
 
+/* Animations */
 @keyframes fadeUp {
-  from {opacity:0; transform:translateY(40px);}
-  to {opacity:1; transform:translateY(0);}
+  from { opacity:0; transform:translateY(40px);} 
+  to { opacity:1; transform:translateY(0);} 
 }
 
-/* Banner */
-.banner-area {
-  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-    url('{% static "img/banner.jpg" %}') center/cover no-repeat;
-  padding: 100px 20px;
+/* ===== HERO ===== */
+.hero-enquiry {
+  height: 45vh;
+  background: linear-gradient(135deg,#1d2671,#c33764);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: white;
-  animation: fadeDown 1s ease;
 }
 
-.banner-area h1 {
+.hero-enquiry h1 {
   font-size: 50px;
   font-weight: 700;
-  color: #fff;
 }
 
-.banner-area p a {
-  color: #ccc;
-  transition: 0.3s;
-}
-
-.banner-area p a:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
-/* Form Section */
+/* ===== SECTION ===== */
 .enquiry-section {
-  background: #0f0f0f;
   padding: 80px 20px;
-  color: white;
+  background: #f4f6f9;
 }
 
-/* Form Card */
-.enquiry-card {
-  background: #1a1a1a;
-  padding: 30px;
+/* Glass Card */
+.glass {
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.6);
   border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
 }
 
-/* Input Styling */
+/* Title */
+.enquiry-title h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Form */
 .form-control {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  color: white;
   border-radius: 10px;
-  padding: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
   transition: 0.3s;
 }
 
 .form-control:focus {
-  border-color: #00ffcc;
-  box-shadow: 0 0 10px rgba(0,255,204,0.3);
-  background: #1a1a1a;
-  color: white;
-}
-
-/* Placeholder color */
-.form-control::placeholder {
-  color: #888;
+  border-color: #c33764;
+  box-shadow: 0 0 8px rgba(195,55,100,0.2);
 }
 
 /* Button */
 .primary-btn {
-  background: #00ffcc;
-  color: #000 !important;
+  background: #c33764;
+  color: white;
   border-radius: 25px;
-  padding: 10px 25px;
+  padding: 12px;
   font-weight: 600;
   transition: 0.3s;
   border: none;
   cursor: pointer;
   width: 100%;
-  margin-top: 10px;
 }
 
 .primary-btn:hover {
   transform: scale(1.05);
-  background: #00e6b8;
 }
 
-/* Title */
-.enquiry-title h3 {
-  color: white;
-  font-size: 22px;
-  font-weight: 600;
-}
-
-/* ✅ Mobile Responsive */
-@media (max-width: 768px) {
-  .banner-area {
-    padding: 70px 15px;
-  }
-
-  .banner-area h1 {
-    font-size: 30px;
-  }
-
-  .enquiry-section {
-    padding: 50px 15px;
-  }
-
-  .enquiry-card {
-    padding: 20px;
-  }
-
-  .enquiry-title h3 {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .banner-area h1 {
-    font-size: 24px;
-  }
-
-  .enquiry-title h3 {
-    font-size: 16px;
-  }
+/* Responsive */
+@media(max-width:768px){
+  .hero-enquiry h1 { font-size: 32px; }
 }
 </style>
 
-<!-- BANNER -->
-<section class="banner-area" id="home">
-  <div class="container">
+<!-- HERO -->
+<section class="hero-enquiry">
+  <div style="animation:fadeUp 1.5s ease;">
     <h1>Enquiry</h1>
-    <p>
-      <a href="{% url 'index' %}">Home</a> →
-      <a href="#">Enquiry</a>
-    </p>
   </div>
 </section>
 
 <!-- FORM -->
-<section class="enquiry-section" id="enquiry">
+<section class="enquiry-section">
+
   <div class="container">
 
     <!-- Title -->
     <div class="enquiry-title text-center mb-4" style="animation: fadeUp 1s ease;">
-      <h3>Enquiry For Product ({{ sinprod.title }} : {{ sinprod.referencenumber }})</h3>
+      <h3>
+        Enquiry For Product 
+        ({{ sinprod.title }} : {{ sinprod.referencenumber }})
+      </h3>
     </div>
 
     <div class="row justify-content-center">
       <div class="col-lg-8 col-md-10 col-sm-12" style="animation: fadeUp 1.3s ease;">
 
-        <div class="enquiry-card">
+        <div class="glass p-4">
 
           <form action="{% url 'enquiry_details' %}" method="POST">
             {% csrf_token %}
@@ -171,42 +122,38 @@
 
               <!-- LEFT -->
               <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="form-group">
-                  <input name="fullname"
-                         placeholder="Enter your name"
-                         class="form-control mb-3"
-                         required type="text">
-                </div>
+                
+                <input name="fullname"
+                       placeholder="Enter your name"
+                       class="form-control mb-3"
+                       required type="text">
 
-                <div class="form-group">
-                  <input name="email"
-                         placeholder="Enter email"
-                         class="form-control mb-3"
-                         required type="email">
-                </div>
+                <input name="email"
+                       placeholder="Enter email"
+                       class="form-control mb-3"
+                       required type="email">
 
-                <div class="form-group">
-                  <input name="mobnum"
-                         maxlength="10"
-                         placeholder="Enter mobile number"
-                         class="form-control mb-3"
-                         required type="text">
-                </div>
+                <input name="mobnum"
+                       maxlength="10"
+                       placeholder="Enter mobile number"
+                       class="form-control mb-3"
+                       required type="text">
+
               </div>
 
               <!-- RIGHT -->
               <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="form-group">
-                  <textarea class="form-control mb-3"
-                            name="message"
-                            placeholder="Your Message"
-                            required
-                            style="height:150px;"></textarea>
-                </div>
+                
+                <textarea class="form-control mb-3"
+                          name="message"
+                          placeholder="Your Message"
+                          required
+                          style="height:150px;"></textarea>
 
                 <button type="submit" class="primary-btn">
                   Send Enquiry
                 </button>
+
               </div>
 
             </div>
@@ -214,10 +161,12 @@
           </form>
 
         </div>
+
       </div>
     </div>
 
   </div>
+
 </section>
 
 {% endblock %}
