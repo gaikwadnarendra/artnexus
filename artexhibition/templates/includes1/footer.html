@@ -25,4 +25,40 @@
     font-weight: 500;
     letter-spacing: 1px;
 }
+
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Old template sections fix */
+  .section-gap {
+    padding: 50px 15px !important;
+  }
+
+  /* Ye purane template ka common issue hai */
+  .home-banner-area,
+  .welcome-area,
+  .whole-wrap {
+    min-height: unset !important;
+    height: auto !important;
+  }
+
+  /* Footer ke baad koi bhi empty div */
+  footer ~ div,
+  footer + div {
+    display: none !important;
+  }
+
+  /* Google Maps container */
+  .map-area,
+  #googleMap,
+  .contact-page-area iframe {
+    height: 200px !important;
+    width: 100% !important;
+  }
+}
 </style>
