@@ -237,7 +237,20 @@ body { font-family: 'Poppins', sans-serif; }
           <!-- Footer -->
           <div class="product-footer">
             <span class="price">${{ i.sellingprice }}</span>
-            <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
+
+            <div>
+              {% if user.is_authenticated %}
+                <a href="{% url 'add_to_wishlist' i.id %}" style="font-size:18px; color:red; margin-right:10px;">
+                  ❤️
+                </a>
+              {% else %}
+                <a href="{% url 'user_login' %}" style="font-size:18px; margin-right:10px;">
+                  🤍
+                </a>
+              {% endif %}
+
+              <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
+            </div>
           </div>
 
         </div>

@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from artapp.models import CustomUser,Artist,Arttype,Artmedium,Artproducts,Page,Enquiry
-from django.contrib.auth import get_user_model
+from artapp.models import *
+from django.contrib.auth import *
 from django.db import IntegrityError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import random
@@ -1134,3 +1134,97 @@ def SEARCH_ENQUIRY(request):
             print("No Record Found")
             return render(request, 'search-enquiry.html', {})
 
+# ✅ REGISTER VIEW
+def REGISTER(request):
+    if request.method == "POST":
+        fullname = request.POST.get('fullname')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match!")
+            return redirect('register')
+
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered!")
+            return redirect('register')
+
+        # ✅ User create karo
+        user = CustomUser.objects.create_user(
+            username=email,
+            email=email,
+            password=password,
+            first_name=fullname,
+            user_type=2  # normal user
+        )
+        user.save()
+        messages.success(request, "Registration successful! Please login.")
+        return redirect('user_login')
+
+    return render(request, 'register.html')
+
+
+# ✅ USER LOGIN VIEW
+def USER_LOGIN(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            if user.user_type == '2':  # normal user only
+                login(request, user)
+                messages.success(request, "Login successful!")
+                return redirect('index')
+            else:
+                messages.error(request, "Admin cannot login here!")
+                return redirect('user_login')
+        else:
+            messages.error(request, "Invalid email or password!")
+            return redirect('user_login')
+
+    return render(request, 'user_login.html')
+
+
+# ✅ USER LOGOUT VIEW
+def USER_LOGOUT(request):
+    logout(request)
+    messages.success(request, "Logged out successfully!")
+    return redirect('index')
+
+# ✅ Add to wishlist
+@login_required
+def add_to_wishlist(request, pid):
+    product = Artproducts.objects.get(id=pid)
+
+    Wishlist.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
+
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+# ✅ Remove from wishlist
+@login_required
+def remove_from_wishlist(request, pid):
+    product = Artproducts.objects.get(id=pid)
+
+    Wishlist.objects.filter(
+        user=request.user,
+        product=product
+    ).delete()
+
+    return redirect('wishlist')
+
+
+# ✅ Wishlist page
+@login_required
+def wishlist_view(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+
+    return render(request, 'wishlist.html', {
+        'wishlist_items': wishlist_items
+    })

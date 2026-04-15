@@ -5,9 +5,8 @@ from django.utils import timezone
 
 class CustomUser(AbstractUser):
     USER ={
-        (1,'admin'),
-        
-        
+        (1,'admin'),   
+        (2, 'user'),
     }
     user_type = models.CharField(choices=USER,max_length=50,default=1)
 
@@ -73,3 +72,11 @@ class Enquiry(models.Model):
     status = models.CharField(max_length=250,blank=True)
     remark = models.CharField(max_length=250, blank=True)
     remark_date = models.DateTimeField(auto_now=True)
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='wishlist')
+    product = models.ForeignKey(Artproducts, on_delete=models.CASCADE, related_name='wishlist')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')

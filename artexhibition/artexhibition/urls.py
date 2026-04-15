@@ -66,9 +66,14 @@ urlpatterns = [
     path('SearchEnquiry', views.SEARCH_ENQUIRY, name='search_enquiry'),
     #Website Page
     path('Website/update', views.WEBSITE_UPDATE, name='website_update'),
-    # path('ViewEnquiry/', views.REPLY_ENQUIRY, name='REPLY_ENQUIRY'),
-    #Chatbot
     path('chatbot/', views.chatbot, name='chatbot'),
     path('chat/', views.chat_page, name='chat'),
+    #User login
+    path('register/', views.REGISTER, name='register'),
+    path('user-login/', views.USER_LOGIN, name='user_login'),
+    path('user-logout/', views.USER_LOGOUT, name='user_logout'),
+    path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('add-to-wishlist/<int:pid>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('remove-from-wishlist/<int:pid>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

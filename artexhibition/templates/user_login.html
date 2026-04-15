@@ -1,0 +1,60 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="banner-area">
+  <div class="container text-center text-white">
+    <h1>Login</h1>
+    <p>
+      <a href="{% url 'index' %}">Home</a> → Login
+    </p>
+  </div>
+</section>
+
+<section class="register-section">
+  <div class="container">
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-center">
+      <div class="col-lg-5">
+
+        <div class="register-card">
+          <h2 class="text-center">User Login 🔐</h2>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group mb-3">
+              <label>Email</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="form-group mb-4">
+              <label>Password</label>
+              <input type="password" name="password" class="form-control" required>
+            </div>
+
+            <button class="register-btn">Login</button>
+          </form>
+
+          <p class="text-center mt-3">
+            New user? <a href="{% url 'register' %}">Register</a>
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

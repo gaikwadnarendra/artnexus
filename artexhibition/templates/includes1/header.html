@@ -322,6 +322,22 @@ body {
               {% endfor %}
             </ul>
           </li>
+          {% if user.is_authenticated %}
+            <li>
+              <a href="{% url 'wishlist' %}">❤️ Wishlist</a>
+            </li>
+            <li>
+              <a href="{% url 'user_logout' %}">Logout</a>
+            </li>
+          {% else %}
+            <li>
+              <a href="{% url 'user_login' %}">Login</a>
+            </li>
+            <li>
+              <a href="{% url 'register' %}">Register</a>
+            </li>
+          {% endif %}
+
 
         </ul>
       </nav>
