@@ -4,7 +4,7 @@
 {% block content %}
 
 <style>
-/* Animations */
+/* ===== Animations ===== */
 @keyframes fadeDown {
   from {opacity:0; transform:translateY(-30px);}
   to {opacity:1; transform:translateY(0);}
@@ -15,56 +15,102 @@
   to {opacity:1; transform:translateY(0);}
 }
 
-/* Banner */
+/* ===== Banner ===== */
 .banner-area {
   background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
     url('{% static "img/pages/about-img.jpg" %}') center/cover no-repeat;
-  padding: 80px 20px;
+  padding: 70px 20px;
   text-align: center;
   color: white;
   animation: fadeDown 1s ease;
 }
 
 .banner-area h1 {
-  font-size: 42px;
+  font-size: 40px;
   font-weight: 700;
-  letter-spacing: 1px;
-  color: #f1efef;
+  margin-bottom: 10px;
 }
 
-/* About Section */
+.banner-area p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ===== About Section ===== */
 .about-section {
-  padding: 60px 20px;
+  padding: 50px 20px;
   background: #0f0f0f;
-  color: rgb(235, 229, 229);
+  color: #eaeaea;
+}
+
+.about-title {
+  animation: fadeUp 1s ease;
 }
 
 .about-title h1 {
-  font-size: 34px;
-  font-weight: 700;
+  font-size: 32px;
+  margin-bottom: 10px;
 }
 
+.about-title p {
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* Image */
 .about-img {
   width: 100%;
-  max-width: 500px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-  transition: 0.5s;
+  max-width: 480px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  transition: 0.4s;
 }
 
 .about-img:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
+/* Card */
 .about-card {
   background: rgba(255,255,255,0.05);
-  padding: 25px;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  padding: 22px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
 }
 
-/* ✅ Mobile Fix */
+.about-card h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.about-card p {
+  color: #dcdcdc;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ===== 992px FIX ===== */
+@media (max-width: 992px) {
+
+  .about-section {
+    padding: 40px 15px;
+  }
+
+  .about-title h1 {
+    font-size: 26px;
+  }
+
+  .mb-5 {
+    margin-bottom: 20px !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 15px !important;
+  }
+
+}
+
+/* ===== Mobile Fix ===== */
 @media (max-width: 768px) {
 
   .banner-area {
@@ -75,25 +121,17 @@
     font-size: 26px;
   }
 
-  .about-section {
-    padding: 40px 15px;
-  }
-
   .about-title h1 {
     font-size: 22px;
   }
 
   .about-card {
     margin-top: 20px;
-    padding: 18px;
   }
 
-  /* Bootstrap margin fix */
-  .mb-5 {
-    margin-bottom: 20px !important;
-  }
 }
 
+/* ===== Small Mobile ===== */
 @media (max-width: 480px) {
   .banner-area h1 {
     font-size: 22px;
@@ -101,7 +139,7 @@
 }
 </style>
 
-<!-- BANNER -->
+<!-- ===== Banner ===== -->
 <section class="banner-area">
   <div class="container">
     <h1>About Us</h1>
@@ -112,14 +150,14 @@
   </div>
 </section>
 
-<!-- ABOUT SECTION -->
+<!-- ===== About Section ===== -->
 <section class="about-section">
   <div class="container">
 
     <!-- Title -->
-    <div class="about-title text-center mb-5" style="animation: fadeUp 1s ease;">
+    <div class="about-title text-center mb-5">
       <h1>Few words about our Art Exhibition</h1>
-      <p style="color:#f1efef;">Experience creativity in a modern digital space</p>
+      <p>Experience creativity in a modern digital space</p>
     </div>
 
     <!-- Content -->
@@ -127,22 +165,19 @@
 
       <!-- Image -->
       <div class="col-lg-6 col-md-12 text-center mb-4" style="animation: fadeUp 1.2s ease;">
-        <img src="{% static 'img/pages/about-img.jpg' %}"
-             class="about-img"
-             alt="About ArtNexus">
+        <img src="{% static 'img/pages/about-img.jpg' %}" class="about-img" alt="About ArtNexus">
       </div>
 
       <!-- Text -->
-      <div class="col-lg-6 col-md-12" style="animation: fadeUp 1.5s ease;">
+      <div class="col-lg-6 col-md-12" style="animation: fadeUp 1.4s ease;">
         <div class="about-card">
-          <h2 style="font-weight:600; margin-bottom:15px;">About Us</h2>
-          <p style="color:#dfdada; line-height:1.7;">
-            {{ page.aboutus }}
-          </p>
+          <h2>About Us</h2>
+          <p>{{ page.aboutus }}</p>
         </div>
       </div>
 
     </div>
+
   </div>
 </section>
 
