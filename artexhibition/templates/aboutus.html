@@ -3,182 +3,160 @@
 
 {% block content %}
 
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-/* ===== Animations ===== */
-@keyframes fadeDown {
-  from {opacity:0; transform:translateY(-30px);}
-  to {opacity:1; transform:translateY(0);}
-}
+body { font-family: 'Poppins', sans-serif; }
 
+/* Animations */
 @keyframes fadeUp {
-  from {opacity:0; transform:translateY(40px);}
-  to {opacity:1; transform:translateY(0);}
+  from { opacity:0; transform:translateY(40px);} 
+  to { opacity:1; transform:translateY(0);} 
 }
 
-/* ===== Banner ===== */
-.banner-area {
-  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-    url('{% static "img/pages/about-img.jpg" %}') center/cover no-repeat;
-  padding: 70px 20px;
+@keyframes zoomIn {
+  from { transform:scale(0.9); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+
+/* Glass */
+.glass {
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+}
+
+/* ===== HERO ===== */
+.hero-about {
+  height: 60vh;
+  background: linear-gradient(135deg,#1d2671,#c33764);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: white;
-  animation: fadeDown 1s ease;
 }
 
-.banner-area h1 {
-  font-size: 40px;
+.hero-about h1 {
+  font-size: 60px;
   font-weight: 700;
-  margin-bottom: 10px;
 }
 
-.banner-area p {
-  margin: 0;
-  font-size: 14px;
+.hero-about p {
+  margin-top: 10px;
+  opacity: 0.9;
 }
 
-/* ===== About Section ===== */
+/* ===== ABOUT ===== */
 .about-section {
-  padding: 50px 20px;
-  background: #0f0f0f;
-  color: #eaeaea;
+  padding: 80px 20px;
+  background: #f4f6f9;
 }
 
-.about-title {
-  animation: fadeUp 1s ease;
-}
-
-.about-title h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.about-title p {
-  color: #ccc;
-  font-size: 14px;
+.about-container {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* Image */
 .about-img {
   width: 100%;
-  max-width: 480px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  transition: 0.4s;
+  max-width: 450px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  transition: 0.5s;
 }
 
 .about-img:hover {
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
 
-/* Card */
+/* Text Card */
 .about-card {
-  background: rgba(255,255,255,0.05);
-  padding: 22px;
-  border-radius: 16px;
-  backdrop-filter: blur(8px);
+  max-width: 500px;
+  padding: 30px;
+  animation: fadeUp 1.2s ease;
 }
 
 .about-card h2 {
-  font-size: 22px;
-  margin-bottom: 12px;
+  font-size: 32px;
+  margin-bottom: 15px;
 }
 
 .about-card p {
-  color: #dcdcdc;
-  line-height: 1.6;
-  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
 }
 
-/* ===== 992px FIX ===== */
-@media (max-width: 992px) {
-
-  .about-section {
-    padding: 40px 15px;
-  }
-
-  .about-title h1 {
-    font-size: 26px;
-  }
-
-  .mb-5 {
-    margin-bottom: 20px !important;
-  }
-
-  .mb-4 {
-    margin-bottom: 15px !important;
-  }
-
+/* ===== CTA ===== */
+.cta {
+  padding: 80px 20px;
+  background: linear-gradient(135deg,#c33764,#1d2671);
+  color: white;
+  text-align: center;
 }
 
-/* ===== Mobile Fix ===== */
-@media (max-width: 768px) {
-
-  .banner-area {
-    padding: 50px 15px;
-  }
-
-  .banner-area h1 {
-    font-size: 26px;
-  }
-
-  .about-title h1 {
-    font-size: 22px;
-  }
-
-  .about-card {
-    margin-top: 20px;
-  }
-
+.cta button {
+  margin-top: 20px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  background: white;
+  color: #c33764;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-/* ===== Small Mobile ===== */
-@media (max-width: 480px) {
-  .banner-area h1 {
-    font-size: 22px;
-  }
+.cta button:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero-about h1 { font-size: 36px; }
 }
 </style>
 
-<!-- ===== Banner ===== -->
-<section class="banner-area">
-  <div class="container">
-    <h1 style="color: aliceblue;">About Us</h1>
-    <p>
-      <a href="{% url 'index' %}">Home</a> →
-      <a href="{% url 'aboutus' %}">About Us</a>
-    </p>
+<!-- HERO -->
+<section class="hero-about">
+  <div style="animation:fadeUp 1.5s ease;">
+    <h1>About ArtNexus</h1>
+    <p>Where creativity meets innovation</p>
   </div>
 </section>
 
-<!-- ===== About Section ===== -->
+<!-- ABOUT -->
 <section class="about-section">
-  <div class="container">
 
-    <!-- Title -->
-    <div class="about-title text-center mb-5">
-      <h1 style="color: aliceblue;">Few words about our Art Exhibition</h1>
-      <p>Experience creativity in a modern digital space</p>
+  <div class="about-container">
+
+    <!-- Image -->
+    <div style="animation: zoomIn 1s ease;">
+      <img src="{% static 'img/pages/about-img.jpg' %}" class="about-img">
     </div>
 
-    <!-- Content -->
-    <div class="row align-items-center">
-
-      <!-- Image -->
-      <div class="col-lg-6 col-md-12 text-center mb-4" style="animation: fadeUp 1.2s ease;">
-        <img src="{% static 'img/pages/about-img.jpg' %}" class="about-img" alt="About ArtNexus">
-      </div>
-
-      <!-- Text -->
-      <div class="col-lg-6 col-md-12" style="animation: fadeUp 1.4s ease;">
-        <div class="about-card">
-          <h2 style="color: aliceblue;">About Us</h2>
-          <p>{{ page.aboutus }}</p>
-        </div>
-      </div>
-
+    <!-- Text -->
+    <div class="about-card glass">
+      <h2>Few words about our Art Exhibition</h2>
+      <p>{{ page.aboutus }}</p>
     </div>
 
   </div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Join ArtNexus Today</h2>
+  <p>Be part of the creative revolution.</p>
+  <a href="{% url 'art_product_list' %}">
+    <button>Explore Now</button>
+  </a>
 </section>
 
 {% endblock %}

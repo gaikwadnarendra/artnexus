@@ -3,269 +3,258 @@
 
 {% block content %}
 
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-@keyframes fadeDown {
-  from {opacity:0; transform:translateY(-30px);}
-  to {opacity:1; transform:translateY(0);}
-}
+body { font-family: 'Poppins', sans-serif; }
 
+/* Animations */
 @keyframes fadeUp {
-  from {opacity:0; transform:translateY(40px);}
-  to {opacity:1; transform:translateY(0);}
+  from { opacity:0; transform:translateY(40px);} 
+  to { opacity:1; transform:translateY(0);} 
 }
 
-/* Banner */
-.banner-area {
-  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-    url('{% static "img/banner.jpg" %}') center/cover no-repeat;
-  padding: 100px 20px;
+@keyframes zoomIn {
+  from { transform:scale(0.9); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+
+/* Glass */
+.glass {
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+}
+
+/* ===== HERO ===== */
+.hero-products {
+  height: 50vh;
+  background: linear-gradient(135deg,#1d2671,#c33764);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: white;
-  animation: fadeDown 1s ease;
 }
 
-.banner-area h1 {
-  font-size: 50px;
+.hero-products h1 {
+  font-size: 55px;
   font-weight: 700;
-  color: white;
 }
 
-.banner-area p a {
-  color: #ccc;
-  transition: 0.3s;
-}
-
-.banner-area p a:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
-/* Products Section */
+/* ===== PRODUCTS ===== */
 .products-section {
-  background: #0f0f0f;
   padding: 80px 20px;
-  color: white;
+  background: #f4f6f9;
 }
 
 .section-title h1 {
   font-size: 40px;
   font-weight: 700;
-  color: white;
 }
 
 .section-title p {
-  font-size: 18px;
+  color: #c33764;
   font-weight: 600;
-  color: #00ffcc;
 }
 
-/* Product Card */
+/* Grid */
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+/* Card */
 .product-card {
-  background: #1a1a1a;
+  width: 300px;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  background: white;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
   transition: 0.4s;
-  height: 100%;
+  animation: zoomIn 0.8s ease;
 }
 
 .product-card:hover {
-  transform: translateY(-10px);
+  transform: scale(1.05);
 }
 
-.product-card .card-img {
+/* Image */
+.product-img {
   overflow: hidden;
 }
 
-.product-card .card-img img {
+.product-img img {
   width: 100%;
   height: 220px;
   object-fit: cover;
   transition: 0.5s;
-  display: block;
 }
 
-.product-card .card-img img:hover {
+.product-img img:hover {
   transform: scale(1.1);
 }
 
-.product-card .card-body-custom {
+/* Content */
+.product-body {
   padding: 20px;
 }
 
-.product-card .card-body-custom h4 a {
-  color: white;
+.product-body h4 a {
   text-decoration: none;
+  color: #333;
   font-weight: 600;
 }
 
-.product-card .card-body-custom h4 a:hover {
-  color: #00ffcc;
+.product-body h4 a:hover {
+  color: #c33764;
 }
 
-.card-footer-custom {
+.product-body p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Footer */
+.product-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 15px;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
-.price-tag {
-  color: #00ffcc;
+.price {
+  color: #c33764;
   font-weight: 600;
-  font-size: 16px;
 }
 
 .view-btn {
-  background: #fff;
-  color: #000;
+  background: #c33764;
+  color: white;
   padding: 6px 15px;
   border-radius: 20px;
   font-size: 12px;
   text-decoration: none;
   transition: 0.3s;
-  display: inline-block;
 }
 
 .view-btn:hover {
   transform: scale(1.1);
-  color: #000;
 }
 
 /* No Products */
 .no-products {
-  font-size: 22px;
-  color: #ff4d4d;
-  background: #1a1a1a;
-  padding: 20px 40px;
-  border-radius: 10px;
-  display: inline-block;
+  font-size: 20px;
+  color: #999;
+  padding: 20px;
 }
 
-/* ✅ Mobile Responsive */
-@media (max-width: 768px) {
-  .banner-area {
-    padding: 70px 15px;
-  }
-
-  .banner-area h1 {
-    font-size: 30px;
-  }
-
-  .products-section {
-    padding: 50px 15px;
-  }
-
-  .section-title h1 {
-    font-size: 26px;
-  }
-
-  .section-title p {
-    font-size: 15px;
-  }
-
-  .product-card .card-img img {
-    height: 180px;
-  }
+/* CTA */
+.cta {
+  padding: 80px 20px;
+  background: linear-gradient(135deg,#c33764,#1d2671);
+  color: white;
+  text-align: center;
 }
 
-@media (max-width: 480px) {
-  .banner-area h1 {
-    font-size: 24px;
-  }
+.cta button {
+  margin-top: 20px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  background: white;
+  color: #c33764;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-  .section-title h1 {
-    font-size: 22px;
-  }
+.cta button:hover {
+  transform: scale(1.1);
+}
 
-  .product-card .card-img img {
-    height: 160px;
-  }
-
-  .no-products {
-    font-size: 16px;
-    padding: 15px 20px;
-  }
+/* Responsive */
+@media(max-width:768px){
+  .hero-products h1 { font-size: 32px; }
 }
 </style>
 
-<!-- BANNER -->
-<section class="banner-area" id="home">
-  <div class="container">
+<!-- HERO -->
+<section class="hero-products">
+  <div style="animation:fadeUp 1.5s ease;">
     <h1>Art Products</h1>
-    <p>
-      <a href="{% url 'index' %}">Home</a> →
-      <a href="#">Art Products</a>
-    </p>
+    <p>{{ arttype_id.arttype }}</p>
   </div>
 </section>
 
 <!-- PRODUCTS -->
-<section class="products-section" id="products">
-  <div class="container">
+<section class="products-section">
 
-    <!-- Title -->
-    <div class="section-title text-center mb-5" style="animation: fadeUp 1s ease;">
-      <h1>Art Products</h1>
-      <p>{{ arttype_id.arttype }}</p>
-    </div>
-
-    <div class="row">
-
-      {% if artproducts %}
-
-        {% for i in artproducts %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" style="animation: fadeUp 1.2s ease;">
-          <div class="product-card">
-
-            <!-- Image -->
-            <div class="card-img">
-              <img src="{{ i.images.url }}" alt="{{ i.title }}">
-            </div>
-
-            <!-- Content -->
-            <div class="card-body-custom">
-
-              <p style="font-size:12px; color:#888;">{{ i.created_at }}</p>
-
-              <h4>
-                <a href="#">{{ i.title }}</a>
-              </h4>
-
-              <p style="color:#aaa; font-size:14px;">by {{ i.artist.name }}</p>
-
-              <p style="font-size:14px; color:#ccc;">
-                {{ i.description|slice:":120" }}...
-              </p>
-
-              <p style="color:#bbb; font-size:13px;">
-                Medium: {{ i.artmedium.artmedium }}
-              </p>
-
-              <!-- Price + Button -->
-              <div class="card-footer-custom">
-                <span class="price-tag">${{ i.sellingprice }}</span>
-                <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
-              </div>
-
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-
-      {% else %}
-
-        <!-- NO DATA -->
-        <div class="col-12 text-center" style="animation: fadeUp 1.2s ease;">
-          <p class="no-products">No Products Available 😔</p>
-        </div>
-
-      {% endif %}
-
-    </div>
+  <div class="section-title text-center mb-5" style="animation:fadeUp 1s ease;">
+    <h1>Explore Art</h1>
+    <p>{{ arttype_id.arttype }}</p>
   </div>
+
+  <div class="products-grid">
+
+    {% if artproducts %}
+
+      {% for i in artproducts %}
+      <div class="product-card">
+
+        <!-- Image -->
+        <div class="product-img">
+          <img src="{{ i.images.url }}">
+        </div>
+
+        <!-- Content -->
+        <div class="product-body">
+
+          <p style="font-size:12px; color:#999;">{{ i.created_at }}</p>
+
+          <h4>
+            <a href="{% url 'view_singleproduct' i.id %}">
+              {{ i.title }}
+            </a>
+          </h4>
+
+          <p>by {{ i.artist.name }}</p>
+
+          <p>{{ i.description|slice:":100" }}...</p>
+
+          <p style="font-size:13px;">Medium: {{ i.artmedium.artmedium }}</p>
+
+          <!-- Footer -->
+          <div class="product-footer">
+            <span class="price">${{ i.sellingprice }}</span>
+            <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
+          </div>
+
+        </div>
+
+      </div>
+      {% endfor %}
+
+    {% else %}
+
+      <p class="no-products">No Products Available 😔</p>
+
+    {% endif %}
+
+  </div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Discover More Art</h2>
+  <p>Explore creativity from talented artists.</p>
+  <a href="{% url 'index' %}">
+    <button>Back to Home</button>
+  </a>
 </section>
 
 {% endblock %}

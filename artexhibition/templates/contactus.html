@@ -3,189 +3,178 @@
 
 {% block content %}
 
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-@keyframes fadeDown {
-  from {opacity:0; transform:translateY(-30px);}
-  to {opacity:1; transform:translateY(0);}
-}
+body { font-family: 'Poppins', sans-serif; }
 
+/* Animations */
 @keyframes fadeUp {
-  from {opacity:0; transform:translateY(40px);}
-  to {opacity:1; transform:translateY(0);}
+  from { opacity:0; transform:translateY(40px);} 
+  to { opacity:1; transform:translateY(0);} 
 }
 
-/* Banner */
-.banner-area {
-  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-    url('{% static "img/banner.jpg" %}') center/cover no-repeat;
-  padding: 100px 20px;
+@keyframes zoomIn {
+  from { transform:scale(0.9); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+
+/* Glass */
+.glass {
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+}
+
+/* ===== HERO ===== */
+.hero-contact {
+  height: 50vh;
+  background: linear-gradient(135deg,#1d2671,#c33764);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: white;
-  animation: fadeDown 1s ease;
 }
 
-.banner-area h1 {
-  font-size: 50px;
+.hero-contact h1 {
+  font-size: 55px;
   font-weight: 700;
-  color: #f1efef;
 }
 
-.banner-area p a {
-  color: #ccc;
-  transition: 0.3s;
-}
-
-.banner-area p a:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
-/* Contact Section */
+/* ===== CONTACT ===== */
 .contact-section {
-  background: #0f0f0f;
   padding: 80px 20px;
-  color: white;
+  background: #f4f6f9;
 }
 
-/* Contact Info Cards */
-.single-contact-address {
-  margin-bottom: 25px;
+.contact-container {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Left Info */
+.contact-info {
+  max-width: 350px;
+  width: 100%;
+}
+
+.contact-card {
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: 0.3s;
   animation: fadeUp 1s ease;
 }
 
-.contact-icon {
-  font-size: 25px;
-  color: #00ffcc;
-  margin-right: 15px;
-  min-width: 35px;
+.contact-card:hover {
+  transform: translateY(-5px);
 }
 
-.contact-details h5 {
+.contact-card h5 {
   font-weight: 600;
-  color: #f1efef;
   margin-bottom: 5px;
 }
 
-.contact-details p {
-  color: #aaa;
+.contact-card p {
+  color: #555;
   margin: 0;
 }
 
-/* Contact Image */
-.contact-img-wrap {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-  animation: fadeUp 1.5s ease;
-  height: 100%;
-}
-
-.contact-img-wrap img {
+/* Image */
+.contact-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
   transition: 0.5s;
-  display: block;
 }
 
-.contact-img-wrap img:hover {
+.contact-img:hover {
   transform: scale(1.05);
 }
 
-/* ✅ Mobile Responsive */
-@media (max-width: 768px) {
-  .banner-area {
-    padding: 70px 15px;
-  }
-
-  .banner-area h1 {
-    font-size: 30px;
-  }
-
-  .contact-section {
-    padding: 50px 15px;
-  }
-
-  .contact-img-wrap {
-    margin-top: 30px;
-    height: 250px;
-  }
+/* CTA */
+.cta {
+  padding: 80px 20px;
+  background: linear-gradient(135deg,#c33764,#1d2671);
+  color: white;
+  text-align: center;
 }
 
-@media (max-width: 480px) {
-  .banner-area h1 {
-    font-size: 24px;
-  }
+.cta button {
+  margin-top: 20px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  background: white;
+  color: #c33764;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-  .contact-icon {
-    font-size: 20px;
-  }
+.cta button:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero-contact h1 { font-size: 32px; }
 }
 </style>
 
-<!-- BANNER -->
-<section class="banner-area" id="home">
-  <div class="container">
+<!-- HERO -->
+<section class="hero-contact">
+  <div style="animation:fadeUp 1.5s ease;">
     <h1>Contact Us</h1>
-    <p>
-      <a href="{% url 'index' %}">Home</a> →
-      <a href="#">Contact Us</a>
-    </p>
   </div>
 </section>
 
-<!-- CONTACT SECTION -->
-<section class="contact-section" id="contact">
-  <div class="container">
-    <div class="row align-items-center">
+<!-- CONTACT -->
+<section class="contact-section">
 
-      <!-- LEFT INFO -->
-      <div class="col-lg-4 col-md-12 mb-4">
+  <div class="contact-container">
 
-        <!-- Address -->
-        <div class="single-contact-address d-flex flex-row">
-          <div class="contact-icon">
-            <span class="lnr lnr-home"></span>
-          </div>
-          <div class="contact-details">
-            <h5>Address</h5>
-            <p>{{ page.address }}</p>
-          </div>
-        </div>
+    <!-- LEFT -->
+    <div class="contact-info">
 
-        <!-- Phone -->
-        <div class="single-contact-address d-flex flex-row">
-          <div class="contact-icon">
-            <span class="lnr lnr-phone-handset"></span>
-          </div>
-          <div class="contact-details">
-            <h5>Phone Number</h5>
-            <p>{{ page.mobilenumber }}</p>
-          </div>
-        </div>
-
-        <!-- Email -->
-        <div class="single-contact-address d-flex flex-row">
-          <div class="contact-icon">
-            <span class="lnr lnr-envelope"></span>
-          </div>
-          <div class="contact-details">
-            <h5>Email</h5>
-            <p>{{ page.email }}</p>
-          </div>
-        </div>
-
+      <div class="contact-card glass">
+        <h5>📍 Address</h5>
+        <p>{{ page.address }}</p>
       </div>
 
-      <!-- RIGHT IMAGE -->
-      <div class="col-lg-8 col-md-12">
-        <div class="contact-img-wrap">
-          <img src="{% static 'img/pages/about-img.jpg' %}" alt="Contact ArtNexus">
-        </div>
+      <div class="contact-card glass">
+        <h5>📞 Phone</h5>
+        <p>{{ page.mobilenumber }}</p>
+      </div>
+
+      <div class="contact-card glass">
+        <h5>✉️ Email</h5>
+        <p>{{ page.email }}</p>
       </div>
 
     </div>
+
+    <!-- RIGHT IMAGE -->
+    <div style="animation: zoomIn 1s ease;">
+      <img src="{% static 'img/pages/about-img.jpg' %}" class="contact-img">
+    </div>
+
   </div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Let's Connect</h2>
+  <p>We’d love to hear from you.</p>
+  <a href="{% url 'art_product_list' %}">
+    <button>Explore Art</button>
+  </a>
 </section>
 
 {% endblock %}
