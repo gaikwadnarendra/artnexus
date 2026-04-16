@@ -73,7 +73,7 @@ urlpatterns = [
     path('user-login/', views.USER_LOGIN, name='user_login'),
     path('user-logout/', views.USER_LOGOUT, name='user_logout'),
     path('wishlist/', views.wishlist_view, name='wishlist'),
-    path('toggle-wishlist/<int:pid>/', views.toggle_wishlist, name='toggle_wishlist'),
+    path('add-to-wishlist/<int:pid>/', views.toggle_wishlist, name='add_to_wishlist'),
     path('remove-from-wishlist/<int:pid>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     #Cart
     path('cart/', views.cart_view, name='cart'),
