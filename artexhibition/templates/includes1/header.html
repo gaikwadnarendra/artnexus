@@ -420,6 +420,9 @@
           </li>
 
           {% if user.is_authenticated %}
+          <li>
+            <a href="{% url 'cart' %}">🛒 Cart</a>
+          </li>
             <li>
               <a href="{% url 'wishlist' %}" class="wishlist-link">❤️ Wishlist</a>
             </li>

@@ -1,0 +1,155 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(40px);}
+  to { opacity:1; transform:translateY(0);}
+}
+</style>
+
+<!-- BANNER -->
+<section style="height:35vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;">
+  <div style="animation:fadeUp 1.2s ease;">
+    <h1 style="font-size:50px;font-weight:700;letter-spacing:3px;">My Cart 🛒</h1>
+    <p style="font-size:16px;opacity:0.85;">
+      <a href="{% url 'index' %}" style="color:white;text-decoration:none;">Home</a> → Cart
+    </p>
+  </div>
+</section>
+
+<!-- CART SECTION -->
+<section style="padding:60px 20px;background:#f4f6f9;min-height:60vh;">
+  <div style="max-width:1100px;margin:auto;">
+
+    {% if messages %}
+      {% for message in messages %}
+        <div style="background:#d4edda;border:1px solid #28a745;padding:12px 20px;border-radius:10px;margin-bottom:20px;text-align:center;color:#155724;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if cart_items %}
+
+    <div style="display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start;">
+
+      <!-- LEFT - Cart Items -->
+      <div style="flex:2;min-width:300px;">
+        <h2 style="font-size:28px;margin-bottom:25px;">Your Items</h2>
+
+        {% for item in cart_items %}
+        <div style="background:white;border-radius:20px;padding:20px;margin-bottom:20px;box-shadow:0 8px 25px rgba(0,0,0,0.08);display:flex;gap:20px;align-items:center;animation:fadeUp 0.6s ease;">
+
+          <!-- Image -->
+          <img src="{{ item.product.images.url }}"
+               style="width:100px;height:100px;object-fit:cover;border-radius:12px;flex-shrink:0;"
+               alt="{{ item.product.title }}">
+
+          <!-- Details -->
+          <div style="flex:1;">
+            <h4 style="font-weight:600;margin:0 0 5px;">
+              <a href="{% url 'view_singleproduct' item.product.id %}" style="text-decoration:none;color:#333;">
+                {{ item.product.title }}
+              </a>
+            </h4>
+            {% if item.product.artist %}
+              <p style="color:#888;font-size:13px;margin:0 0 5px;">by {{ item.product.artist.name }}</p>
+            {% endif %}
+            <p style="color:#c33764;font-weight:600;font-size:15px;margin:0;">₹{{ item.product.sellingprice }}</p>
+          </div>
+
+          <!-- Quantity + Remove -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+
+            <form method="POST" action="{% url 'update_cart' item.product.id %}" style="display:flex;align-items:center;gap:8px;">
+              {% csrf_token %}
+              <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"
+                style="width:30px;height:30px;border-radius:50%;border:1px solid #ddd;background:white;font-size:16px;cursor:pointer;line-height:1;">−</button>
+              <span style="font-size:16px;font-weight:600;min-width:20px;text-align:center;">{{ item.quantity }}</span>
+              <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"
+                style="width:30px;height:30px;border-radius:50%;border:1px solid #ddd;background:white;font-size:16px;cursor:pointer;line-height:1;">+</button>
+            </form>
+
+            <p style="font-size:14px;font-weight:600;color:#333;margin:0;">
+              ₹{{ item.total_price }}
+            </p>
+
+            <a href="{% url 'remove_from_cart' item.product.id %}"
+               style="font-size:12px;color:#dc3545;text-decoration:none;"
+               onclick="return confirm('Remove this item?')">
+              🗑 Remove
+            </a>
+
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+
+      <!-- RIGHT - Order Summary -->
+      <div style="flex:1;min-width:280px;position:sticky;top:100px;">
+        <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
+          <h3 style="font-size:22px;font-weight:700;margin-bottom:20px;">Order Summary</h3>
+
+          <div style="border-top:1px solid #eee;padding-top:15px;">
+            {% for item in cart_items %}
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;color:#555;">
+              <span>{{ item.product.title|slice:":25" }}... x{{ item.quantity }}</span>
+              <span>₹{{ item.total_price }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div style="border-top:2px solid #eee;margin-top:15px;padding-top:15px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:18px;font-weight:700;">Total</span>
+            <span style="font-size:22px;font-weight:700;color:#c33764;">₹{{ total }}</span>
+          </div>
+
+          <a href="{% url 'checkout' %}">
+            <button style="width:100%;margin-top:25px;padding:14px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-size:16px;font-weight:600;cursor:pointer;transition:0.3s;"
+                    onmouseover="this.style.opacity='0.85'"
+                    onmouseout="this.style.opacity='1'">
+              Proceed to Checkout →
+            </button>
+          </a>
+
+          <a href="{% url 'art_product_list' %}">
+            <button style="width:100%;margin-top:12px;padding:12px;border:1px solid #1d2671;border-radius:30px;background:transparent;color:#1d2671;font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;"
+                    onmouseover="this.style.background='#1d2671';this.style.color='white'"
+                    onmouseout="this.style.background='transparent';this.style.color='#1d2671'">
+              Continue Shopping
+            </button>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+    {% else %}
+
+    <!-- EMPTY CART -->
+    <div style="text-align:center;padding:80px 20px;animation:fadeUp 1s ease;">
+      <div style="font-size:80px;">🛒</div>
+      <h3 style="font-size:28px;margin-top:20px;color:#333;">Your cart is empty</h3>
+      <p style="color:#888;margin-top:10px;">Add some beautiful artworks to your cart.</p>
+      <a href="{% url 'art_product_list' %}">
+        <button style="margin-top:25px;padding:12px 30px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-weight:600;cursor:pointer;font-size:15px;transition:0.3s;"
+                onmouseover="this.style.transform='scale(1.1)'"
+                onmouseout="this.style.transform='scale(1)'">
+          Browse Artworks
+        </button>
+      </a>
+    </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

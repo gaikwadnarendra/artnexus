@@ -228,10 +228,21 @@ body { font-family: 'Poppins', sans-serif; }
           <p style="font-size:13px;">Medium: {{ i.artmedium.artmedium }}</p>
 
           <!-- Footer -->
-          <div class="product-footer">
-            <span class="price">${{ i.sellingprice }}</span>
+          <!-- Footer -->
+        <div class="product-footer">
+          <span class="price">₹{{ i.sellingprice }}</span>
+          <div style="display:flex;gap:8px;">
             <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
+            <a href="{% url 'add_to_cart' i.id %}" class="view-btn" 
+              style="background:linear-gradient(135deg,#1d2671,#c33764);">
+              🛒 Cart
+            </a>
+            <a href="{% url 'add_to_wishlist' i.id %}" class="view-btn"
+              style="background:transparent;border:1px solid #c33764;color:#c33764;">
+              ❤️
+            </a>
           </div>
+        </div>
 
         </div>
 

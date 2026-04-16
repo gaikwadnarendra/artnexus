@@ -1228,3 +1228,52 @@ def wishlist_view(request):
     return render(request, 'wishlist.html', {
         'wishlist_items': wishlist_items
     })
+
+# ✅ Add to Cart
+@login_required
+def add_to_cart(request, pid):
+    product = Artproducts.objects.get(id=pid)
+    cart_item, created = Cart.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    messages.success(request, f'"{product.title}" added to cart!')
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+# ✅ Remove from Cart
+@login_required
+def remove_from_cart(request, pid):
+    product = Artproducts.objects.get(id=pid)
+    Cart.objects.filter(user=request.user, product=product).delete()
+    messages.success(request, 'Item removed from cart.')
+    return redirect('cart')
+
+
+# ✅ Update Cart Quantity
+@login_required
+def update_cart(request, pid):
+    product = Artproducts.objects.get(id=pid)
+    quantity = int(request.POST.get('quantity', 1))
+    if quantity > 0:
+        cart_item = Cart.objects.get(user=request.user, product=product)
+        cart_item.quantity = quantity
+        cart_item.save()
+    else:
+        Cart.objects.filter(user=request.user, product=product).delete()
+    return redirect('cart')
+
+
+# ✅ Cart Page
+@login_required
+def cart_view(request):
+    cart_items = Cart.objects.filter(user=request.user).select_related('product')
+    total = sum(item.total_price() for item in cart_items)
+    return render(request, 'cart.html', {
+        'cart_items': cart_items,
+        'total': total
+    })

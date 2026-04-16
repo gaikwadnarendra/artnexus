@@ -75,5 +75,10 @@ urlpatterns = [
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('add-to-wishlist/<int:pid>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('remove-from-wishlist/<int:pid>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    #Cart
+    path('cart/', views.cart_view, name='cart'),
+    path('add-to-cart/<int:pid>/', views.add_to_cart, name='add_to_cart'),
+    path('remove-from-cart/<int:pid>/', views.remove_from_cart, name='remove_from_cart'),
+    path('update-cart/<int:pid>/', views.update_cart, name='update_cart'),
     
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
