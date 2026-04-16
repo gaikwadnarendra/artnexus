@@ -375,7 +375,7 @@
 </style>
 
 <header id="header">
-  <div class="container-fluid px-3">
+  <div class="container-fluid px-4 px-md-5">
     <div class="row align-items-center justify-content-between d-flex flex-nowrap" style="position:relative;">
 
       <!-- Logo -->
@@ -455,6 +455,14 @@
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('nav-menu-container');
   const artTypeMenu = document.getElementById('artTypeMenu');
+  const userMenu = document.getElementById('userMenu');
+
+  userMenu.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768) {
+      e.stopPropagation();
+      this.classList.toggle('open');
+    }
+  });
 
   hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
