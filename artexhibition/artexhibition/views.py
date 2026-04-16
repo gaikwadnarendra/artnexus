@@ -502,6 +502,36 @@ def doLogout(request):
     request.session.flush()  # Clear the session including CSRF token
     return redirect('login')
 
+from django.contrib.admin.views.decorators import staff_member_required
+
+@login_required(login_url = '/')
+def admin_orders(request):
+    orders = Order.objects.all().order_by('-created_at')
+    order_stats = {
+        'Total Orders':   orders.count(),
+        'Pending':        orders.filter(status='pending').count(),
+        'Confirmed':      orders.filter(status='confirmed').count(),
+        'Shipped':        orders.filter(status='shipped').count(),
+        'Delivered':      orders.filter(status='delivered').count(),
+        'Cancelled':      orders.filter(status='cancelled').count(),
+    }
+    return render(request, 'admin_orders.html', {
+        'orders': orders,
+        'order_stats': order_stats,
+    })
+
+
+
+@login_required(login_url = '/')
+def admin_update_order_status(request, order_id):
+    order = Order.objects.get(id=order_id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        order.status = new_status
+        order.save()
+        messages.success(request, f'Order #{order.id} status updated to {new_status}.')
+    return redirect('admin_orders')
+
 @login_required(login_url = '/')
 def DASHBOARD(request):
     artist_count = Artist.objects.all().count

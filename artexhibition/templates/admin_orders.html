@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(30px);}
+  to { opacity:1; transform:translateY(0);}
+}
+.status-select {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+</style>
+
+<!-- BANNER -->
+<section style="height:30vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;">
+  <div style="animation:fadeUp 1s ease;">
+    <h1 style="font-size:40px;font-weight:700;letter-spacing:3px;">Admin — Orders 🛠️</h1>
+    <p style="opacity:0.85;font-size:15px;">Manage all customer orders</p>
+  </div>
+</section>
+
+<section style="padding:50px 20px;background:#f4f6f9;min-height:70vh;">
+  <div style="max-width:1100px;margin:auto;">
+
+    {% if messages %}
+      {% for message in messages %}
+        <div style="background:#d4edda;border:1px solid #28a745;padding:12px 20px;border-radius:10px;margin-bottom:20px;text-align:center;color:#155724;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Stats Row -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:35px;">
+      {% for label, status in order_stats.items %}
+      <div style="background:white;border-radius:15px;padding:20px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.07);">
+        <p style="font-size:28px;font-weight:700;margin:0;color:#1d2671;">{{ status }}</p>
+        <p style="font-size:13px;color:#888;margin:5px 0 0;">{{ label }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Orders Table -->
+    {% if orders %}
+    <div style="background:white;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,0.08);overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <thead>
+            <tr style="background:linear-gradient(135deg,#1d2671,#c33764);color:white;">
+              <th style="padding:15px 20px;text-align:left;">Order ID</th>
+              <th style="padding:15px 20px;text-align:left;">Customer</th>
+              <th style="padding:15px 20px;text-align:left;">Items</th>
+              <th style="padding:15px 20px;text-align:left;">Total</th>
+              <th style="padding:15px 20px;text-align:left;">Payment</th>
+              <th style="padding:15px 20px;text-align:left;">Date</th>
+              <th style="padding:15px 20px;text-align:left;">Status</th>
+              <th style="padding:15px 20px;text-align:left;">Update</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr style="border-bottom:1px solid #f0f0f0;transition:0.2s;"
+                onmouseover="this.style.background='#fafafa'"
+                onmouseout="this.style.background='white'">
+
+              <td style="padding:15px 20px;font-weight:700;">#{{ order.id }}</td>
+
+              <td style="padding:15px 20px;">
+                <p style="margin:0;font-weight:600;">{{ order.full_name }}</p>
+                <p style="margin:0;font-size:12px;color:#888;">{{ order.email }}</p>
+                <p style="margin:0;font-size:12px;color:#888;">{{ order.phone }}</p>
+              </td>
+
+              <td style="padding:15px 20px;">
+                {% for item in order.order_items.all %}
+                  <p style="margin:0;font-size:13px;">
+                    {{ item.product.title|slice:":20" }}... × {{ item.quantity }}
+                  </p>
+                {% endfor %}
+              </td>
+
+              <td style="padding:15px 20px;font-weight:700;color:#c33764;">
+                ₹{{ order.total_amount }}
+              </td>
+
+              <td style="padding:15px 20px;">
+                {% if order.payment_method == 'cod' %}
+                  <span class="badge" style="background:#fff3cd;color:#856404;">COD</span>
+                {% else %}
+                  <span class="badge" style="background:#d1ecf1;color:#0c5460;">Razorpay</span>
+                {% endif %}
+                <br>
+                {% if order.payment_status %}
+                  <span style="font-size:12px;color:green;font-weight:600;">✅ Paid</span>
+                {% else %}
+                  <span style="font-size:12px;color:orange;font-weight:600;">⏳ Pending</span>
+                {% endif %}
+              </td>
+
+              <td style="padding:15px 20px;font-size:13px;color:#666;">
+                {{ order.created_at|date:"d M Y" }}<br>
+                <span style="font-size:12px;">{{ order.created_at|time:"h:i A" }}</span>
+              </td>
+
+              <td style="padding:15px 20px;">
+                {% if order.status == 'pending' %}
+                  <span class="badge" style="background:#fff3cd;color:#856404;">⏳ Pending</span>
+                {% elif order.status == 'confirmed' %}
+                  <span class="badge" style="background:#d1ecf1;color:#0c5460;">✅ Confirmed</span>
+                {% elif order.status == 'shipped' %}
+                  <span class="badge" style="background:#d4edda;color:#155724;">🚚 Shipped</span>
+                {% elif order.status == 'delivered' %}
+                  <span class="badge" style="background:#c3e6cb;color:#155724;">🎉 Delivered</span>
+                {% elif order.status == 'cancelled' %}
+                  <span class="badge" style="background:#f8d7da;color:#721c24;">❌ Cancelled</span>
+                {% endif %}
+              </td>
+
+              <td style="padding:15px 20px;">
+                <form method="POST" action="{% url 'admin_update_order_status' order.id %}">
+                  {% csrf_token %}
+                  <select name="status" class="status-select" onchange="this.form.submit()">
+                    <option value="pending"   {% if order.status == 'pending' %}selected{% endif %}>⏳ Pending</option>
+                    <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>✅ Confirmed</option>
+                    <option value="shipped"   {% if order.status == 'shipped' %}selected{% endif %}>🚚 Shipped</option>
+                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>🎉 Delivered</option>
+                    <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>❌ Cancelled</option>
+                  </select>
+                </form>
+              </td>
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {% else %}
+      <div style="text-align:center;padding:60px;">
+        <p style="font-size:50px;">📭</p>
+        <h3 style="color:#333;">No orders yet</h3>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

@@ -85,5 +85,9 @@ urlpatterns = [
     path('payment-success/', views.payment_success, name='payment_success'),
     path('order-confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation'),
     path('my-orders/', views.my_orders, name='my_orders'),
+
+    # manage Oreders
+    path('admin-orders/', views.admin_orders, name='admin_orders'),
+    path('admin-orders/update/<int:order_id>/', views.admin_update_order_status, name='admin_update_order_status'),
     
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
