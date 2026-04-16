@@ -4,8 +4,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-  body {
+  body,html {
     font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
   }
 
   @keyframes fadeDown {
@@ -28,6 +29,7 @@
     box-shadow: 0 5px 25px rgba(0,0,0,0.5);
     animation: fadeDown 0.8s ease;
     padding: 12px 0;
+    width: 100%;
   }
 
   /* ✅ Header Row - never wrap */
@@ -263,6 +265,10 @@
   /* ✅ Mobile Menu */
   @media (max-width: 768px) {
 
+    #header .row {
+      padding: 0 5px;
+    }
+    
     nav#nav-menu-container {
       margin-left: 0;
     }
@@ -369,7 +375,7 @@
 </style>
 
 <header id="header">
-  <div class="container">
+  <div class="container-fluid px-3">
     <div class="row align-items-center justify-content-between d-flex flex-nowrap" style="position:relative;">
 
       <!-- Logo -->
@@ -384,7 +390,7 @@
         </a>
       </div>
 
-      <div style="flex:1;"></div>
+      <!-- <div style="flex:1;"></div> -->
 
       <!-- ✅ Hamburger Button (Mobile Only) -->
       <button class="hamburger" id="hamburger" aria-label="Menu">
