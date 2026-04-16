@@ -3,11 +3,104 @@
 
 {% block content %}
 
+<style>
+  .banner-area {
+    background-color: #343a40;
+    padding: 50px 0;
+    text-align: center;
+    color: #fff;
+  }
+
+  .banner-area h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .banner-area p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .banner-area a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .banner-area a:hover {
+    text-decoration: underline;
+  }
+
+  .register-section {
+    padding: 60px 0;
+    background-color: #f8f9fa;
+  }
+
+  .register-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+  }
+
+  .register-card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .form-group label {
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+
+  .register-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+
+  .register-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .alert {
+    border-radius: 6px;
+    padding: 10px;
+  }
+
+  .text-link {
+    text-decoration: none;
+  }
+
+  .text-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
 <section class="banner-area">
-  <div class="container text-center text-white">
+  <div class="container">
     <h1>Login</h1>
     <p>
-      <a href="{% url 'index' %}">Home</a> → Login
+      <a href="{% url 'index' %}">Home</a> / Login
     </p>
   </div>
 </section>
@@ -24,10 +117,11 @@
     {% endif %}
 
     <div class="row justify-content-center">
-      <div class="col-lg-5">
+      <div class="col-lg-5 col-md-7 col-sm-10">
 
         <div class="register-card">
-          <h2 class="text-center">User Login 🔐</h2>
+
+          <h2>User Login</h2>
 
           <form method="POST">
             {% csrf_token %}
@@ -37,16 +131,18 @@
               <input type="email" name="email" class="form-control" required>
             </div>
 
-            <div class="form-group mb-4">
+            <div class="form-group mb-3">
               <label>Password</label>
               <input type="password" name="password" class="form-control" required>
             </div>
 
-            <button class="register-btn">Login</button>
+            <button type="submit" class="register-btn">Login</button>
+
           </form>
 
           <p class="text-center mt-3">
-            New user? <a href="{% url 'register' %}">Register</a>
+            New user?
+            <a href="{% url 'register' %}" class="text-link">Register</a>
           </p>
 
         </div>
