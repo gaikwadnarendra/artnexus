@@ -235,7 +235,7 @@ body { font-family: 'Poppins', sans-serif; }
           <p style="font-size:13px;">Medium: {{ i.artmedium.artmedium }}</p>
 
           <!-- Footer -->
-          <!-- <div class="product-footer">
+          <div class="product-footer">
           <span class="price">₹{{ i.sellingprice }}</span>
 
           <div style="display:flex;align-items:center;gap:8px;">
@@ -255,49 +255,6 @@ body { font-family: 'Poppins', sans-serif; }
             {% endif %}
 
             <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
-          </div> -->
-
-          <div class="product-footer">
-            <span class="price">₹{{ i.sellingprice }}</span>
-
-            <div style="display:flex;align-items:center;gap:8px;">
-
-              {% if user.is_authenticated %}
-
-                <!-- Wishlist (AJAX) -->
-                <button type="button"
-                        onclick="toggleWishlist({{ i.id }}, this)"
-                        style="background:none;border:none;font-size:18px;cursor:pointer;">
-                  🤍
-                </button>
-
-                <!-- Add to Cart (AJAX) -->
-                <button type="button"
-                        onclick="addToCart({{ i.id }})"
-                        class="view-btn"
-                        style="background:linear-gradient(135deg,#1d2671,#c33764);">
-                  🛒
-                </button>
-
-              {% else %}
-
-                <!-- Not logged in -->
-                <a href="{% url 'user_login' %}" style="font-size:18px;">🤍</a>
-
-                <a href="{% url 'user_login' %}"
-                  class="view-btn"
-                  style="background:linear-gradient(135deg,#1d2671,#c33764);">
-                  🛒
-                </a>
-
-              {% endif %}
-
-              <!-- View Button -->
-              <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">
-                View
-              </a>
-
-            </div>
           </div>
         </div>
 

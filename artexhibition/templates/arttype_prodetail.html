@@ -229,7 +229,7 @@ body { font-family: 'Poppins', sans-serif; }
 
           <!-- Footer -->
           <!-- Footer -->
-        <!-- <div class="product-footer">
+        <div class="product-footer">
           <span class="price">₹{{ i.sellingprice }}</span>
           <div style="display:flex;gap:8px;">
             <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">View</a>
@@ -241,53 +241,6 @@ body { font-family: 'Poppins', sans-serif; }
               style="background:transparent;border:1px solid #c33764;color:#c33764;">
               ❤️
             </a>
-          </div>
-        </div> -->
-
-        <div class="product-footer">
-          <span class="price">₹{{ i.sellingprice }}</span>
-
-          <div style="display:flex;align-items:center;gap:8px;">
-
-            <!-- View (normal link ok) -->
-            <a href="{% url 'view_singleproduct' i.id %}" class="view-btn">
-              View
-            </a>
-
-            {% if user.is_authenticated %}
-
-              <!-- Add to Cart (AJAX) -->
-              <button type="button"
-                      onclick="addToCart({{ i.id }})"
-                      class="view-btn"
-                      style="background:linear-gradient(135deg,#1d2671,#c33764);">
-                🛒 Cart
-              </button>
-
-              <!-- Wishlist (AJAX) -->
-              <button type="button"
-                      onclick="toggleWishlist({{ i.id }}, this)"
-                      style="background:transparent;border:1px solid #c33764;
-                            color:#c33764;border-radius:20px;padding:5px 10px;
-                            cursor:pointer;">
-                🤍
-              </button>
-
-            {% else %}
-
-              <!-- Not logged in -->
-              <a href="{% url 'user_login' %}" class="view-btn"
-                style="background:linear-gradient(135deg,#1d2671,#c33764);">
-                🛒 Cart
-              </a>
-
-              <a href="{% url 'user_login' %}" class="view-btn"
-                style="background:transparent;border:1px solid #c33764;color:#c33764;">
-                ❤️
-              </a>
-
-            {% endif %}
-
           </div>
         </div>
 

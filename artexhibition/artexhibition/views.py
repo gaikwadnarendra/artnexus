@@ -9,8 +9,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import random
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from django.db.models import Sum
 User = get_user_model()
 
 # for email
@@ -1228,23 +1226,15 @@ def USER_LOGOUT(request):
 
 # ✅ Add to wishlist
 @login_required
-def toggle_wishlist(request, pid):
-    if not request.user.is_authenticated:
-        return JsonResponse({'status': 'login'})
-
+def add_to_wishlist(request, pid):
     product = Artproducts.objects.get(id=pid)
 
-    wishlist_item = Wishlist.objects.filter(
+    Wishlist.objects.get_or_create(
         user=request.user,
         product=product
     )
 
-    if wishlist_item.exists():
-        wishlist_item.delete()
-        return JsonResponse({'status': 'removed'})
-    else:
-        Wishlist.objects.create(user=request.user, product=product)
-        return JsonResponse({'status': 'added'})
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 # ✅ Remove from wishlist
@@ -1272,29 +1262,17 @@ def wishlist_view(request):
 # ✅ Add to Cart
 @login_required
 def add_to_cart(request, pid):
-    if not request.user.is_authenticated:
-        return JsonResponse({'status': 'login'})
-
     product = Artproducts.objects.get(id=pid)
-
     cart_item, created = Cart.objects.get_or_create(
         user=request.user,
         product=product
     )
-
     if not created:
         cart_item.quantity += 1
         cart_item.save()
 
-    cart_count = Cart.objects.filter(user=request.user).aggregate(
-        total=Sum('quantity')
-    )['total'] or 0
-
-    return JsonResponse({
-        'status': 'ok',
-        'cart_count': cart_count
-    })
-     
+    messages.success(request, f'"{product.title}" added to cart!')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 # ✅ Remove from Cart
