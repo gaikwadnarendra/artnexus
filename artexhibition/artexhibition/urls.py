@@ -84,5 +84,6 @@ urlpatterns = [
     path('checkout/', views.checkout_view, name='checkout'),
     path('payment-success/', views.payment_success, name='payment_success'),
     path('order-confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation'),
+    path('my-orders/', views.my_orders, name='my_orders'),
     
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

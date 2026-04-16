@@ -1395,3 +1395,8 @@ def payment_success(request):
 def order_confirmation(request, order_id):
     order = Order.objects.get(id=order_id, user=request.user)
     return render(request, 'order_confirmation.html', {'order': order})
+
+@login_required
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'my_orders.html', {'orders': orders})
