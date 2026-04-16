@@ -184,6 +184,47 @@
 
     }
 
+    /* #POPUP Style */
+    #toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
+
+    .toast {
+        background: #1e293b;
+        color: white;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        min-width: 250px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        animation: slideIn 0.4s ease;
+    }
+
+    .toast.success { border-left: 4px solid #10a37f; }
+    .toast.error { border-left: 4px solid #ef4444; }
+    .toast.warning { border-left: 4px solid #f59e0b; }
+
+    .toast-icon {
+        font-size: 18px;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
     </style>
 
 </head>
@@ -201,7 +242,7 @@
 
     <!-- JS -->
     <script src="{% static 'js/vendor/jquery-2.2.4.min.js'%}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="{% static 'js/vendor/bootstrap.min.js'%}"></script>
     <script src="{% static 'js/main.js'%}"></script>
@@ -249,6 +290,7 @@
         document.getElementById("notif-dot").style.display = "block";
     }
     }
+    
 
     // ADD MESSAGE
     function addMessage(content, type) {
@@ -381,9 +423,44 @@
         addMessage("👋 Welcome to ArtNexus! How can I help you?", "bot");
     }, 800);
     };
-    </script>
 
+    // #POPUP
+
+    function showToast(message, type="success") {
+        let container = document.getElementById("toast-container");
+
+        let toast = document.createElement("div");
+        toast.classList.add("toast", type);
+
+        let icon = "";
+        if(type === "success") icon = "✅";
+        if(type === "error") icon = "❌";
+        if(type === "warning") icon = "⚠️";
+
+        toast.innerHTML = `
+            <div class="toast-icon">${icon}</div>
+            <div>${message}</div>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateX(100%)";
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+    </script>
     {% if messages %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+                showToast("{{ message|escapejs }}", "{{ message.tags }}");
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
+    <!-- {% if messages %}
     <script>
         {% for message in messages %}
             Swal.fire({
@@ -397,6 +474,8 @@
             });
         {% endfor %}
     </script>
-    {% endif %}
+    {% endif %} -->
+
+    <div id="toast-container"></div>
 </body>
 </html>
