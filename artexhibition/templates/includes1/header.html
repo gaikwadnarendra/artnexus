@@ -425,16 +425,15 @@
             </ul>
           </li>
 
-          {% if user.is_authenticated %}
-            <li><a href="{% url 'my_orders' %}">📦 My Orders</a></li>
-            <li>
-              <a href="{% url 'cart' %}">🛒 Cart</a>
-            </li>
-            <li>
-              <a href="{% url 'wishlist' %}" class="wishlist-link">❤️ Wishlist</a>
-            </li>
-            <li>
-              <a href="{% url 'user_logout' %}" class="nav-btn nav-btn-login">Logout</a>
+            {% if user.is_authenticated %}
+            <li class="menu-has-children" id="userMenu">
+              <a href="#">My Account</a>
+              <ul>
+                <li><a href="{% url 'my_orders' %}">My Orders</a></li>
+                <li><a href="{% url 'cart' %}">Cart</a></li>
+                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                <li><a href="{% url 'user_logout' %}">Logout</a></li>
+              </ul>
             </li>
           {% else %}
             <li>
