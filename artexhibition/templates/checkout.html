@@ -1,0 +1,251 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(40px);}
+  to { opacity:1; transform:translateY(0);}
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  transition: 0.3s;
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: #c33764;
+  box-shadow: 0 0 0 3px rgba(195,55,100,0.1);
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.payment-option {
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.payment-option:hover {
+  border-color: #c33764;
+}
+
+.payment-option input[type="radio"]:checked + label,
+.payment-option.selected {
+  border-color: #c33764;
+  background: #fff0f5;
+}
+</style>
+
+<!-- BANNER -->
+<section style="height:35vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;">
+  <div style="animation:fadeUp 1.2s ease;">
+    <h1 style="font-size:50px;font-weight:700;letter-spacing:3px;">Checkout 🧾</h1>
+    <p style="font-size:16px;opacity:0.85;">
+      <a href="{% url 'index' %}" style="color:white;text-decoration:none;">Home</a> →
+      <a href="{% url 'cart' %}" style="color:white;text-decoration:none;">Cart</a> →
+      Checkout
+    </p>
+  </div>
+</section>
+
+<!-- CHECKOUT SECTION -->
+<section style="padding:60px 20px;background:#f4f6f9;min-height:60vh;">
+  <div style="max-width:1100px;margin:auto;">
+
+    {% if messages %}
+      {% for message in messages %}
+        <div style="background:#f8d7da;border:1px solid #dc3545;padding:12px 20px;border-radius:10px;margin-bottom:20px;text-align:center;color:#721c24;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div style="display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start;">
+
+        <!-- LEFT - Shipping Form -->
+        <div style="flex:2;min-width:300px;animation:fadeUp 0.8s ease;">
+
+          <!-- Shipping Details -->
+          <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-bottom:25px;">
+            <h3 style="font-size:20px;font-weight:700;margin-bottom:25px;">📦 Shipping Details</h3>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+
+              <div style="grid-column:1/-1;">
+                <label class="form-label">Full Name *</label>
+                <input type="text" name="full_name" class="form-control"
+                       value="{{ request.user.get_full_name }}" required>
+              </div>
+
+              <div>
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control"
+                       value="{{ request.user.email }}" required>
+              </div>
+
+              <div>
+                <label class="form-label">Phone *</label>
+                <input type="tel" name="phone" class="form-control"
+                       placeholder="10-digit mobile number" required>
+              </div>
+
+              <div style="grid-column:1/-1;">
+                <label class="form-label">Address *</label>
+                <textarea name="address" class="form-control" rows="3"
+                          placeholder="House No, Street, Area" required></textarea>
+              </div>
+
+              <div>
+                <label class="form-label">City *</label>
+                <input type="text" name="city" class="form-control"
+                       placeholder="e.g. Mumbai" required>
+              </div>
+
+              <div>
+                <label class="form-label">State *</label>
+                <input type="text" name="state" class="form-control"
+                       placeholder="e.g. Maharashtra" required>
+              </div>
+
+              <div>
+                <label class="form-label">Pincode *</label>
+                <input type="text" name="pincode" class="form-control"
+                       placeholder="6-digit pincode" required>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
+            <h3 style="font-size:20px;font-weight:700;margin-bottom:25px;">💳 Payment Method</h3>
+
+            <div style="display:flex;flex-direction:column;gap:15px;">
+
+              <!-- Razorpay -->
+              <label class="payment-option" id="razorpay-option"
+                     style="border:2px solid #ddd;border-radius:15px;padding:15px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:0.3s;">
+                <input type="radio" name="payment_method" value="razorpay" id="razorpay"
+                       style="accent-color:#c33764;width:18px;height:18px;" required>
+                <div>
+                  <p style="font-weight:600;margin:0;font-size:15px;">💳 Pay Online (Razorpay)</p>
+                  <p style="font-size:12px;color:#888;margin:3px 0 0;">Credit/Debit Card, UPI, Net Banking, Wallets</p>
+                </div>
+              </label>
+
+              <!-- COD -->
+              <label class="payment-option" id="cod-option"
+                     style="border:2px solid #ddd;border-radius:15px;padding:15px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:0.3s;">
+                <input type="radio" name="payment_method" value="cod" id="cod"
+                       style="accent-color:#c33764;width:18px;height:18px;">
+                <div>
+                  <p style="font-weight:600;margin:0;font-size:15px;">🚚 Cash on Delivery</p>
+                  <p style="font-size:12px;color:#888;margin:3px 0 0;">Pay when your artwork arrives</p>
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT - Order Summary -->
+        <div style="flex:1;min-width:280px;position:sticky;top:100px;animation:fadeUp 1s ease;">
+          <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
+            <h3 style="font-size:20px;font-weight:700;margin-bottom:20px;">🧾 Order Summary</h3>
+
+            <div style="border-bottom:1px solid #eee;padding-bottom:15px;margin-bottom:15px;">
+              {% for item in cart_items %}
+              <div style="display:flex;justify-content:space-between;margin-bottom:12px;align-items:center;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <img src="{{ item.product.images.url }}"
+                       style="width:45px;height:45px;object-fit:cover;border-radius:8px;">
+                  <div>
+                    <p style="font-size:13px;font-weight:600;margin:0;">{{ item.product.title|slice:":20" }}</p>
+                    <p style="font-size:11px;color:#888;margin:0;">x{{ item.quantity }}</p>
+                  </div>
+                </div>
+                <span style="font-size:13px;font-weight:600;color:#c33764;">₹{{ item.total_price }}</span>
+              </div>
+              {% endfor %}
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;color:#666;">
+              <span>Subtotal</span>
+              <span>₹{{ total }}</span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;color:#666;">
+              <span>Shipping</span>
+              <span style="color:green;font-weight:600;">FREE</span>
+            </div>
+
+            <div style="border-top:2px solid #eee;padding-top:15px;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:18px;font-weight:700;">Total</span>
+              <span style="font-size:22px;font-weight:700;color:#c33764;">₹{{ total }}</span>
+            </div>
+
+            <button type="submit"
+                    style="width:100%;margin-top:25px;padding:14px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-size:16px;font-weight:600;cursor:pointer;transition:0.3s;"
+                    onmouseover="this.style.opacity='0.85'"
+                    onmouseout="this.style.opacity='1'">
+              Place Order →
+            </button>
+
+            <a href="{% url 'cart' %}">
+              <button type="button"
+                      style="width:100%;margin-top:12px;padding:12px;border:1px solid #1d2671;border-radius:30px;background:transparent;color:#1d2671;font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;"
+                      onmouseover="this.style.background='#1d2671';this.style.color='white'"
+                      onmouseout="this.style.background='transparent';this.style.color='#1d2671'">
+                ← Back to Cart
+              </button>
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<script>
+  // Payment option highlight on select
+  document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.style.borderColor = '#ddd';
+        opt.style.background = 'white';
+      });
+      this.closest('.payment-option').style.borderColor = '#c33764';
+      this.closest('.payment-option').style.background = '#fff0f5';
+    });
+  });
+</script>
+
+{% endblock %}

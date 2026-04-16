@@ -185,3 +185,8 @@ LOGGING = {
 #     return _original_starttls(self)
 
 # smtplib.SMTP.starttls = patched_starttls
+
+#Razorpay
+
+RAZORPAY_KEY_ID     = os.environ.get('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET')

@@ -80,5 +80,9 @@ urlpatterns = [
     path('add-to-cart/<int:pid>/', views.add_to_cart, name='add_to_cart'),
     path('remove-from-cart/<int:pid>/', views.remove_from_cart, name='remove_from_cart'),
     path('update-cart/<int:pid>/', views.update_cart, name='update_cart'),
+
+    path('checkout/', views.checkout_view, name='checkout'),
+    path('payment-success/', views.payment_success, name='payment_success'),
+    path('order-confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation'),
     
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

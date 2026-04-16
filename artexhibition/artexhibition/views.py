@@ -1277,3 +1277,121 @@ def cart_view(request):
         'cart_items': cart_items,
         'total': total
     })
+
+import razorpay
+from django.conf import settings
+
+@login_required
+def checkout_view(request):
+    cart_items = Cart.objects.filter(user=request.user).select_related('product')
+
+    if not cart_items.exists():
+        messages.error(request, 'Your cart is empty!')
+        return redirect('cart')
+
+    total = sum(item.total_price() for item in cart_items)
+
+    if request.method == 'POST':
+        payment_method = request.POST.get('payment_method')
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        pincode = request.POST.get('pincode')
+
+        # Create Order
+        order = Order.objects.create(
+            user=request.user,
+            payment_method=payment_method,
+            payment_status=True if payment_method == 'cod' else False,
+            full_name=full_name,
+            email=email,
+            phone=phone,
+            address=address,
+            city=city,
+            state=state,
+            pincode=pincode,
+        )
+
+        # Create Order Items
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.sellingprice
+            )
+
+        if payment_method == 'cod':
+            # Clear cart
+            cart_items.delete()
+            messages.success(request, 'Order placed successfully!')
+            return redirect('order_confirmation', order_id=order.id)
+
+        elif payment_method == 'razorpay':
+            client = razorpay.Client(
+                auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+            )
+            amount = int(total * 100)  # paise mein
+            razorpay_order = client.order.create({
+                'amount': amount,
+                'currency': 'INR',
+                'payment_capture': 1
+            })
+            order.razorpay_order_id = razorpay_order['id']
+            order.save()
+
+            return render(request, 'razorpay_payment.html', {
+                'order': order,
+                'razorpay_order_id': razorpay_order['id'],
+                'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+                'total': amount,
+                'full_name': full_name,
+                'email': email,
+                'phone': phone,
+            })
+
+    return render(request, 'checkout.html', {
+        'cart_items': cart_items,
+        'total': total,
+    })
+
+
+# ✅ Razorpay Payment Verification
+@login_required
+def payment_success(request):
+    if request.method == 'POST':
+        payment_id = request.POST.get('razorpay_payment_id')
+        order_id   = request.POST.get('razorpay_order_id')
+        signature  = request.POST.get('razorpay_signature')
+
+        client = razorpay.Client(
+            auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+        )
+        try:
+            client.utility.verify_payment_signature({
+                'razorpay_order_id':   order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature':  signature,
+            })
+            order = Order.objects.get(razorpay_order_id=order_id)
+            order.razorpay_payment_id = payment_id
+            order.payment_status = True
+            order.status = 'confirmed'
+            order.save()
+            Cart.objects.filter(user=request.user).delete()
+            messages.success(request, 'Payment successful! Order confirmed.')
+            return redirect('order_confirmation', order_id=order.id)
+
+        except razorpay.errors.SignatureVerificationError:
+            messages.error(request, 'Payment verification failed. Contact support.')
+            return redirect('cart')
+
+
+# ✅ Order Confirmation
+@login_required
+def order_confirmation(request, order_id):
+    order = Order.objects.get(id=order_id, user=request.user)
+    return render(request, 'order_confirmation.html', {'order': order})

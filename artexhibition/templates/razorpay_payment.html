@@ -1,0 +1,108 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(40px);}
+  to { opacity:1; transform:translateY(0);}
+}
+</style>
+
+<section style="height:35vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;">
+  <div style="animation:fadeUp 1.2s ease;">
+    <h1 style="font-size:45px;font-weight:700;letter-spacing:3px;">Complete Payment 💳</h1>
+    <p style="font-size:16px;opacity:0.85;">
+      <a href="{% url 'index' %}" style="color:white;text-decoration:none;">Home</a> →
+      <a href="{% url 'cart' %}" style="color:white;text-decoration:none;">Cart</a> →
+      Payment
+    </p>
+  </div>
+</section>
+
+<section style="padding:60px 20px;background:#f4f6f9;min-height:60vh;">
+  <div style="max-width:500px;margin:auto;animation:fadeUp 0.8s ease;">
+
+    <div style="background:white;border-radius:20px;padding:35px;box-shadow:0 8px 25px rgba(0,0,0,0.08);text-align:center;">
+
+      <div style="font-size:60px;margin-bottom:15px;">🎨</div>
+      <h2 style="font-size:24px;font-weight:700;margin-bottom:8px;">ArtNexus</h2>
+      <p style="color:#888;font-size:14px;margin-bottom:25px;">Secure Payment via Razorpay</p>
+
+      <div style="background:#f4f6f9;border-radius:12px;padding:20px;margin-bottom:25px;text-align:left;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;color:#555;">
+          <span>Order ID</span>
+          <span style="font-weight:600;">#{{ order.id }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;color:#555;">
+          <span>Name</span>
+          <span style="font-weight:600;">{{ full_name }}</span>
+        </div>
+        <div style="border-top:1px solid #ddd;padding-top:12px;margin-top:5px;display:flex;justify-content:space-between;">
+          <span style="font-size:16px;font-weight:700;">Amount to Pay</span>
+          <span style="font-size:20px;font-weight:700;color:#c33764;">₹{{ order.total_amount }}</span>
+        </div>
+      </div>
+
+      <button id="rzp-button"
+              style="width:100%;padding:16px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-size:16px;font-weight:600;cursor:pointer;transition:0.3s;"
+              onmouseover="this.style.opacity='0.85'"
+              onmouseout="this.style.opacity='1'">
+        Pay ₹{{ order.total_amount }} Now
+      </button>
+
+      <p style="font-size:12px;color:#aaa;margin-top:15px;">
+        🔒 100% Secure · UPI · Cards · Net Banking · Wallets
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<form id="payment-form" method="POST" action="{% url 'payment_success' %}" style="display:none;">
+  {% csrf_token %}
+  <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+  <input type="hidden" name="razorpay_order_id" value="{{ razorpay_order_id }}">
+  <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+</form>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  var options = {
+    key: "{{ razorpay_key_id }}",
+    amount: "{{ total }}",
+    currency: "INR",
+    name: "ArtNexus",
+    description: "Artwork Purchase",
+    order_id: "{{ razorpay_order_id }}",
+    handler: function(response) {
+      document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+      document.getElementById('razorpay_signature').value = response.razorpay_signature;
+      document.getElementById('payment-form').submit();
+    },
+    prefill: {
+      name: "{{ full_name }}",
+      email: "{{ email }}",
+      contact: "{{ phone }}"
+    },
+    theme: {
+      color: "#c33764"
+    },
+    modal: {
+      ondismiss: function() {
+        alert('Payment cancelled. Your order is saved — you can retry from My Orders.');
+      }
+    }
+  };
+
+  document.getElementById('rzp-button').onclick = function(e) {
+    var rzp = new Razorpay(options);
+    rzp.open();
+    e.preventDefault();
+  };
+</script>
+
+{% endblock %}

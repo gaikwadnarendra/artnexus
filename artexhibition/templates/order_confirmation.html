@@ -1,0 +1,111 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(40px);}
+  to { opacity:1; transform:translateY(0);}
+}
+@keyframes scaleIn {
+  from { transform:scale(0); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+</style>
+
+<section style="padding:80px 20px;background:#f4f6f9;min-height:80vh;">
+  <div style="max-width:650px;margin:auto;text-align:center;animation:fadeUp 1s ease;">
+
+    <!-- Success Icon -->
+    <div style="width:100px;height:100px;background:linear-gradient(135deg,#1d2671,#c33764);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 25px;animation:scaleIn 0.8s ease;">
+      <span style="font-size:45px;">✓</span>
+    </div>
+
+    <h1 style="font-size:38px;font-weight:700;color:#333;">Order Placed! 🎉</h1>
+    <p style="color:#888;margin-top:10px;font-size:16px;">
+      Thank you <strong>{{ order.full_name }}</strong>! Your order has been placed successfully.
+    </p>
+
+    <!-- Order Details -->
+    <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-top:30px;text-align:left;">
+
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;">Order Details</h3>
+
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:14px;">
+        <span style="color:#888;">Order ID</span>
+        <span style="font-weight:600;">#{{ order.id }}</span>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:14px;">
+        <span style="color:#888;">Payment Method</span>
+        <span style="font-weight:600;">
+          {% if order.payment_method == 'cod' %}🚚 Cash on Delivery
+          {% else %}💳 Razorpay{% endif %}
+        </span>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:14px;">
+        <span style="color:#888;">Payment Status</span>
+        <span style="font-weight:600;color:{% if order.payment_status %}green{% else %}orange{% endif %};">
+          {% if order.payment_status %}✅ Paid{% else %}⏳ Pending{% endif %}
+        </span>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:14px;">
+        <span style="color:#888;">Order Status</span>
+        <span style="font-weight:600;color:#1d2671;">{{ order.get_status_display }}</span>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:14px;">
+        <span style="color:#888;">Deliver To</span>
+        <span style="font-weight:600;text-align:right;max-width:250px;">
+          {{ order.address }}, {{ order.city }}, {{ order.state }} - {{ order.pincode }}
+        </span>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:16px;">
+        <span style="font-weight:700;">Total Amount</span>
+        <span style="font-weight:700;color:#c33764;">₹{{ order.total_amount }}</span>
+      </div>
+
+    </div>
+
+    <!-- Items -->
+    <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-top:20px;text-align:left;">
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;">Items Ordered</h3>
+      {% for item in order.order_items.all %}
+      <div style="display:flex;align-items:center;gap:15px;padding:10px 0;border-bottom:1px solid #eee;">
+        <img src="{{ item.product.images.url }}"
+             style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
+        <div style="flex:1;">
+          <p style="font-weight:600;margin:0;font-size:14px;">{{ item.product.title }}</p>
+          <p style="font-size:12px;color:#888;margin:3px 0 0;">Qty: {{ item.quantity }} × ₹{{ item.price }}</p>
+        </div>
+        <span style="font-weight:600;color:#c33764;">₹{{ item.total_price }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex;gap:15px;justify-content:center;margin-top:30px;flex-wrap:wrap;">
+      <a href="{% url 'art_product_list' %}">
+        <button style="padding:12px 30px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-weight:600;cursor:pointer;font-size:15px;transition:0.3s;"
+                onmouseover="this.style.opacity='0.85'"
+                onmouseout="this.style.opacity='1'">
+          Continue Shopping
+        </button>
+      </a>
+      <a href="{% url 'index' %}">
+        <button style="padding:12px 30px;border:1px solid #1d2671;border-radius:30px;background:transparent;color:#1d2671;font-weight:600;cursor:pointer;font-size:15px;transition:0.3s;"
+                onmouseover="this.style.background='#1d2671';this.style.color='white'"
+                onmouseout="this.style.background='transparent';this.style.color='#1d2671'">
+          Back to Home
+        </button>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
