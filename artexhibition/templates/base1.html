@@ -193,6 +193,61 @@
     {% include 'includes1/header.html' %}
 
     <main>
+        {% if messages %}
+            <div id="toast-container" style="position:fixed;top:80px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;">
+            {% for message in messages %}
+            <div class="toast-msg" style="
+                background:white;
+                border-radius:15px;
+                padding:15px 20px;
+                box-shadow:0 10px 40px rgba(0,0,0,0.15);
+                display:flex;
+                align-items:center;
+                gap:12px;
+                min-width:300px;
+                max-width:380px;
+                animation:slideIn 0.4s ease;
+                border-left:4px solid
+                {% if message.tags == 'success' %}#28a745
+                {% elif message.tags == 'error' %}#dc3545
+                {% elif message.tags == 'warning' %}#ffc107
+                {% else %}#1d2671{% endif %};
+            ">
+                <span style="font-size:22px;">
+                {% if message.tags == 'success' %}✅
+                {% elif message.tags == 'error' %}❌
+                {% elif message.tags == 'warning' %}⚠️
+                {% else %}ℹ️{% endif %}
+                </span>
+                <div style="flex:1;">
+                <p style="margin:0;font-size:14px;font-weight:600;color:#333;">{{ message }}</p>
+                </div>
+                <span onclick="this.parentElement.remove()" style="cursor:pointer;font-size:18px;color:#aaa;line-height:1;">×</span>
+            </div>
+            {% endfor %}
+            </div>
+
+            <style>
+            @keyframes slideIn {
+            from { opacity:0; transform:translateX(100px); }
+            to { opacity:1; transform:translateX(0); }
+            }
+            @keyframes slideOut {
+            from { opacity:1; transform:translateX(0); }
+            to { opacity:0; transform:translateX(100px); }
+            }
+            </style>
+
+            <script>
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.toast-msg').forEach(toast => {
+                toast.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => toast.remove(), 400);
+                });
+            }, 3000);
+            </script>
+            {% endif %}
         {% block content %}
         {% endblock %}
     </main>
