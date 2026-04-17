@@ -1,262 +1,185 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="zxx" class="no-js">
+<html lang="en">
 <head>
 
-    <title>ArtNexus || Home Page</title>
+<title>ArtNexus</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'css/linearicons.css'%}">
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css'%}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css'%}">
-    <link rel="stylesheet" href="{% static 'css/nice-select.css'%}">
-    <link rel="stylesheet" href="{% static 'css/animate.min.css'%}">
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.css'%}">
-    <link rel="stylesheet" href="{% static 'css/main.css'%}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <style>
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
+<link rel="stylesheet" href="{% static 'css/main.css'%}">
 
-    /* ===== GLOBAL FIX ===== */
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-    }
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #f8f9fa;
+    overflow-x: hidden;
+}
 
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh; /* 🔥 mobile fix */
-        background: #201f1f; /* 🔥 removes white gap */
-        overflow-x: hidden;
-    }
+main {
+    min-height: 80vh;
+}
 
-    main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
+/* ===== CHAT BUTTON ===== */
+#chat-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #10a37f;
+    color: white;
+    font-size: 20px;
+    padding: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 999;
+}
 
-    /* ===== CHAT BUTTON ===== */
-    #chat-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: linear-gradient(45deg, #10a37f, #0ea5e9);
-        color: white;
-        font-size: 22px;
-        padding: 15px;
-        border-radius: 50%;
-        cursor: pointer;
-        z-index: 999;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        transition: 0.3s;
-    }
+/* ===== CHAT BOX ===== */
+#chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 320px;
+    height: 460px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 
-    #chat-btn:hover {
-        transform: scale(1.1);
-    }
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.3s;
+    pointer-events: none;
 
-    #notif-dot {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        width: 10px;
-        height: 10px;
-        background: red;
-        border-radius: 50%;
-        display: none;
-    }
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
 
-    /* ===== CHAT BOX ===== */
-    #chat-box {
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 350px;
-        height: 500px;
-        background: #0f172a;
-        border-radius: 15px;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+#chat-box.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
 
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-        transition: all 0.3s ease;
-        pointer-events: none;
-    }
+#chat-header {
+    background: #111;
+    color: white;
+    padding: 10px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
 
-    #chat-box.active {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        pointer-events: auto;
-    }
+#chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f1f5f9;
+}
 
-    #chat-header {
-        background: #020617;
-        color: white;
-        padding: 12px;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
-    }
+#chat-footer {
+    display: flex;
+    border-top: 1px solid #ddd;
+}
 
-    #chat-body {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-    }
+#chat-footer input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+}
 
-    #chat-footer {
-        display: flex;
-        border-top: 1px solid #333;
-    }
+#chat-footer button {
+    background: #10a37f;
+    border: none;
+    padding: 10px;
+    color: white;
+}
 
-    #chat-footer input {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        background: #1e293b;
-        color: white;
-    }
+/* MESSAGE */
+.msg {
+    margin: 8px 0;
+    display: flex;
+}
 
-    #chat-footer button {
-        background: #10a37f;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-    }
+.user { justify-content: flex-end; }
+.bot { justify-content: flex-start; }
 
-    /* MESSAGE */
-    .msg {
-        margin: 8px 0;
-        display: flex;
-        animation: fadeInUp 0.3s ease;
-    }
+.bubble {
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 75%;
+    font-size: 13px;
+}
 
-    .user { justify-content: flex-end; }
-    .bot { justify-content: flex-start; }
+.user .bubble {
+    background: #10a37f;
+    color: white;
+}
 
-    .bubble {
-        padding: 10px 14px;
-        border-radius: 12px;
-        max-width: 80%;
-        font-size: 14px;
-    }
+.bot .bubble {
+    background: #e2e8f0;
+}
 
-    .user .bubble {
-        background: #10a37f;
-        color: white;
-    }
+/* ===== TOAST ===== */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
 
-    .bot .bubble {
-        background: #1e293b;
-        color: white;
-    }
+.toast {
+    background: white;
+    color: #333;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    min-width: 220px;
+    display: flex;
+    gap: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease;
+}
 
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(10px);}
-        to { opacity: 1; transform: translateY(0);}
-    }
+.toast.success { border-left: 4px solid #10a37f; }
+.toast.error { border-left: 4px solid red; }
+.toast.warning { border-left: 4px solid orange; }
 
-    /* ===== RESPONSIVE FIX ===== */
-    @media (max-width: 992px) {
-
-        .mb-5 { margin-bottom: 20px !important; }
-        .mb-4 { margin-bottom: 15px !important; }
-
-    }
-
-    @media (max-width: 768px) {
-
-        .section-gap {
-            padding: 40px 15px !important;
-        }
-
-        iframe {
-            width: 100% !important;
-            height: 200px !important;
-        }
-
-    }
-
-    /* #POPUP Style */
-    #toast-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-    }
-
-    .toast {
-        background: #1e293b;
-        color: white;
-        padding: 12px 16px;
-        margin-bottom: 10px;
-        border-radius: 10px;
-        min-width: 250px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        animation: slideIn 0.4s ease;
-    }
-
-    .toast.success { border-left: 4px solid #10a37f; }
-    .toast.error { border-left: 4px solid #ef4444; }
-    .toast.warning { border-left: 4px solid #f59e0b; }
-
-    .toast-icon {
-        font-size: 18px;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(100%);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    </style>
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+</style>
 
 </head>
 
 <body>
 
-    {% include 'includes1/header.html' %}
+{% include 'includes1/header.html' %}
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+<main>
+    {% block content %}{% endblock %}
+</main>
 
-    {% include 'includes1/footer.html' %}
+{% include 'includes1/footer.html' %}
 
-    <!-- JS -->
-    <script src="{% static 'js/vendor/jquery-2.2.4.min.js'%}"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="{% static 'js/vendor/bootstrap.min.js'%}"></script>
-    <script src="{% static 'js/main.js'%}"></script>
+<!-- JS -->
+<script src="{% static 'js/vendor/jquery-2.2.4.min.js'%}"></script>
+<script src="{% static 'js/vendor/bootstrap.min.js'%}"></script>
 
-    <!-- 💬 Chat Button -->
-    <div id="chat-btn" onclick="toggleChat()">
-    💬
-    <span id="notif-dot"></span>
-    </div>
+<!-- CHAT BUTTON -->
+<div id="chat-btn" onclick="toggleChat()">💬</div>
 
-    <!-- 💬 Chatbox -->
-    <div id="chat-box">
+<!-- CHAT BOX -->
+<div id="chat-box">
     <div id="chat-header">
-        🤖 ArtNexus Bot
+        ArtNexus Bot
         <span onclick="toggleChat()">✖</span>
     </div>
 
@@ -264,37 +187,32 @@
 
     <div id="chat-footer">
         <input type="text" id="msg" placeholder="Type message...">
-        <button onclick="sendMsg()">➤</button>
+        <button onclick="sendMsg()">Send</button>
     </div>
-    </div>
+</div>
 
-    <script>
-    let messages = [];
+<script>
+let messages = [];
 
-    // ENTER KEY
-    document.getElementById("msg").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") sendMsg();
-    });
-
-    // TOGGLE CHAT
-    function toggleChat() {
-    let box = document.getElementById("chat-box");
-    box.classList.toggle("active");
-    document.getElementById("notif-dot").style.display = "none";
+// ENTER KEY
+document.addEventListener("DOMContentLoaded", () => {
+    let input = document.getElementById("msg");
+    if(input){
+        input.addEventListener("keypress", function(e){
+            if(e.key === "Enter") sendMsg();
+        });
     }
+});
 
-    // NOTIFICATION
-    function showNotification() {
-    let box = document.getElementById("chat-box");
-    if (!box.classList.contains("active")) {
-        document.getElementById("notif-dot").style.display = "block";
-    }
-    }
-    
+// TOGGLE CHAT
+function toggleChat() {
+    document.getElementById("chat-box").classList.toggle("active");
+}
 
-    // ADD MESSAGE
-    function addMessage(content, type) {
+// ADD MESSAGE
+function addMessage(content, type) {
     let chat = document.getElementById("chat-body");
+
     let msgDiv = document.createElement("div");
     msgDiv.classList.add("msg", type);
 
@@ -307,175 +225,72 @@
     chat.scrollTop = chat.scrollHeight;
 
     return bubble;
-    }
+}
 
-    // FORMAT RESPONSE
-    function formatResponse(text) {
-    return text
-        .replace(/!\[(.*?)\]\((.*?)\)/g, "<br><img src='$2' style='max-width:100%; border-radius:10px; margin-top:5px;'/>")
-        .replace(/\n/g, "<br>")
-        .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-        .replace(/\*(.*?)\*/g, "<i>$1</i>");
-    }
-
-    // TYPE EFFECT
-    function typeEffect(element, html, speed = 15) {
-    element.innerHTML = "";
-
-    let temp = document.createElement("div");
-    temp.innerHTML = html;
-
-    let nodes = Array.from(temp.childNodes);
-    let i = 0;
-
-    function typeNode() {
-        if (i >= nodes.length) return;
-
-        let node = nodes[i];
-
-        if (node.nodeType === 3) {
-        let text = node.textContent;
-        let j = 0;
-
-        let span = document.createElement("span");
-        element.appendChild(span);
-
-        function typeChar() {
-            if (j < text.length) {
-            span.textContent += text[j];
-            j++;
-            setTimeout(typeChar, speed);
-            } else {
-            i++;
-            typeNode();
-            }
-        }
-
-        typeChar();
-        } else {
-        element.appendChild(node.cloneNode(true));
-        i++;
-        typeNode();
-        }
-    }
-
-    typeNode();
-    }
-
-    // SEND MESSAGE
-    function sendMsg() {
+// SEND MESSAGE
+function sendMsg() {
     let input = document.getElementById("msg");
     let msg = input.value.trim();
 
     if (!msg) return;
 
     addMessage(msg, "user");
-    messages.push({ role: "user", content: msg });
-
     input.value = "";
 
-    // TYPING DOTS
-    let typingBubble = addMessage(
-        "<div class='typing-dots'><span>.</span><span>.</span><span>.</span></div>",
-        "bot"
-    );
+    let typing = addMessage("Typing...", "bot");
 
     fetch("/chatbot/", {
         method: "POST",
         headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken")
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
         },
-        body: JSON.stringify({ messages: messages })
+        body: JSON.stringify({ message: msg })
     })
     .then(res => res.json())
     .then(data => {
-        let formatted = formatResponse(data.reply);
-
-        typingBubble.innerHTML = "";
-
-        setTimeout(() => {
-        typeEffect(typingBubble, formatted);
-        }, 300);
-
-        messages.push({ role: "assistant", content: data.reply });
-        showNotification();
+        typing.innerHTML = data.reply;
     });
-    }
+}
 
-    // CSRF
-    function getCookie(name) {
+// CSRF
+function getCookie(name) {
     let cookieValue = null;
-
     document.cookie.split(';').forEach(c => {
         c = c.trim();
         if (c.startsWith(name + '=')) {
-        cookieValue = decodeURIComponent(c.substring(name.length + 1));
+            cookieValue = decodeURIComponent(c.substring(name.length + 1));
         }
     });
-
     return cookieValue;
-    }
+}
 
-    // AUTO WELCOME
-    window.onload = function() {
-    setTimeout(() => {
-        addMessage("👋 Welcome to ArtNexus! How can I help you?", "bot");
-    }, 800);
-    };
+// TOAST
+function showToast(message, type="success") {
+    let container = document.getElementById("toast-container");
 
-    // #POPUP
+    let toast = document.createElement("div");
+    toast.classList.add("toast", type);
 
-    function showToast(message, type="success") {
-        let container = document.getElementById("toast-container");
+    toast.innerHTML = `<div>${message}</div>`;
 
-        let toast = document.createElement("div");
-        toast.classList.add("toast", type);
+    container.appendChild(toast);
 
-        let icon = "";
-        if(type === "success") icon = "✅";
-        if(type === "error") icon = "❌";
-        if(type === "warning") icon = "⚠️";
+    setTimeout(() => toast.remove(), 2500);
+}
+</script>
 
-        toast.innerHTML = `
-            <div class="toast-icon">${icon}</div>
-            <div>${message}</div>
-        `;
+{% if messages %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    {% for message in messages %}
+        showToast("{{ message|escapejs }}", "{{ message.tags }}");
+    {% endfor %}
+});
+</script>
+{% endif %}
 
-        container.appendChild(toast);
+<div id="toast-container"></div>
 
-        setTimeout(() => {
-            toast.style.opacity = "0";
-            toast.style.transform = "translateX(100%)";
-            setTimeout(() => toast.remove(), 300);
-        }, 2500);
-    }
-    </script>
-    {% if messages %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            {% for message in messages %}
-                showToast("{{ message|escapejs }}", "{{ message.tags }}");
-            {% endfor %}
-        });
-    </script>
-    {% endif %}
-    <!-- {% if messages %}
-    <script>
-        {% for message in messages %}
-            Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: "{{ message.tags }}",   // success, error, warning
-            title: "{{ message|escapejs }}",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true
-            });
-        {% endfor %}
-    </script>
-    {% endif %} -->
-
-    <div id="toast-container"></div>
 </body>
 </html>
