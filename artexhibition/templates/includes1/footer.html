@@ -1,64 +1,126 @@
 <footer class="footer-area">
-    <div class="container">
-        <div class="footer-content">
-            <h4>ArtNexus © Narendra Gaikwad</h4>
-        </div>
+
+  <div class="footer-container">
+
+    <!-- LEFT -->
+    <div class="footer-col">
+      <h2 class="footer-logo">ArtNexus</h2>
+      <p class="footer-text">
+        A modern platform where artists showcase creativity and connect with the world.
+      </p>
     </div>
+
+    <!-- CENTER -->
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'aboutus' %}">About</a></li>
+        <li><a href="{% url 'art_product_list' %}">Art</a></li>
+        <li><a href="{% url 'contactus' %}">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📍 India</p>
+      <p>📧 support@artnexus.com</p>
+      <p>📞 +91 7558359029</p>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <p>© 2026 ArtNexus | Designed by Narendra Gaikwad</p>
+  </div>
+
 </footer>
 
 <style>
+/* ===== FOOTER ===== */
 .footer-area {
-    background-color: #f5f5dc; /* soft beige */
-    padding: 20px 0;
+  background: #0f172a;
+  color: #fff;
+  padding-top: 60px;
 }
 
-.footer-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Container */
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 0 40px 40px;
+}
+
+/* Columns */
+.footer-col {
+  flex: 1;
+  min-width: 220px;
+}
+
+/* Logo */
+.footer-logo {
+  font-size: 26px;
+  font-weight: 700;
+  color: #c33764;
+}
+
+/* Text */
+.footer-text {
+  color: #ccc;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+/* Headings */
+.footer-col h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+/* Links */
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+  color: #fff;
+  padding-left: 5px;
+}
+
+/* Bottom */
+.footer-bottom {
+  text-align: center;
+  padding: 15px;
+  border-top: 1px solid #222;
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  .footer-container {
+    flex-direction: column;
     text-align: center;
-}
-
-.footer-content h4 {
-    color: #333;
-    margin: 0;
-    font-weight: 500;
-    letter-spacing: 1px;
-}
-
-@media (max-width: 768px) {
-  html, body {
-    overflow-x: hidden !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 20px 30px;
   }
 
-  /* Old template sections fix */
-  .section-gap {
-    padding: 50px 15px !important;
-  }
-
-  /* Ye purane template ka common issue hai */
-  .home-banner-area,
-  .welcome-area,
-  .whole-wrap {
-    min-height: unset !important;
-    height: auto !important;
-  }
-
-  /* Footer ke baad koi bhi empty div */
-  footer ~ div,
-  footer + div {
-    display: none !important;
-  }
-
-  /* Google Maps container */
-  .map-area,
-  #googleMap,
-  .contact-page-area iframe {
-    height: 200px !important;
-    width: 100% !important;
+  .footer-col {
+    margin-bottom: 20px;
   }
 }
 </style>
