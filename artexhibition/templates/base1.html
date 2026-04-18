@@ -5,7 +5,7 @@
 
     <title>ArtNexus || Home Page</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/linearicons.css'%}">
@@ -19,7 +19,7 @@
 
     <style>
 
-    /* ===== GLOBAL FIX ===== */
+    /* ===== GLOBAL ===== */
     html, body {
         margin: 0;
         padding: 0;
@@ -29,9 +29,10 @@
     body {
         display: flex;
         flex-direction: column;
-        min-height: 100dvh; /* 🔥 mobile fix */
-        background: #201f1f; /* 🔥 removes white gap */
+        min-height: 100dvh;
+        background: #201f1f;
         overflow-x: hidden;
+        font-family: 'Poppins', sans-serif;
     }
 
     main {
@@ -43,50 +44,153 @@
     /* ===== CHAT BUTTON ===== */
     #chat-btn {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: linear-gradient(45deg, #10a37f, #0ea5e9);
+        bottom: 28px;
+        right: 28px;
+        width: 56px;
+        height: 56px;
+        background: #c33764;
         color: white;
-        font-size: 22px;
-        padding: 15px;
         border-radius: 50%;
         cursor: pointer;
-        z-index: 999;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        transition: 0.3s;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(195, 55, 100, 0.45);
+        transition: transform 0.3s, box-shadow 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
     }
 
     #chat-btn:hover {
-        transform: scale(1.1);
+        transform: scale(1.08);
+        box-shadow: 0 6px 28px rgba(195, 55, 100, 0.6);
+    }
+
+    #chat-btn svg {
+        width: 24px;
+        height: 24px;
+        fill: #fff;
+        transition: transform 0.3s;
+    }
+
+    #chat-btn.open svg.icon-chat { display: none; }
+    #chat-btn.open svg.icon-close { display: block !important; }
+    #chat-btn svg.icon-close { display: none; }
+
+    /* Pulse ring */
+    #chat-btn::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid rgba(195, 55, 100, 0.4);
+        animation: pulse-ring 2.5s ease-out infinite;
+    }
+
+    @keyframes pulse-ring {
+        0%   { transform: scale(1); opacity: 0.8; }
+        70%  { transform: scale(1.35); opacity: 0; }
+        100% { transform: scale(1.35); opacity: 0; }
     }
 
     #notif-dot {
         position: absolute;
-        top: 5px;
-        right: 5px;
-        width: 10px;
-        height: 10px;
-        background: red;
+        top: 4px;
+        right: 4px;
+        width: 11px;
+        height: 11px;
+        background: #ef4444;
+        border: 2px solid #0f172a;
         border-radius: 50%;
         display: none;
+    }
+
+    /* ===== WELCOME BUBBLE ===== */
+    #chat-bubble {
+        position: fixed;
+        bottom: 96px;
+        right: 28px;
+        background: #0f172a;
+        border: 1px solid rgba(195, 55, 100, 0.3);
+        border-radius: 16px 16px 4px 16px;
+        padding: 14px 18px;
+        max-width: 230px;
+        z-index: 999;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+        pointer-events: none;
+    }
+
+    #chat-bubble.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
+
+    #chat-bubble p {
+        margin: 0 0 6px;
+        font-size: 13px;
+        color: #e2e8f0;
+        line-height: 1.5;
+        font-weight: 400;
+    }
+
+    #chat-bubble span {
+        font-size: 11px;
+        color: #c33764;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    #bubble-close {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        font-size: 13px;
+        color: #64748b;
+        cursor: pointer;
+        line-height: 1;
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    #bubble-close:hover { color: #94a3b8; }
+
+    /* Tail */
+    #chat-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        right: 20px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 0px solid transparent;
+        border-top: 8px solid #0f172a;
     }
 
     /* ===== CHAT BOX ===== */
     #chat-box {
         position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 350px;
-        height: 500px;
+        bottom: 96px;
+        right: 28px;
+        width: 360px;
+        height: 520px;
         background: #0f172a;
-        border-radius: 15px;
+        border-radius: 16px;
+        border: 1px solid rgba(195, 55, 100, 0.2);
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        z-index: 1000;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 
         opacity: 0;
-        transform: translateY(30px) scale(0.95);
-        transition: all 0.3s ease;
+        transform: translateY(20px) scale(0.97);
+        transition: opacity 0.3s ease, transform 0.3s ease;
         pointer-events: none;
     }
 
@@ -96,95 +200,193 @@
         pointer-events: auto;
     }
 
+    /* Header */
     #chat-header {
-        background: #020617;
-        color: white;
-        padding: 12px;
-        font-weight: bold;
+        background: #080e1c;
+        padding: 14px 18px;
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid rgba(195, 55, 100, 0.15);
+        flex-shrink: 0;
     }
 
+    .chat-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #c33764;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .chat-avatar svg {
+        width: 18px;
+        height: 18px;
+        fill: #fff;
+    }
+
+    .chat-header-info {
+        flex: 1;
+    }
+
+    .chat-header-info strong {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #f1f5f9;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .chat-header-info small {
+        font-size: 11px;
+        color: #10b981;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .online-dot {
+        width: 6px;
+        height: 6px;
+        background: #10b981;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    #chat-close-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: #64748b;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    #chat-close-btn:hover { color: #fff; }
+    #chat-close-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* Body */
     #chat-body {
         flex: 1;
         overflow-y: auto;
-        padding: 10px;
+        padding: 16px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        scrollbar-width: thin;
+        scrollbar-color: #1e293b transparent;
     }
 
+    #chat-body::-webkit-scrollbar { width: 4px; }
+    #chat-body::-webkit-scrollbar-track { background: transparent; }
+    #chat-body::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+
+    /* Footer */
     #chat-footer {
         display: flex;
-        border-top: 1px solid #333;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 14px;
+        border-top: 1px solid #1e293b;
+        background: #080e1c;
+        flex-shrink: 0;
     }
 
     #chat-footer input {
         flex: 1;
-        padding: 10px;
-        border: none;
+        padding: 10px 14px;
+        border: 1px solid #1e293b;
+        border-radius: 24px;
         background: #1e293b;
-        color: white;
+        color: #f1f5f9;
+        font-size: 13px;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
+        transition: border-color 0.2s;
     }
+
+    #chat-footer input::placeholder { color: #475569; }
+    #chat-footer input:focus { border-color: rgba(195, 55, 100, 0.5); }
 
     #chat-footer button {
-        background: #10a37f;
+        width: 38px;
+        height: 38px;
+        background: #c33764;
         border: none;
-        padding: 10px 15px;
+        border-radius: 50%;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background 0.2s, transform 0.1s;
     }
 
-    /* MESSAGE */
+    #chat-footer button:hover { background: #a82d55; }
+    #chat-footer button:active { transform: scale(0.94); }
+    #chat-footer button svg { width: 16px; height: 16px; fill: #fff; }
+
+    /* Messages */
     .msg {
-        margin: 8px 0;
+        margin: 4px 0;
         display: flex;
-        animation: fadeInUp 0.3s ease;
+        animation: fadeInUp 0.25s ease;
     }
 
     .user { justify-content: flex-end; }
-    .bot { justify-content: flex-start; }
+    .bot  { justify-content: flex-start; }
 
     .bubble {
         padding: 10px 14px;
-        border-radius: 12px;
+        border-radius: 16px;
         max-width: 80%;
-        font-size: 14px;
+        font-size: 13.5px;
+        line-height: 1.55;
+        font-family: 'Poppins', sans-serif;
     }
 
     .user .bubble {
-        background: #10a37f;
-        color: white;
+        background: #c33764;
+        color: #fff;
+        border-bottom-right-radius: 4px;
     }
 
     .bot .bubble {
         background: #1e293b;
-        color: white;
+        color: #e2e8f0;
+        border-bottom-left-radius: 4px;
+    }
+
+    /* Typing dots */
+    .typing-dots span {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: #94a3b8;
+        border-radius: 50%;
+        margin: 0 2px;
+        animation: bounce 1.2s infinite;
+    }
+
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+        0%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-6px); }
     }
 
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(10px);}
-        to { opacity: 1; transform: translateY(0);}
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== RESPONSIVE FIX ===== */
-    @media (max-width: 992px) {
-
-        .mb-5 { margin-bottom: 20px !important; }
-        .mb-4 { margin-bottom: 15px !important; }
-
-    }
-
-    @media (max-width: 768px) {
-
-        .section-gap {
-            padding: 40px 15px !important;
-        }
-
-        iframe {
-            width: 100% !important;
-            height: 200px !important;
-        }
-
-    }
-
-    /* #POPUP Style */
+    /* ===== TOAST ===== */
     #toast-container {
         position: fixed;
         top: 20px;
@@ -194,7 +396,7 @@
 
     .toast {
         background: #1e293b;
-        color: white;
+        color: #f1f5f9;
         padding: 12px 16px;
         margin-bottom: 10px;
         border-radius: 10px;
@@ -202,45 +404,52 @@
         display: flex;
         align-items: center;
         gap: 10px;
-
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.35);
         animation: slideIn 0.4s ease;
+        font-size: 13.5px;
+        font-family: 'Poppins', sans-serif;
+        transition: opacity 0.3s, transform 0.3s;
     }
 
-    .toast.success { border-left: 4px solid #10a37f; }
-    .toast.error { border-left: 4px solid #ef4444; }
+    .toast.success { border-left: 4px solid #10b981; }
+    .toast.error   { border-left: 4px solid #ef4444; }
     .toast.warning { border-left: 4px solid #f59e0b; }
-
-    .toast-icon {
-        font-size: 18px;
-    }
+    .toast-icon    { font-size: 17px; }
 
     @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(100%);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        from { opacity: 0; transform: translateX(100%); }
+        to   { opacity: 1; transform: translateX(0); }
     }
 
-    /* FORCE MOBILE CHAT FIX */
-    @media screen and (max-width:768px){
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 992px) {
+        .mb-5 { margin-bottom: 20px !important; }
+        .mb-4 { margin-bottom: 15px !important; }
+    }
+
+    @media (max-width: 768px) {
+        .section-gap { padding: 40px 15px !important; }
+        iframe { width: 100% !important; height: 200px !important; }
 
         #chat-btn {
-            bottom: 90px !important;
-            right: 15px !important;
+            bottom: 20px !important;
+            right: 16px !important;
+            width: 50px;
+            height: 50px;
+        }
+
+        #chat-bubble {
+            bottom: 82px !important;
+            right: 16px !important;
+            max-width: 200px;
         }
 
         #chat-box {
-            bottom: 160px !important;
-            right: 10px !important;
-            width: 92% !important;
-            height: 65vh !important;
+            bottom: 82px !important;
+            right: 8px !important;
+            width: calc(100vw - 16px) !important;
+            height: 62vh !important;
         }
-
     }
     </style>
 
@@ -259,30 +468,49 @@
 
     <!-- JS -->
     <script src="{% static 'js/vendor/jquery-2.2.4.min.js'%}"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="{% static 'js/vendor/bootstrap.min.js'%}"></script>
     <script src="{% static 'js/main.js'%}"></script>
 
-    <!-- 💬 Chat Button -->
-    <div id="chat-btn" onclick="toggleChat()">
-    💬
-    <span id="notif-dot"></span>
+    <!-- WELCOME BUBBLE -->
+    <div id="chat-bubble">
+        <button id="bubble-close" onclick="closeBubble()">✕</button>
+        <p>👋 Hi! Need help finding the perfect artwork?</p>
+        <span>Chat with ArtNexus Bot →</span>
     </div>
 
-    <!-- 💬 Chatbox -->
+    <!-- CHAT BUTTON -->
+    <button id="chat-btn" onclick="toggleChat()">
+        <svg class="icon-chat" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <span id="notif-dot"></span>
+    </button>
+
+    <!-- CHAT BOX -->
     <div id="chat-box">
-    <div id="chat-header">
-        🤖 ArtNexus Bot
-        <span onclick="toggleChat()">✖</span>
-    </div>
 
-    <div id="chat-body"></div>
+        <div id="chat-header">
+            <div class="chat-avatar">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+            </div>
+            <div class="chat-header-info">
+                <strong>ArtNexus Bot</strong>
+                <small><span class="online-dot"></span> Online &amp; ready to help</small>
+            </div>
+            <button id="chat-close-btn" onclick="toggleChat()">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
 
-    <div id="chat-footer">
-        <input type="text" id="msg" placeholder="Type message...">
-        <button onclick="sendMsg()">➤</button>
-    </div>
+        <div id="chat-body"></div>
+
+        <div id="chat-footer">
+            <input type="text" id="msg" placeholder="Ask me anything...">
+            <button onclick="sendMsg()">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+        </div>
+
     </div>
 
     <script>
@@ -290,177 +518,161 @@
 
     // ENTER KEY
     document.getElementById("msg").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") sendMsg();
+        if (e.key === "Enter") sendMsg();
     });
+
+    // WELCOME BUBBLE — show after 1.5s, hide after 10s
+    window.addEventListener("load", function () {
+        setTimeout(() => {
+            let bubble = document.getElementById("chat-bubble");
+            bubble.classList.add("visible");
+
+            setTimeout(() => {
+                closeBubble();
+            }, 10000);
+        }, 1500);
+
+        // Auto welcome message
+        setTimeout(() => {
+            addMessage("👋 Welcome to ArtNexus! How can I help you today?", "bot");
+        }, 800);
+    });
+
+    function closeBubble() {
+        let bubble = document.getElementById("chat-bubble");
+        bubble.classList.remove("visible");
+    }
 
     // TOGGLE CHAT
     function toggleChat() {
-    let box = document.getElementById("chat-box");
-    box.classList.toggle("active");
-    document.getElementById("notif-dot").style.display = "none";
+        let box = document.getElementById("chat-box");
+        let btn = document.getElementById("chat-btn");
+        box.classList.toggle("active");
+        btn.classList.toggle("open");
+        document.getElementById("notif-dot").style.display = "none";
+        closeBubble();
     }
 
     // NOTIFICATION
     function showNotification() {
-    let box = document.getElementById("chat-box");
-    if (!box.classList.contains("active")) {
-        document.getElementById("notif-dot").style.display = "block";
+        let box = document.getElementById("chat-box");
+        if (!box.classList.contains("active")) {
+            document.getElementById("notif-dot").style.display = "block";
+        }
     }
-    }
-    
 
     // ADD MESSAGE
     function addMessage(content, type) {
-    let chat = document.getElementById("chat-body");
-    let msgDiv = document.createElement("div");
-    msgDiv.classList.add("msg", type);
+        let chat = document.getElementById("chat-body");
+        let msgDiv = document.createElement("div");
+        msgDiv.classList.add("msg", type);
 
-    let bubble = document.createElement("div");
-    bubble.classList.add("bubble");
-    bubble.innerHTML = content;
+        let bubble = document.createElement("div");
+        bubble.classList.add("bubble");
+        bubble.innerHTML = content;
 
-    msgDiv.appendChild(bubble);
-    chat.appendChild(msgDiv);
-    chat.scrollTop = chat.scrollHeight;
+        msgDiv.appendChild(bubble);
+        chat.appendChild(msgDiv);
+        chat.scrollTop = chat.scrollHeight;
 
-    return bubble;
+        return bubble;
     }
 
     // FORMAT RESPONSE
     function formatResponse(text) {
-    return text
-        .replace(/!\[(.*?)\]\((.*?)\)/g, "<br><img src='$2' style='max-width:100%; border-radius:10px; margin-top:5px;'/>")
-        .replace(/\n/g, "<br>")
-        .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-        .replace(/\*(.*?)\*/g, "<i>$1</i>");
+        return text
+            .replace(/!\[(.*?)\]\((.*?)\)/g, "<br><img src='$2' style='max-width:100%; border-radius:10px; margin-top:5px;'/>")
+            .replace(/\n/g, "<br>")
+            .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+            .replace(/\*(.*?)\*/g, "<i>$1</i>");
     }
 
     // TYPE EFFECT
     function typeEffect(element, html, speed = 15) {
-    element.innerHTML = "";
+        element.innerHTML = "";
+        let temp = document.createElement("div");
+        temp.innerHTML = html;
+        let nodes = Array.from(temp.childNodes);
+        let i = 0;
 
-    let temp = document.createElement("div");
-    temp.innerHTML = html;
-
-    let nodes = Array.from(temp.childNodes);
-    let i = 0;
-
-    function typeNode() {
-        if (i >= nodes.length) return;
-
-        let node = nodes[i];
-
-        if (node.nodeType === 3) {
-        let text = node.textContent;
-        let j = 0;
-
-        let span = document.createElement("span");
-        element.appendChild(span);
-
-        function typeChar() {
-            if (j < text.length) {
-            span.textContent += text[j];
-            j++;
-            setTimeout(typeChar, speed);
+        function typeNode() {
+            if (i >= nodes.length) return;
+            let node = nodes[i];
+            if (node.nodeType === 3) {
+                let text = node.textContent;
+                let j = 0;
+                let span = document.createElement("span");
+                element.appendChild(span);
+                function typeChar() {
+                    if (j < text.length) {
+                        span.textContent += text[j];
+                        j++;
+                        setTimeout(typeChar, speed);
+                    } else { i++; typeNode(); }
+                }
+                typeChar();
             } else {
-            i++;
-            typeNode();
+                element.appendChild(node.cloneNode(true));
+                i++;
+                typeNode();
             }
         }
-
-        typeChar();
-        } else {
-        element.appendChild(node.cloneNode(true));
-        i++;
         typeNode();
-        }
-    }
-
-    typeNode();
     }
 
     // SEND MESSAGE
     function sendMsg() {
-    let input = document.getElementById("msg");
-    let msg = input.value.trim();
+        let input = document.getElementById("msg");
+        let msg = input.value.trim();
+        if (!msg) return;
 
-    if (!msg) return;
+        addMessage(msg, "user");
+        messages.push({ role: "user", content: msg });
+        input.value = "";
 
-    addMessage(msg, "user");
-    messages.push({ role: "user", content: msg });
+        let typingBubble = addMessage(
+            "<div class='typing-dots'><span></span><span></span><span></span></div>",
+            "bot"
+        );
 
-    input.value = "";
-
-    // TYPING DOTS
-    let typingBubble = addMessage(
-        "<div class='typing-dots'><span>.</span><span>.</span><span>.</span></div>",
-        "bot"
-    );
-
-    fetch("/chatbot/", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken")
-        },
-        body: JSON.stringify({ messages: messages })
-    })
-    .then(res => res.json())
-    .then(data => {
-        let formatted = formatResponse(data.reply);
-
-        typingBubble.innerHTML = "";
-
-        setTimeout(() => {
-        typeEffect(typingBubble, formatted);
-        }, 300);
-
-        messages.push({ role: "assistant", content: data.reply });
-        showNotification();
-    });
+        fetch("/chatbot/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ messages: messages })
+        })
+        .then(res => res.json())
+        .then(data => {
+            let formatted = formatResponse(data.reply);
+            typingBubble.innerHTML = "";
+            setTimeout(() => { typeEffect(typingBubble, formatted); }, 300);
+            messages.push({ role: "assistant", content: data.reply });
+            showNotification();
+        });
     }
 
     // CSRF
     function getCookie(name) {
-    let cookieValue = null;
-
-    document.cookie.split(';').forEach(c => {
-        c = c.trim();
-        if (c.startsWith(name + '=')) {
-        cookieValue = decodeURIComponent(c.substring(name.length + 1));
-        }
-    });
-
-    return cookieValue;
+        let cookieValue = null;
+        document.cookie.split(';').forEach(c => {
+            c = c.trim();
+            if (c.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(c.substring(name.length + 1));
+            }
+        });
+        return cookieValue;
     }
 
-    // AUTO WELCOME
-    window.onload = function() {
-    setTimeout(() => {
-        addMessage("👋 Welcome to ArtNexus! How can I help you?", "bot");
-    }, 800);
-    };
-
-    // #POPUP
-
+    // TOAST
     function showToast(message, type="success") {
         let container = document.getElementById("toast-container");
-
         let toast = document.createElement("div");
         toast.classList.add("toast", type);
-
-        let icon = "";
-        if(type === "success") icon = "✅";
-        if(type === "error") icon = "❌";
-        if(type === "warning") icon = "⚠️";
-
-        toast.innerHTML = `
-            <div class="toast-icon">${icon}</div>
-            <div>${message}</div>
-        `;
-
+        let icon = type === "success" ? "✅" : type === "error" ? "❌" : "⚠️";
+        toast.innerHTML = `<div class="toast-icon">${icon}</div><div>${message}</div>`;
         container.appendChild(toast);
-
         setTimeout(() => {
             toast.style.opacity = "0";
             toast.style.transform = "translateX(100%)";
@@ -468,6 +680,7 @@
         }, 2500);
     }
     </script>
+
     {% if messages %}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -477,22 +690,8 @@
         });
     </script>
     {% endif %}
-    <!-- {% if messages %}
-    <script>
-        {% for message in messages %}
-            Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: "{{ message.tags }}",   // success, error, warning
-            title: "{{ message|escapejs }}",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true
-            });
-        {% endfor %}
-    </script>
-    {% endif %} -->
 
     <div id="toast-container"></div>
+
 </body>
 </html>
