@@ -1,45 +1,118 @@
 {% load static %}
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-body,html {
+body, html {
   font-family: 'Poppins', sans-serif;
   margin: 0;
 }
 
-/* HEADER */
+/* ── HEADER ── */
 #header {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(10, 14, 26, 0.92);
   position: sticky;
-  padding: 10px 0;
   top: 0;
   z-index: 999;
-  backdrop-filter: blur(10px);
-  padding: 10px 0;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(195, 55, 100, 0.15);
+  padding: 0;
 }
 
 .header-inner {
-  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 36px;
+  height: 66px;
+  max-width: 1280px;
+  margin: 0 auto;
 }
-/* LOGO */
+
+/* ── LOGO: OPTION B ── */
 #logo a {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 13px;
   text-decoration: none;
 }
 
-.logo-text {
-  font-size: 20px;
+/* Monogram circle */
+.logo-monogram {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid #c33764;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.logo-monogram::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: rgba(195, 55, 100, 0.08);
+  transition: background 0.3s;
+}
+
+.logo-monogram span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
   font-weight: 700;
+  color: #c33764;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+#logo a:hover .logo-monogram {
+  background: rgba(195, 55, 100, 0.12);
+}
+
+/* Wordmark */
+.logo-wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 2px;
+}
+
+.logo-wordmark-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+  line-height: 1;
+}
+
+.logo-wordmark-name em {
+  font-style: normal;
   color: #c33764;
 }
 
-/* NAV */
+.logo-wordmark-tag {
+  font-family: 'Poppins', sans-serif;
+  font-size: 8.5px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #64748b;
+  line-height: 1;
+}
+
+/* ── NAV ── */
 .nav-menu {
   display: flex;
-  gap: 14px;
+  align-items: center;
+  gap: 6px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -50,70 +123,135 @@ body,html {
 }
 
 .nav-menu li a {
-  color: #fff;
+  color: #cbd5e1;
   font-size: 13px;
+  font-weight: 400;
   text-decoration: none;
-  transition: 0.3s;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+  display: block;
+  white-space: nowrap;
 }
 
 .nav-menu li a:hover {
-  color: #bbb;
+  color: #fff;
+  background: rgba(255,255,255,0.06);
 }
 
-/* DROPDOWN */
+/* ── DROPDOWN ── */
+.menu-has-children > a::after {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: transform 0.2s;
+}
+
+.menu-has-children.open > a::after {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
 .menu-has-children ul {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 0;
-  background: #111;
-  min-width: 150px;
-  border-radius: 8px;
+  background: #0f172a;
+  border: 1px solid rgba(195, 55, 100, 0.2);
+  border-radius: 10px;
+  min-width: 170px;
   display: none;
-  padding: 5px 0;
+  padding: 6px;
+  z-index: 100;
 }
 
 .menu-has-children.open ul {
   display: block;
+  animation: dropIn 0.18s ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .menu-has-children ul li a {
   display: block;
   padding: 8px 12px;
-  color: #ccc;
+  color: #94a3b8;
+  font-size: 13px;
+  border-radius: 7px;
 }
 
 .menu-has-children ul li a:hover {
-  background: #222;
+  background: rgba(195, 55, 100, 0.1);
+  color: #fff;
 }
 
-/* BUTTONS */
+/* ── AUTH BUTTONS ── */
 .nav-btn-login {
-  border: 1px solid #fff;
-  padding: 5px 12px;
-  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.25) !important;
+  color: #fff !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  transition: border-color 0.2s, background 0.2s !important;
+}
+
+.nav-btn-login:hover {
+  border-color: #fff !important;
+  background: rgba(255,255,255,0.08) !important;
 }
 
 .nav-btn-register {
-  background: linear-gradient(135deg,#c33764,#1d2671);
-  padding: 5px 12px;
-  border-radius: 15px;
+  background: #c33764 !important;
+  color: #fff !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  border: 1px solid transparent !important;
+  transition: background 0.2s, opacity 0.2s !important;
 }
 
-/* MOBILE */
+.nav-btn-register:hover {
+  opacity: 0.88 !important;
+  background: #a82d55 !important;
+}
+
+/* ── HAMBURGER ── */
 .hamburger {
   display: none;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
+  padding: 4px;
 }
 
 .hamburger span {
-  width: 24px;
-  height: 3px;
+  width: 22px;
+  height: 2px;
   background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
 }
 
-@media(max-width:768px){
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .header-inner {
+    padding: 0 20px;
+    height: 58px;
+  }
 
   .hamburger { display: flex; }
 
@@ -121,34 +259,65 @@ body,html {
     display: none;
     position: absolute;
     top: 100%;
-    padding: 0 15px;
-    width: 100%;
-    background: #111;
+    left: 0;
+    right: 0;
+    background: #0a0e1a;
+    border-top: 1px solid rgba(195, 55, 100, 0.15);
+    padding: 10px 16px 16px;
   }
 
   #nav-menu-container.open {
     display: block;
+    animation: dropIn 0.2s ease;
   }
 
   .nav-menu {
     flex-direction: column;
-    padding: 10px;
+    align-items: stretch;
+    gap: 2px;
   }
 
-  .nav-menu li {
-    padding: 8px 0;
+  .nav-menu li a {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .menu-has-children ul {
+    position: static;
+    border: none;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    margin: 4px 0 4px 12px;
+    padding: 4px;
+    display: none;
+  }
+
+  .menu-has-children.open ul {
+    display: block;
+    animation: none;
+  }
+
+  .nav-btn-login,
+  .nav-btn-register {
+    text-align: center !important;
+    margin-top: 4px !important;
   }
 }
 </style>
 
 <header id="header">
-  <div class="d-flex justify-content-between align-items-center header-inner">
+  <div class="header-inner">
 
-    <!-- LOGO -->
+    <!-- LOGO: Option B -->
     <div id="logo">
       <a href="{% url 'index' %}">
-        <img src="{% static 'img/logo.png' %}" height="40">
-        <span class="logo-text">ArtNexus</span>
+        <div class="logo-monogram">
+          <span>AN</span>
+        </div>
+        <div class="logo-wordmark">
+          <span class="logo-wordmark-name"><em>Art</em>Nexus</span>
+          <span class="logo-wordmark-tag">Creative Platform</span>
+        </div>
       </a>
     </div>
 
@@ -166,7 +335,7 @@ body,html {
         <li><a href="{% url 'art_product_list' %}">Art</a></li>
         <li><a href="{% url 'contactus' %}">Contact</a></li>
 
-        <!-- ART TYPE -->
+        <!-- CATEGORIES DROPDOWN -->
         <li class="menu-has-children" id="artTypeMenu">
           <a href="#">Categories</a>
           <ul>
@@ -203,19 +372,28 @@ body,html {
 
 <script>
 const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu-container');
+const navMenu   = document.getElementById('nav-menu-container');
 
 hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
   navMenu.classList.toggle('open');
 });
 
-// SAFE dropdown handling
 document.querySelectorAll('.menu-has-children').forEach(menu => {
-  menu.addEventListener('click', function(e){
-    if(window.innerWidth <= 768){
+  menu.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768) {
       e.stopPropagation();
       this.classList.toggle('open');
     }
+  });
+});
+
+document.querySelectorAll('.menu-has-children').forEach(menu => {
+  menu.addEventListener('mouseenter', function() {
+    if (window.innerWidth > 768) this.classList.add('open');
+  });
+  menu.addEventListener('mouseleave', function() {
+    if (window.innerWidth > 768) this.classList.remove('open');
   });
 });
 </script>
