@@ -9,6 +9,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import random
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.db.models import Q
 User = get_user_model()
 
 # for email
@@ -454,22 +457,92 @@ def THANKYOU(request, enquirynumber):
     return render(request, 'thankyou.html', context)
 
 
-def ARTPRODUCTLIST(request):    
+def ARTPRODUCTLIST(request):
+    query      = request.GET.get('q', '').strip()
+    art_type   = request.GET.get('arttype', '').strip()
+    price_min  = request.GET.get('price_min', '').strip()
+    price_max  = request.GET.get('price_max', '').strip()
+    sort_by    = request.GET.get('sort', '').strip()
+ 
     artproduct_list = Artproducts.objects.all()
-    paginator = Paginator(artproduct_list, 9)  # Show 10 categories per page
-
+ 
+    # ── SEARCH ──
+    if query:
+        artproduct_list = artproduct_list.filter(
+            Q(title__icontains=query) |
+            Q(artist__name__icontains=query) |
+            Q(artmedium__artmedium__icontains=query) |
+            Q(description__icontains=query)
+        )
+ 
+    # ── FILTER: Art Type ──
+    if art_type:
+        artproduct_list = artproduct_list.filter(arttype__id=art_type)
+ 
+    # ── FILTER: Price Range ──
+    if price_min:
+        try:
+            artproduct_list = artproduct_list.filter(sellingprice__gte=float(price_min))
+        except ValueError:
+            pass
+    if price_max:
+        try:
+            artproduct_list = artproduct_list.filter(sellingprice__lte=float(price_max))
+        except ValueError:
+            pass
+ 
+    # ── SORT ──
+    sort_map = {
+        'price_low':  'sellingprice',
+        'price_high': '-sellingprice',
+        'newest':     '-id',
+        'oldest':     'id',
+        'name_az':    'title',
+        'name_za':    '-title',
+    }
+    artproduct_list = artproduct_list.order_by(sort_map.get(sort_by, '-id'))
+ 
+    # ── SUGGESTIONS (AJAX) ──
+    if request.GET.get('suggest'):
+        q = request.GET.get('q', '').strip()
+        suggestions = []
+        if q:
+            titles   = Artproducts.objects.filter(title__icontains=q).values_list('title', flat=True).distinct()[:4]
+            artists  = Artproducts.objects.filter(artist__name__icontains=q).values_list('artist__name', flat=True).distinct()[:2]
+            mediums  = Artproducts.objects.filter(artmedium__artmedium__icontains=q).values_list('artmedium__artmedium', flat=True).distinct()[:2]
+            for t in titles:
+                suggestions.append({'label': t, 'type': 'Artwork'})
+            for a in artists:
+                if a:
+                    suggestions.append({'label': a, 'type': 'Artist'})
+            for m in mediums:
+                suggestions.append({'label': m, 'type': 'Medium'})
+        return JsonResponse({'suggestions': suggestions[:7]})
+ 
+    # ── PAGINATION ──
+    paginator = Paginator(artproduct_list, 9)
     page_number = request.GET.get('page')
     try:
-       artproducts = paginator.page(page_number)
+        artproducts = paginator.page(page_number)
     except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
         artproducts = paginator.page(1)
     except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
         artproducts = paginator.page(paginator.num_pages)
-
+ 
+    # ── ART TYPES for filter dropdown ──
+    from artapp.models import Arttype   # adjust import to your app
+    arttypes = Arttype.objects.all()
+ 
     context = {
-    'artproducts':artproducts,}
+        'artproducts': artproducts,
+        'arttypes':    arttypes,
+        'query':       query,
+        'art_type':    art_type,
+        'price_min':   price_min,
+        'price_max':   price_max,
+        'sort_by':     sort_by,
+        'total_count': artproduct_list.count(),
+    }
     return render(request, 'artproducts-list.html', context)
 
 def LOGIN(request):
