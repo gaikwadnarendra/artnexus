@@ -1233,7 +1233,7 @@ def add_to_wishlist(request, pid):
         user=request.user,
         product=product
     )
-
+    messages.success(request, f'"{product.title}" added to Wishlist!')
     return redirect(request.META.get('HTTP_REFERER'))
 
 
