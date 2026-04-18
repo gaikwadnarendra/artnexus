@@ -18,6 +18,9 @@ body, html {
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(195, 55, 100, 0.15);
   padding: 0;
+  /* keeps mobile dropdown from overflowing horizontally */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header-inner {
@@ -261,6 +264,9 @@ body, html {
     top: 100%;
     left: 0;
     right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
     background: #0a0e1a;
     border-top: 1px solid rgba(195, 55, 100, 0.15);
     padding: 10px 16px 16px;
@@ -283,18 +289,23 @@ body, html {
   }
 
   .menu-has-children ul {
-    position: static;
-    border: none;
-    background: rgba(255,255,255,0.04);
-    border-radius: 8px;
-    margin: 4px 0 4px 12px;
-    padding: 4px;
-    display: none;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    border: none !important;
+    background: rgba(255,255,255,0.04) !important;
+    border-radius: 8px !important;
+    margin: 4px 0 4px 12px !important;
+    padding: 4px !important;
+    display: none !important;
+    width: auto !important;
+    min-width: unset !important;
+    box-shadow: none !important;
   }
 
   .menu-has-children.open ul {
-    display: block;
-    animation: none;
+    display: block !important;
+    animation: none !important;
   }
 
   .nav-btn-login,
