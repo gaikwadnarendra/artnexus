@@ -3,58 +3,50 @@
 
 {% block content %}
 
-<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body { font-family: 'Poppins', sans-serif; }
-
-/* Animations */
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(40px);} 
-  to { opacity:1; transform:translateY(0);} 
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f5f5f5;
 }
 
-/* ===== HERO ===== */
-.hero-enquiry {
-  height: 45vh;
-  background: linear-gradient(135deg,#1d2671,#c33764);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* BANNER */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+              url("{% static 'img/u4.jpg' %}") center/cover no-repeat;
+  padding: 90px 20px;
   text-align: center;
   color: white;
 }
 
-.hero-enquiry h1 {
-  font-size: 50px;
+.banner-area h1 {
+  font-size: 42px;
   font-weight: 700;
 }
 
-/* ===== SECTION ===== */
+/* SECTION */
 .enquiry-section {
-  padding: 80px 20px;
-  background: #f4f6f9;
+  padding: 70px 20px;
 }
 
-/* Glass Card */
-.glass {
-  backdrop-filter: blur(12px);
-  background: rgba(255,255,255,0.6);
+/* CARD */
+.enquiry-card {
+  background: white;
+  padding: 35px;
   border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* Title */
+/* TITLE */
 .enquiry-title h3 {
-  font-size: 22px;
-  font-weight: 600;
-  color: #333;
+  text-align: center;
+  margin-bottom: 25px;
 }
 
-/* Form */
+/* INPUT */
 .form-control {
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
   border: 1px solid #ddd;
   transition: 0.3s;
@@ -65,53 +57,56 @@ body { font-family: 'Poppins', sans-serif; }
   box-shadow: 0 0 8px rgba(195,55,100,0.2);
 }
 
-/* Button */
-.primary-btn {
+/* BUTTON */
+.btn-main {
   background: #c33764;
   color: white;
   border-radius: 25px;
   padding: 12px;
   font-weight: 600;
-  transition: 0.3s;
   border: none;
-  cursor: pointer;
   width: 100%;
 }
 
-.primary-btn:hover {
-  transform: scale(1.05);
+.btn-main:hover {
+  background: #a82d55;
 }
 
-/* Responsive */
+/* MOBILE */
 @media(max-width:768px){
-  .hero-enquiry h1 { font-size: 32px; }
+  .banner-area h1 {
+    font-size: 28px;
+  }
 }
 </style>
 
-<!-- HERO -->
-<section class="hero-enquiry">
-  <div style="animation:fadeUp 1.5s ease;">
+<!-- BANNER -->
+<section class="banner-area">
+  <div class="container">
     <h1>Enquiry</h1>
+    <p>
+      <a href="{% url 'index' %}" style="color:#ddd;">Home</a> → Enquiry
+    </p>
   </div>
 </section>
 
 <!-- FORM -->
 <section class="enquiry-section">
-
   <div class="container">
 
-    <!-- Title -->
-    <div class="enquiry-title text-center mb-4" style="animation: fadeUp 1s ease;">
-      <h3>
-        Enquiry For Product 
-        ({{ sinprod.title }} : {{ sinprod.referencenumber }})
-      </h3>
-    </div>
-
     <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-10 col-sm-12" style="animation: fadeUp 1.3s ease;">
+      <div class="col-lg-8 col-md-10 col-sm-12">
 
-        <div class="glass p-4">
+        <div class="enquiry-card">
+
+          <div class="enquiry-title">
+            <h3>
+              Enquiry For Product <br>
+              <span style="color:#c33764;">
+                {{ sinprod.title }} ({{ sinprod.referencenumber }})
+              </span>
+            </h3>
+          </div>
 
           <form action="{% url 'enquiry_details' %}" method="POST">
             {% csrf_token %}
@@ -121,8 +116,8 @@ body { font-family: 'Poppins', sans-serif; }
             <div class="row">
 
               <!-- LEFT -->
-              <div class="col-lg-6 col-md-6 col-sm-12">
-                
+              <div class="col-lg-6">
+
                 <input name="fullname"
                        placeholder="Enter your name"
                        class="form-control mb-3"
@@ -142,15 +137,15 @@ body { font-family: 'Poppins', sans-serif; }
               </div>
 
               <!-- RIGHT -->
-              <div class="col-lg-6 col-md-6 col-sm-12">
-                
+              <div class="col-lg-6">
+
                 <textarea class="form-control mb-3"
                           name="message"
-                          placeholder="Your Message"
+                          placeholder="Your message"
                           required
                           style="height:150px;"></textarea>
 
-                <button type="submit" class="primary-btn">
+                <button type="submit" class="btn-main">
                   Send Enquiry
                 </button>
 
@@ -166,7 +161,6 @@ body { font-family: 'Poppins', sans-serif; }
     </div>
 
   </div>
-
 </section>
 
 {% endblock %}

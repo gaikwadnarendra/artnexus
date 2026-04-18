@@ -6,36 +6,147 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body { font-family: 'Poppins', sans-serif; }
-
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(40px);}
-  to { opacity:1; transform:translateY(0);}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f5f5f5;
 }
 
-@keyframes zoomIn {
-  from { transform:scale(0.9); opacity:0; }
-  to { transform:scale(1); opacity:1; }
+/* BANNER */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+              url("{% static 'img/u4.jpg' %}") center/cover no-repeat;
+  padding: 90px 20px;
+  text-align: center;
+  color: white;
+}
+
+.banner-area h1 {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+/* SECTION */
+.wishlist-section {
+  padding: 70px 20px;
+}
+
+/* CARD */
+.wishlist-card {
+  width: 280px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.wishlist-card:hover {
+  transform: translateY(-5px);
+}
+
+/* IMAGE */
+.wishlist-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* BODY */
+.card-body {
+  padding: 15px;
+}
+
+.card-body h4 a {
+  text-decoration: none;
+  color: #333;
+}
+
+.card-body h4 a:hover {
+  color: #c33764;
+}
+
+.artist {
+  font-size: 13px;
+  color: #777;
+}
+
+.price {
+  color: #c33764;
+  font-weight: 600;
+}
+
+/* BUTTONS */
+.btn-small {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-view {
+  background: #c33764;
+  color: white;
+}
+
+.btn-view:hover {
+  background: #a82d55;
+}
+
+.btn-remove {
+  border: 1px solid #c33764;
+  color: #c33764;
+  background: transparent;
+}
+
+.btn-remove:hover {
+  background: #c33764;
+  color: white;
+}
+
+/* EMPTY */
+.empty-box {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.btn-main {
+  margin-top: 20px;
+  padding: 12px 30px;
+  border-radius: 25px;
+  border: none;
+  background: #c33764;
+  color: white;
+  font-weight: 600;
+}
+
+/* MOBILE */
+@media (max-width:768px) {
+  .banner-area h1 {
+    font-size: 28px;
+  }
 }
 </style>
 
 <!-- BANNER -->
-<section style="height:40vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;">
-  <div style="animation:fadeUp 1.2s ease;">
-    <h1 style="font-size:50px;font-weight:700;letter-spacing:3px;">My Wishlist</h1>
-    <p style="font-size:16px;opacity:0.85;">
-      <a href="{% url 'index' %}" style="color:white;text-decoration:none;">Home</a> → Wishlist
+<section class="banner-area">
+  <div class="container">
+    <h1>My Wishlist</h1>
+    <p>
+      <a href="{% url 'index' %}" style="color:#ddd;">Home</a> → Wishlist
     </p>
   </div>
 </section>
 
-<!-- WISHLIST SECTION -->
-<section style="padding:80px 20px;background:#f4f6f9;min-height:60vh;">
+<!-- WISHLIST -->
+<section class="wishlist-section">
   <div style="max-width:1200px;margin:auto;">
 
     {% if messages %}
       {% for message in messages %}
-        <div style="background:#fff3cd;border:1px solid #ffc107;padding:12px 20px;border-radius:10px;margin-bottom:20px;text-align:center;">
+        <div class="alert alert-{{ message.tags }} text-center">
           {{ message }}
         </div>
       {% endfor %}
@@ -43,84 +154,63 @@ body { font-family: 'Poppins', sans-serif; }
 
     {% if wishlist_items %}
 
-      <h2 style="text-align:center;font-size:35px;margin-bottom:50px;">
-        Your Saved Artworks ❤️
+      <h2 style="text-align:center;margin-bottom:40px;">
+        Your Saved Artworks
       </h2>
 
-      <div style="display:flex;flex-wrap:wrap;gap:30px;justify-content:center;">
+      <div style="display:flex;flex-wrap:wrap;gap:25px;justify-content:center;">
 
         {% for item in wishlist_items %}
+        <div class="wishlist-card">
 
-        <div style="width:300px;border-radius:20px;overflow:hidden;background:white;box-shadow:0 15px 35px rgba(0,0,0,0.1);transition:0.4s;animation:zoomIn 0.8s ease;"
-             onmouseover="this.style.transform='scale(1.05)'"
-             onmouseout="this.style.transform='scale(1)'">
+          <img src="{{ item.product.images.url }}">
 
-          <div style="overflow:hidden;">
-            <img src="{{ item.product.images.url }}"
-                 style="width:100%;height:220px;object-fit:cover;transition:0.5s;"
-                 onmouseover="this.style.transform='scale(1.1)'"
-                 onmouseout="this.style.transform='scale(1)'"
-                 alt="{{ item.product.title }}">
-          </div>
-
-          <div style="padding:20px;">
-            <h4 style="font-weight:600;">
-              <a href="{% url 'view_singleproduct' item.product.id %}" style="text-decoration:none;color:#333;">
+          <div class="card-body">
+            <h4>
+              <a href="{% url 'view_singleproduct' item.product.id %}">
                 {{ item.product.title }}
               </a>
             </h4>
 
             {% if item.product.artist %}
-              <p style="color:#888;font-size:14px;margin:5px 0;">by {{ item.product.artist.name }}</p>
+              <p class="artist">by {{ item.product.artist.name }}</p>
             {% endif %}
 
-            <p style="font-size:15px;font-weight:600;color:#c33764;margin:8px 0;">
-              ₹{{ item.product.sellingprice }}
-            </p>
+            <p class="price">₹{{ item.product.sellingprice }}</p>
 
-            <p style="font-size:13px;color:#777;">
+            <p style="font-size:12px;color:#777;">
               {{ item.product.dimension }} | {{ item.product.orientation }}
             </p>
 
-            <p style="font-size:13px;color:#555;margin-top:8px;">
-              {{ item.product.description|slice:":100" }}...
+            <p style="font-size:13px;color:#555;">
+              {{ item.product.description|slice:":80" }}...
             </p>
 
-            <div style="display:flex;gap:10px;margin-top:15px;">
-              <a href="{% url 'view_singleproduct' item.product.id %}"
-                 style="flex:1;text-align:center;padding:8px 0;border-radius:20px;background:#1d2671;color:white;text-decoration:none;font-size:13px;font-weight:600;transition:0.3s;"
-                 onmouseover="this.style.background='#c33764'"
-                 onmouseout="this.style.background='#1d2671'">
+            <div style="display:flex;gap:10px;margin-top:10px;">
+              <a href="{% url 'view_singleproduct' item.product.id %}" class="btn-small btn-view">
                 View
               </a>
-              <a href="{% url 'remove_from_wishlist' item.product.id %}"
-                 style="flex:1;text-align:center;padding:8px 0;border-radius:20px;background:#f8d7da;color:#c33764;text-decoration:none;font-size:13px;font-weight:600;transition:0.3s;border:1px solid #c33764;"
-                 onmouseover="this.style.background='#c33764';this.style.color='white'"
-                 onmouseout="this.style.background='#f8d7da';this.style.color='#c33764'">
-                Remove ✕
+              <a href="{% url 'remove_from_wishlist' item.product.id %}" class="btn-small btn-remove">
+                Remove
               </a>
             </div>
 
           </div>
-        </div>
 
+        </div>
         {% endfor %}
 
       </div>
 
     {% else %}
 
-      <!-- EMPTY STATE -->
-      <div style="text-align:center;padding:80px 20px;animation:fadeUp 1s ease;">
-        <div style="font-size:80px;">🎨</div>
-        <h3 style="font-size:28px;margin-top:20px;color:#333;">Your wishlist is empty</h3>
-        <p style="color:#888;margin-top:10px;">Explore our collection and save artworks you love.</p>
+      <div class="empty-box">
+        <div style="font-size:70px;">🎨</div>
+        <h3>Your wishlist is empty</h3>
+        <p>Explore and save artworks you love.</p>
+
         <a href="{% url 'art_product_list' %}">
-          <button style="margin-top:25px;padding:12px 30px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-weight:600;cursor:pointer;font-size:15px;transition:0.3s;"
-                  onmouseover="this.style.transform='scale(1.1)'"
-                  onmouseout="this.style.transform='scale(1)'">
-            Browse Artworks
-          </button>
+          <button class="btn-main">Browse Artworks</button>
         </a>
       </div>
 

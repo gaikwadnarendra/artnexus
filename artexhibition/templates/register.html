@@ -126,7 +126,7 @@ body {
 <!-- BANNER -->
 <section class="banner-area">
   <div class="container">
-    <h1>Create Account</h1>
+    <h1 style="color: white;">Create Account</h1>
     <p>
       <a href="{% url 'index' %}">Home</a> →
       <span>Register</span>
@@ -151,7 +151,7 @@ body {
       <div class="col-lg-6 col-md-8 col-sm-12">
 
         <div class="register-card">
-          <h2>Join ArtNexus 🎨</h2>
+          <h2>Join ArtNexus</h2>
 
           <form method="POST" action="{% url 'register' %}">
             {% csrf_token %}

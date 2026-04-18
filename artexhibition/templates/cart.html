@@ -6,29 +6,157 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(40px);}
-  to { opacity:1; transform:translateY(0);}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f5f5f5;
+}
+
+/* BANNER */
+.banner-area {
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+              url("{% static 'img/u4.jpg' %}") center/cover no-repeat;
+  padding: 90px 20px;
+  text-align: center;
+  color: white;
+}
+
+.banner-area h1 {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+/* SECTION */
+.cart-section {
+  padding: 70px 20px;
+}
+
+/* CART ITEM */
+.cart-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.cart-card:hover {
+  transform: translateY(-3px);
+}
+
+.cart-card img {
+  width: 95px;
+  height: 95px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* TEXT */
+.item-title {
+  font-weight: 600;
+}
+
+.item-artist {
+  font-size: 13px;
+  color: #777;
+}
+
+.price {
+  color: #c33764;
+  font-weight: 600;
+}
+
+/* QTY */
+.qty-box button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+/* SUMMARY */
+.summary-card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* BUTTON */
+.btn-main {
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  background: #c33764;
+  color: white;
+  font-weight: 600;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.btn-main:hover {
+  background: #a82d55;
+}
+
+/* OUTLINE BTN */
+.btn-outline {
+  width: 100%;
+  padding: 11px;
+  border-radius: 25px;
+  border: 1px solid #c33764;
+  background: transparent;
+  color: #c33764;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.btn-outline:hover {
+  background: #c33764;
+  color: white;
+}
+
+/* EMPTY */
+.empty-box {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+/* MOBILE */
+@media (max-width:768px) {
+  .banner-area h1 {
+    font-size: 28px;
+  }
+
+  .cart-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 </style>
 
 <!-- BANNER -->
-<section style="height:35vh;background:linear-gradient(135deg,#1d2671,#c33764);display:flex;align-items:center;justify-content:center;text-align:center;color:white;">
-  <div style="animation:fadeUp 1.2s ease;">
-    <h1 style="font-size:50px;font-weight:700;letter-spacing:3px;">My Cart 🛒</h1>
-    <p style="font-size:16px;opacity:0.85;">
-      <a href="{% url 'index' %}" style="color:white;text-decoration:none;">Home</a> → Cart
+<section class="banner-area">
+  <div class="container">
+    <h1>My Cart</h1>
+    <p>
+      <a href="{% url 'index' %}" style="color:#ddd;">Home</a> → Cart
     </p>
   </div>
 </section>
 
-<!-- CART SECTION -->
-<section style="padding:60px 20px;background:#f4f6f9;min-height:60vh;">
+<!-- CART -->
+<section class="cart-section">
   <div style="max-width:1100px;margin:auto;">
 
     {% if messages %}
       {% for message in messages %}
-        <div style="background:#d4edda;border:1px solid #28a745;padding:12px 20px;border-radius:10px;margin-bottom:20px;text-align:center;color:#155724;">
+        <div class="alert alert-{{ message.tags }} text-center">
           {{ message }}
         </div>
       {% endfor %}
@@ -38,92 +166,78 @@
 
     <div style="display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start;">
 
-      <!-- LEFT - Cart Items -->
+      <!-- LEFT -->
       <div style="flex:2;min-width:300px;">
-        <h2 style="font-size:28px;margin-bottom:25px;">Your Items</h2>
+        <h2 style="margin-bottom:25px;">Your Items</h2>
 
         {% for item in cart_items %}
-        <div style="background:white;border-radius:20px;padding:20px;margin-bottom:20px;box-shadow:0 8px 25px rgba(0,0,0,0.08);display:flex;gap:20px;align-items:center;animation:fadeUp 0.6s ease;">
+        <div class="cart-card">
 
-          <!-- Image -->
-          <img src="{{ item.product.images.url }}"
-               style="width:100px;height:100px;object-fit:cover;border-radius:12px;flex-shrink:0;"
-               alt="{{ item.product.title }}">
+          <img src="{{ item.product.images.url }}">
 
-          <!-- Details -->
           <div style="flex:1;">
-            <h4 style="font-weight:600;margin:0 0 5px;">
+            <h4 class="item-title">
               <a href="{% url 'view_singleproduct' item.product.id %}" style="text-decoration:none;color:#333;">
                 {{ item.product.title }}
               </a>
             </h4>
+
             {% if item.product.artist %}
-              <p style="color:#888;font-size:13px;margin:0 0 5px;">by {{ item.product.artist.name }}</p>
+              <p class="item-artist">by {{ item.product.artist.name }}</p>
             {% endif %}
-            <p style="color:#c33764;font-weight:600;font-size:15px;margin:0;">₹{{ item.product.sellingprice }}</p>
+
+            <p class="price">₹{{ item.product.sellingprice }}</p>
           </div>
 
-          <!-- Quantity + Remove -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+          <div style="text-align:center;">
 
-            <form method="POST" action="{% url 'update_cart' item.product.id %}" style="display:flex;align-items:center;gap:8px;">
+            <form method="POST" action="{% url 'update_cart' item.product.id %}" class="qty-box">
               {% csrf_token %}
-              <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"
-                style="width:30px;height:30px;border-radius:50%;border:1px solid #ddd;background:white;font-size:16px;cursor:pointer;line-height:1;">−</button>
-              <span style="font-size:16px;font-weight:600;min-width:20px;text-align:center;">{{ item.quantity }}</span>
-              <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"
-                style="width:30px;height:30px;border-radius:50%;border:1px solid #ddd;background:white;font-size:16px;cursor:pointer;line-height:1;">+</button>
+              <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}">−</button>
+              <span style="margin:0 10px;">{{ item.quantity }}</span>
+              <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}">+</button>
             </form>
 
-            <p style="font-size:14px;font-weight:600;color:#333;margin:0;">
-              ₹{{ item.total_price }}
-            </p>
+            <p style="margin-top:8px;font-weight:600;">₹{{ item.total_price }}</p>
 
             <a href="{% url 'remove_from_cart' item.product.id %}"
-               style="font-size:12px;color:#dc3545;text-decoration:none;"
-               onclick="return confirm('Remove this item?')">
-              🗑 Remove
+               style="font-size:12px;color:#dc3545;text-decoration:none;">
+              Remove
             </a>
 
           </div>
+
         </div>
         {% endfor %}
 
       </div>
 
-      <!-- RIGHT - Order Summary -->
-      <div style="flex:1;min-width:280px;position:sticky;top:100px;">
-        <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
-          <h3 style="font-size:22px;font-weight:700;margin-bottom:20px;">Order Summary</h3>
+      <!-- RIGHT -->
+      <div style="flex:1;min-width:280px;">
+        <div class="summary-card">
 
-          <div style="border-top:1px solid #eee;padding-top:15px;">
-            {% for item in cart_items %}
-            <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;color:#555;">
-              <span>{{ item.product.title|slice:":25" }}... x{{ item.quantity }}</span>
-              <span>₹{{ item.total_price }}</span>
-            </div>
-            {% endfor %}
+          <h3>Order Summary</h3>
+
+          {% for item in cart_items %}
+          <div style="display:flex;justify-content:space-between;font-size:14px;margin-top:10px;">
+            <span>{{ item.product.title|slice:":20" }}... x{{ item.quantity }}</span>
+            <span>₹{{ item.total_price }}</span>
           </div>
+          {% endfor %}
 
-          <div style="border-top:2px solid #eee;margin-top:15px;padding-top:15px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:18px;font-weight:700;">Total</span>
-            <span style="font-size:22px;font-weight:700;color:#c33764;">₹{{ total }}</span>
+          <hr>
+
+          <div style="display:flex;justify-content:space-between;">
+            <strong>Total</strong>
+            <strong style="color:#c33764;">₹{{ total }}</strong>
           </div>
 
           <a href="{% url 'checkout' %}">
-            <button style="width:100%;margin-top:25px;padding:14px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-size:16px;font-weight:600;cursor:pointer;transition:0.3s;"
-                    onmouseover="this.style.opacity='0.85'"
-                    onmouseout="this.style.opacity='1'">
-              Proceed to Checkout →
-            </button>
+            <button class="btn-main">Proceed to Checkout</button>
           </a>
 
           <a href="{% url 'art_product_list' %}">
-            <button style="width:100%;margin-top:12px;padding:12px;border:1px solid #1d2671;border-radius:30px;background:transparent;color:#1d2671;font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;"
-                    onmouseover="this.style.background='#1d2671';this.style.color='white'"
-                    onmouseout="this.style.background='transparent';this.style.color='#1d2671'">
-              Continue Shopping
-            </button>
+            <button class="btn-outline">Continue Shopping</button>
           </a>
 
         </div>
@@ -133,17 +247,13 @@
 
     {% else %}
 
-    <!-- EMPTY CART -->
-    <div style="text-align:center;padding:80px 20px;animation:fadeUp 1s ease;">
-      <div style="font-size:80px;">🛒</div>
-      <h3 style="font-size:28px;margin-top:20px;color:#333;">Your cart is empty</h3>
-      <p style="color:#888;margin-top:10px;">Add some beautiful artworks to your cart.</p>
+    <div class="empty-box">
+      <div style="font-size:70px;">🛒</div>
+      <h3>Your cart is empty</h3>
+      <p>Add some artworks to your cart.</p>
+
       <a href="{% url 'art_product_list' %}">
-        <button style="margin-top:25px;padding:12px 30px;border:none;border-radius:30px;background:linear-gradient(135deg,#1d2671,#c33764);color:white;font-weight:600;cursor:pointer;font-size:15px;transition:0.3s;"
-                onmouseover="this.style.transform='scale(1.1)'"
-                onmouseout="this.style.transform='scale(1)'">
-          Browse Artworks
-        </button>
+        <button class="btn-main">Browse Artworks</button>
       </a>
     </div>
 
