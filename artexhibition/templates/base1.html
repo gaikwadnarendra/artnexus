@@ -226,21 +226,20 @@
         }
     }
 
-    /* ✅ MOBILE FIX FOR CHAT */
-    @media(max-width:768px){
+    /* FORCE MOBILE CHAT FIX */
+    @media screen and (max-width:768px){
 
-    #chat-btn {
-        bottom: 80px;   /* 👈 button upar */
-        right: 15px;
-    }
+        #chat-btn {
+            bottom: 90px !important;
+            right: 15px !important;
+        }
 
-    #chat-box {
-        bottom: 140px;  /* 👈 box bhi upar */
-        right: 10px;
-        width: 92%;
-        height: 60vh;   /* 👈 full screen jaisa feel */
-        border-radius: 12px;
-    }
+        #chat-box {
+            bottom: 160px !important;
+            right: 10px !important;
+            width: 92% !important;
+            height: 65vh !important;
+        }
 
     }
     </style>
