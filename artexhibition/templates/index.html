@@ -41,6 +41,8 @@ body {
 .hero h1 {
   font-size: 60px;
   font-weight: 700;
+  line-height: 1.15;
+  color: white;
 }
 
 .hero p {
@@ -67,6 +69,64 @@ body {
   border: 2px solid white;
   background: transparent;
   color: white;
+}
+
+/* ── HERO ANIMATION ── */
+
+/* Clip container for each word */
+.word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  margin: 0 3px;
+}
+
+/* Word slides up from bottom */
+.word {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  animation: wordUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes wordUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Subtitle: blur → clear */
+.hero-subtitle {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(10px);
+  animation: blurIn 1s ease forwards;
+  animation-delay: 0.9s;
+}
+
+@keyframes blurIn {
+  to {
+    opacity: 0.9;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+/* Buttons: fade + rise */
+.hero-btns {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 1.4s;
+  margin-top: 10px;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* FEATURES */
@@ -117,7 +177,6 @@ body {
   overflow: hidden;
 }
 
-/* Each slide */
 .slide {
   position: absolute;
   inset: 0;
@@ -138,14 +197,12 @@ body {
   display: block;
 }
 
-/* Dark overlay on slide */
 .slide-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
 }
 
-/* Slide info */
 .slide-info {
   position: absolute;
   bottom: 60px;
@@ -159,6 +216,7 @@ body {
   font-size: 34px;
   font-weight: 700;
   margin: 0 0 6px;
+  color: white;
   text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
@@ -186,7 +244,6 @@ body {
   transform: scale(1.04);
 }
 
-/* Prev / Next arrows */
 .slider-arrow {
   position: absolute;
   top: 50%;
@@ -215,7 +272,6 @@ body {
 .arrow-prev { left: 24px; }
 .arrow-next { right: 24px; }
 
-/* Slide counter */
 .slide-counter {
   position: absolute;
   bottom: 24px;
@@ -227,7 +283,6 @@ body {
   letter-spacing: 1px;
 }
 
-/* No artworks fallback */
 .no-artworks {
   text-align: center;
   color: #888;
@@ -245,6 +300,8 @@ body {
 
 /* MOBILE */
 @media (max-width: 600px) {
+  .hero h1 { font-size: 36px; }
+
   .slider-wrapper {
     height: 55vw;
     min-height: 280px;
@@ -256,13 +313,8 @@ body {
     max-width: calc(100% - 80px);
   }
 
-  .slide-info h3 {
-    font-size: 20px;
-  }
-
-  .slide-info p {
-    font-size: 13px;
-  }
+  .slide-info h3 { font-size: 20px; }
+  .slide-info p  { font-size: 13px; }
 
   .slider-arrow {
     width: 38px;
@@ -270,25 +322,32 @@ body {
     font-size: 16px;
   }
 
-  .slider-section h2 {
-    font-size: 24px;
-  }
+  .slider-section h2 { font-size: 24px; }
 }
 </style>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <h1 style="color: white;">Discover & Buy Unique Art</h1>
-    <p>Explore creativity, connect with artists, and own beautiful artworks.</p>
 
-    <a href="{% url 'art_product_list' %}">
-      <button class="btn-main btn-primary">Explore</button>
-    </a>
+    <!-- JS will split this into animated words -->
+    <h1 id="heroHeading">Discover & Buy Unique Art</h1>
 
-    <a href="{% url 'register' %}">
-      <button class="btn-main btn-outline">Join Now</button>
-    </a>
+    <!-- Blur → clear animation -->
+    <p class="hero-subtitle">
+      Explore creativity, connect with artists, and own beautiful artworks.
+    </p>
+
+    <!-- Fade + rise animation -->
+    <div class="hero-btns">
+      <a href="{% url 'art_product_list' %}">
+        <button class="btn-main btn-primary">Explore</button>
+      </a>
+      <a href="{% url 'register' %}">
+        <button class="btn-main btn-outline">Join Now</button>
+      </a>
+    </div>
+
   </div>
 </section>
 
@@ -297,91 +356,87 @@ body {
   <h2>Why ArtNexus?</h2>
 
   <div style="display:flex;gap:25px;justify-content:center;flex-wrap:wrap;margin-top:40px;">
-
     <div class="feature-box">
       <h3>Creative Platform</h3>
       <p>Showcase your artwork and connect globally.</p>
     </div>
-
     <div class="feature-box">
       <h3>Global Reach</h3>
       <p>Explore art from different cultures worldwide.</p>
     </div>
-
     <div class="feature-box">
       <h3>Live Exhibitions</h3>
       <p>Experience digital exhibitions anytime.</p>
     </div>
-
   </div>
 </section>
 
-<!-- ── ARTWORK SLIDER ── -->
+<!-- ARTWORK SLIDER -->
 <section class="slider-section">
   <h2>Featured <span>Artworks</span></h2>
 
   {% if artproducts1 %}
-
   <div class="slider-wrapper" id="artSlider">
 
     {% for i in artproducts1 %}
-    <div class="slide {% if forloop.first %}active{% endif %}"
-         data-index="{{ forloop.counter0 }}">
-
+    <div class="slide {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
       <img src="{{ i.images.url }}" alt="{{ i.title }}">
-
       <div class="slide-overlay"></div>
-
       <div class="slide-info">
-        <h3 style="color: white;">{{ i.title }}</h3>
+        <h3>{{ i.title }}</h3>
         <p>By {{ i.artist.name }}</p>
         <a href="{% url 'view_singleproduct' i.id %}">
           <button>View Artwork</button>
         </a>
       </div>
-
     </div>
     {% endfor %}
 
-    <!-- Arrows -->
     <button class="slider-arrow arrow-prev" id="prevBtn">&#8249;</button>
     <button class="slider-arrow arrow-next" id="nextBtn">&#8250;</button>
-
-    <!-- Counter -->
     <div class="slide-counter" id="slideCounter">1 / {{ artproducts1|length }}</div>
 
   </div>
-
   {% else %}
   <p class="no-artworks">No artworks available right now.</p>
   {% endif %}
-
 </section>
 
 <!-- CTA -->
 <section class="cta">
   <h2 style="color: black;">Join ArtNexus Today</h2>
   <p>Be part of the creative community.</p>
-
   <a href="{% url 'register' %}">
     <button class="btn-main btn-primary">Get Started</button>
   </a>
 </section>
 
-<!-- ── SLIDER SCRIPT ── -->
 <script>
+/* ── HERO HEADING: split words + stagger animation ── */
 (function () {
-  const slides   = document.querySelectorAll('.slide');
-  const prevBtn  = document.getElementById('prevBtn');
-  const nextBtn  = document.getElementById('nextBtn');
-  const counter  = document.getElementById('slideCounter');
-  const total    = slides.length;
+  const h1 = document.getElementById('heroHeading');
+  if (!h1) return;
+
+  const words = h1.textContent.trim().split(/\s+/);
+
+  h1.innerHTML = words.map((word, i) =>
+    `<span class="word-wrap"><span class="word" style="animation-delay:${(i * 0.1).toFixed(2)}s">${word}</span></span>`
+  ).join(' ');
+})();
+
+/* ── ARTWORK SLIDER ── */
+(function () {
+  const slides  = document.querySelectorAll('.slide');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counter = document.getElementById('slideCounter');
+  const total   = slides.length;
 
   if (!total) return;
 
-  let current   = 0;
-  let timer     = null;
-  const DELAY   = 4000; // 4 seconds auto-play
+  let current = 0;
+  let timer   = null;
+  const DELAY = 4000;
 
   function goTo(idx) {
     slides[current].classList.remove('active');
@@ -393,25 +448,16 @@ body {
   function next() { goTo(current + 1); }
   function prev() { goTo(current - 1); }
 
-  function startTimer() {
-    stopTimer();
-    timer = setInterval(next, DELAY);
-  }
+  function startTimer() { stopTimer(); timer = setInterval(next, DELAY); }
+  function stopTimer()  { if (timer) { clearInterval(timer); timer = null; } }
 
-  function stopTimer() {
-    if (timer) { clearInterval(timer); timer = null; }
-  }
-
-  // Arrow clicks — reset timer on manual nav
   nextBtn.addEventListener('click', () => { next(); startTimer(); });
   prevBtn.addEventListener('click', () => { prev(); startTimer(); });
 
-  // Pause on hover
   const wrapper = document.getElementById('artSlider');
   wrapper.addEventListener('mouseenter', stopTimer);
   wrapper.addEventListener('mouseleave', startTimer);
 
-  // Touch swipe support
   let touchStartX = 0;
   wrapper.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   wrapper.addEventListener('touchend', e => {
