@@ -51,6 +51,141 @@ body {
   background: #f8f9fa;
 }
 
+/* ── SEARCH BAR ── */
+.search-container {
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  position: relative;
+}
+
+.search-bar-wrap {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1.5px solid #ddd;
+  border-radius: 50px;
+  padding: 0 16px;
+  gap: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar-wrap:focus-within {
+  border-color: #c33764;
+  box-shadow: 0 0 0 4px rgba(195,55,100,0.1);
+}
+
+.search-bar-wrap svg {
+  width: 18px;
+  height: 18px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+#productSearch {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  padding: 12px 0;
+  background: transparent;
+  color: #333;
+  min-width: 0;
+}
+
+#productSearch::placeholder {
+  color: #bbb;
+}
+
+#clearSearch {
+  display: none;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #888;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+#clearSearch:hover {
+  background: #e0e0e0;
+}
+
+/* SUGGESTIONS DROPDOWN */
+.suggestions-box {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.sugg-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sugg-item:hover,
+.sugg-item.sugg-active {
+  background: #fdf0f4;
+  color: #c33764;
+}
+
+.sugg-item svg {
+  width: 14px;
+  height: 14px;
+  color: #bbb;
+  flex-shrink: 0;
+}
+
+.sugg-match {
+  color: #c33764;
+  font-weight: 600;
+}
+
+/* SEARCH RESULTS COUNT */
+#searchCount {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+  display: none;
+}
+
+/* MOBILE: collapse search to icon */
+@media (max-width: 576px) {
+  .search-container {
+    margin-bottom: 28px;
+  }
+
+  .search-bar-wrap {
+    padding: 0 12px;
+  }
+
+  #productSearch {
+    font-size: 14px;
+    padding: 10px 0;
+  }
+}
+
 /* GRID */
 .products-grid {
   display: flex;
@@ -71,6 +206,10 @@ body {
 
 .product-card:hover {
   transform: translateY(-8px);
+}
+
+.product-card.hidden {
+  display: none;
 }
 
 /* IMAGE */
@@ -164,6 +303,16 @@ body {
   font-size: 18px;
 }
 
+/* NO SEARCH RESULTS */
+#noSearchResult {
+  display: none;
+  text-align: center;
+  color: #aaa;
+  font-size: 16px;
+  width: 100%;
+  padding: 30px 0;
+}
+
 /* CTA */
 .cta {
   padding: 70px 20px;
@@ -195,12 +344,42 @@ body {
 <!-- PRODUCTS -->
 <section class="products-section">
 
-  <div class="products-grid">
+  <!-- ── SEARCH BAR ── -->
+  <div class="search-container">
+    <div class="search-bar-wrap">
+      <!-- Search Icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+
+      <input
+        type="text"
+        id="productSearch"
+        placeholder="Search by title, artist, medium..."
+        autocomplete="off"
+      />
+
+      <!-- Clear Button -->
+      <button id="clearSearch" title="Clear search">&#x2715;</button>
+    </div>
+
+    <!-- Suggestions Dropdown -->
+    <div class="suggestions-box" id="suggestionsBox"></div>
+  </div>
+
+  <!-- Result Count -->
+  <div id="searchCount"></div>
+
+  <div class="products-grid" id="productsGrid">
 
     {% if artproducts %}
 
       {% for i in artproducts %}
-      <div class="product-card">
+      <div class="product-card"
+           data-title="{{ i.title|lower }}"
+           data-artist="{{ i.artist.name|default:'unknown artist'|lower }}"
+           data-medium="{{ i.artmedium.artmedium|lower }}"
+           data-desc="{{ i.description|default:''|lower|slice:':200' }}">
 
         <!-- IMAGE -->
         <div class="product-img">
@@ -273,6 +452,9 @@ body {
       </div>
       {% endfor %}
 
+      <!-- No search result message (inside grid) -->
+      <p id="noSearchResult">No products found for "<span id="noSearchQuery"></span>"</p>
+
     {% else %}
       <p class="no-products">No Products Available</p>
     {% endif %}
@@ -290,5 +472,176 @@ body {
     <button>Back to Home</button>
   </a>
 </section>
+
+<!-- ── SEARCH SCRIPT ── -->
+<script>
+(function () {
+  const searchInput  = document.getElementById('productSearch');
+  const clearBtn     = document.getElementById('clearSearch');
+  const suggestBox   = document.getElementById('suggestionsBox');
+  const searchCount  = document.getElementById('searchCount');
+  const noResult     = document.getElementById('noSearchResult');
+  const noQuery      = document.getElementById('noSearchQuery');
+  const cards        = document.querySelectorAll('.product-card');
+
+  let activeIdx = -1;
+
+  // Build suggestion data from cards
+  const allTitles   = [...new Set([...cards].map(c => c.dataset.title))];
+  const allArtists  = [...new Set([...cards].map(c => c.dataset.artist))];
+  const allMediums  = [...new Set([...cards].map(c => c.dataset.medium))];
+
+  function normalize(str) {
+    return (str || '').toLowerCase().trim();
+  }
+
+  // Live filter cards
+  function filterCards(q) {
+    q = normalize(q);
+    let visible = 0;
+
+    cards.forEach(card => {
+      const matches =
+        card.dataset.title.includes(q) ||
+        card.dataset.artist.includes(q) ||
+        card.dataset.medium.includes(q) ||
+        card.dataset.desc.includes(q);
+
+      if (!q || matches) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Show count & no-result message
+    if (q) {
+      searchCount.style.display = 'block';
+      searchCount.innerHTML = visible
+        ? `<b>${visible}</b> result${visible > 1 ? 's' : ''} found for "<b>${q}</b>"`
+        : '';
+      if (visible === 0) {
+        noResult.style.display = 'block';
+        noQuery.textContent = q;
+      } else {
+        noResult.style.display = 'none';
+      }
+    } else {
+      searchCount.style.display = 'none';
+      noResult.style.display = 'none';
+    }
+  }
+
+  // Build suggestions list
+  function buildSuggestions(q) {
+    q = normalize(q);
+    if (!q) { hideSuggestions(); return; }
+
+    const results = [];
+
+    allTitles.forEach(t => {
+      if (t.includes(q)) results.push({ label: toTitleCase(t), type: 'Artwork' });
+    });
+    allArtists.forEach(a => {
+      if (a.includes(q)) results.push({ label: toTitleCase(a), type: 'Artist' });
+    });
+    allMediums.forEach(m => {
+      if (m.includes(q)) results.push({ label: toTitleCase(m), type: 'Medium' });
+    });
+
+    const unique = results.slice(0, 7);
+
+    if (!unique.length) { hideSuggestions(); return; }
+
+    suggestBox.innerHTML = unique.map((s, i) =>
+      `<div class="sugg-item" data-idx="${i}" data-text="${s.label.toLowerCase()}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <span>${highlight(s.label, q)}</span>
+        <span style="margin-left:auto;font-size:11px;color:#bbb;">${s.type}</span>
+      </div>`
+    ).join('');
+
+    suggestBox.style.display = 'block';
+    activeIdx = -1;
+
+    // Click on suggestion
+    suggestBox.querySelectorAll('.sugg-item').forEach(el => {
+      el.addEventListener('mousedown', e => {
+        e.preventDefault();
+        searchInput.value = el.dataset.text;
+        hideSuggestions();
+        filterCards(el.dataset.text);
+        clearBtn.style.display = 'flex';
+      });
+    });
+  }
+
+  function hideSuggestions() {
+    suggestBox.style.display = 'none';
+    activeIdx = -1;
+  }
+
+  // Highlight matching text
+  function highlight(text, q) {
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx < 0) return text;
+    return (
+      text.slice(0, idx) +
+      '<span class="sugg-match">' + text.slice(idx, idx + q.length) + '</span>' +
+      text.slice(idx + q.length)
+    );
+  }
+
+  function toTitleCase(str) {
+    return str.replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  // Keyboard navigation in suggestions
+  function navigateSuggestions(dir) {
+    const items = suggestBox.querySelectorAll('.sugg-item');
+    if (!items.length) return;
+    items[activeIdx]?.classList.remove('sugg-active');
+    activeIdx = Math.max(-1, Math.min(items.length - 1, activeIdx + dir));
+    if (activeIdx >= 0) items[activeIdx].classList.add('sugg-active');
+  }
+
+  // Events
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim();
+    clearBtn.style.display = q ? 'flex' : 'none';
+    filterCards(q);
+    buildSuggestions(q);
+  });
+
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown')  { e.preventDefault(); navigateSuggestions(1); }
+    else if (e.key === 'ArrowUp')   { e.preventDefault(); navigateSuggestions(-1); }
+    else if (e.key === 'Enter') {
+      const active = suggestBox.querySelector('.sugg-active');
+      if (active) {
+        searchInput.value = active.dataset.text;
+        filterCards(active.dataset.text);
+      }
+      hideSuggestions();
+    }
+    else if (e.key === 'Escape') { hideSuggestions(); }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    hideSuggestions();
+    filterCards('');
+    searchInput.focus();
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-container')) hideSuggestions();
+  });
+})();
+</script>
 
 {% endblock %}

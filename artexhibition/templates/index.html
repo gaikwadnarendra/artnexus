@@ -89,46 +89,150 @@ body {
   transform: translateY(-8px);
 }
 
-/* PRODUCTS */
-.products {
-  padding: 80px 20px;
-}
-
-.product-card {
-  width: 280px;
-  border-radius: 15px;
+/* ── ARTWORK SLIDER ── */
+.slider-section {
+  padding: 80px 0 60px;
+  background: #111;
   overflow: hidden;
-  background: white;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  transition: 0.3s;
 }
 
-.product-card:hover {
-  transform: scale(1.03);
+.slider-section h2 {
+  text-align: center;
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
 }
 
-.product-card img {
+.slider-section h2 span {
+  color: #c33764;
+}
+
+.slider-wrapper {
+  position: relative;
   width: 100%;
-  height: 220px;
+  height: 75vh;
+  min-height: 480px;
+  overflow: hidden;
+}
+
+/* Each slide */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.product-body {
-  padding: 15px;
+/* Dark overlay on slide */
+.slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
 }
 
-.product-body h4 {
-  margin: 0;
+/* Slide info */
+.slide-info {
+  position: absolute;
+  bottom: 60px;
+  left: 60px;
+  color: white;
+  z-index: 5;
+  max-width: 500px;
 }
 
-.artist {
-  font-size: 13px;
-  color: #777;
+.slide-info h3 {
+  font-size: 34px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
-.desc {
+.slide-info p {
+  font-size: 15px;
+  opacity: 0.85;
+  margin: 0 0 18px;
+}
+
+.slide-info a button {
+  padding: 10px 26px;
+  border-radius: 30px;
+  border: none;
+  background: #c33764;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
   font-size: 14px;
-  color: #555;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.slide-info a button:hover {
+  background: #a52d54;
+  transform: scale(1.04);
+}
+
+/* Prev / Next arrows */
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.4);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.slider-arrow:hover {
+  background: rgba(195,55,100,0.7);
+  border-color: #c33764;
+}
+
+.arrow-prev { left: 24px; }
+.arrow-next { right: 24px; }
+
+/* Slide counter */
+.slide-counter {
+  position: absolute;
+  bottom: 24px;
+  right: 30px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  z-index: 10;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* No artworks fallback */
+.no-artworks {
+  text-align: center;
+  color: #888;
+  padding: 60px 20px;
+  font-size: 18px;
 }
 
 /* CTA */
@@ -137,6 +241,38 @@ body {
   background: linear-gradient(135deg,#c33764,#1d2671);
   text-align: center;
   color: white;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .slider-wrapper {
+    height: 55vw;
+    min-height: 280px;
+  }
+
+  .slide-info {
+    bottom: 40px;
+    left: 20px;
+    max-width: calc(100% - 80px);
+  }
+
+  .slide-info h3 {
+    font-size: 20px;
+  }
+
+  .slide-info p {
+    font-size: 13px;
+  }
+
+  .slider-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .slider-section h2 {
+    font-size: 24px;
+  }
 }
 </style>
 
@@ -150,7 +286,6 @@ body {
       <button class="btn-main btn-primary">Explore</button>
     </a>
 
-    <!-- FIXED JOIN BUTTON -->
     <a href="{% url 'register' %}">
       <button class="btn-main btn-outline">Join Now</button>
     </a>
@@ -181,36 +316,46 @@ body {
   </div>
 </section>
 
-<!-- PRODUCTS -->
-<section class="products">
-  <h2 style="text-align:center;margin-bottom:40px;">Featured Artworks</h2>
+<!-- ── ARTWORK SLIDER ── -->
+<section class="slider-section">
+  <h2>Featured <span>Artworks</span></h2>
 
-  <div style="display:flex;flex-wrap:wrap;gap:25px;justify-content:center;">
+  {% if artproducts1 %}
+
+  <div class="slider-wrapper" id="artSlider">
 
     {% for i in artproducts1 %}
+    <div class="slide {% if forloop.first %}active{% endif %}"
+         data-index="{{ forloop.counter0 }}">
 
-    <div class="product-card">
+      <img src="{{ i.images.url }}" alt="{{ i.title }}">
 
-      <img src="{{i.images.url}}">
+      <div class="slide-overlay"></div>
 
-      <div class="product-body">
-        <h4>
-          <a href="{% url 'view_singleproduct' i.id %}" style="text-decoration:none;color:#333;">
-            {{i.title}}
-          </a>
-        </h4>
-
-        <p class="artist">By {{i.artist.name}}</p>
-
-        <p class="desc">{{i.description|slice:":100"}}...</p>
-
+      <div class="slide-info">
+        <h3>{{ i.title }}</h3>
+        <p>By {{ i.artist.name }}</p>
+        <a href="{% url 'view_singleproduct' i.id %}">
+          <button>View Artwork</button>
+        </a>
       </div>
 
     </div>
-
     {% endfor %}
 
+    <!-- Arrows -->
+    <button class="slider-arrow arrow-prev" id="prevBtn">&#8249;</button>
+    <button class="slider-arrow arrow-next" id="nextBtn">&#8250;</button>
+
+    <!-- Counter -->
+    <div class="slide-counter" id="slideCounter">1 / {{ artproducts1|length }}</div>
+
   </div>
+
+  {% else %}
+  <p class="no-artworks">No artworks available right now.</p>
+  {% endif %}
+
 </section>
 
 <!-- CTA -->
@@ -222,5 +367,60 @@ body {
     <button class="btn-main btn-primary">Get Started</button>
   </a>
 </section>
+
+<!-- ── SLIDER SCRIPT ── -->
+<script>
+(function () {
+  const slides   = document.querySelectorAll('.slide');
+  const prevBtn  = document.getElementById('prevBtn');
+  const nextBtn  = document.getElementById('nextBtn');
+  const counter  = document.getElementById('slideCounter');
+  const total    = slides.length;
+
+  if (!total) return;
+
+  let current   = 0;
+  let timer     = null;
+  const DELAY   = 4000; // 4 seconds auto-play
+
+  function goTo(idx) {
+    slides[current].classList.remove('active');
+    current = (idx + total) % total;
+    slides[current].classList.add('active');
+    if (counter) counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function startTimer() {
+    stopTimer();
+    timer = setInterval(next, DELAY);
+  }
+
+  function stopTimer() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  // Arrow clicks — reset timer on manual nav
+  nextBtn.addEventListener('click', () => { next(); startTimer(); });
+  prevBtn.addEventListener('click', () => { prev(); startTimer(); });
+
+  // Pause on hover
+  const wrapper = document.getElementById('artSlider');
+  wrapper.addEventListener('mouseenter', stopTimer);
+  wrapper.addEventListener('mouseleave', startTimer);
+
+  // Touch swipe support
+  let touchStartX = 0;
+  wrapper.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  wrapper.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); startTimer(); }
+  }, { passive: true });
+
+  startTimer();
+})();
+</script>
 
 {% endblock %}
