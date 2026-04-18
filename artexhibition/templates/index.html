@@ -238,7 +238,7 @@ body {
 /* CTA */
 .cta {
   padding: 80px 20px;
-  background: linear-gradient(135deg,#c33764,#1d2671);
+  background: rgba(49, 48, 48, 0.815);
   text-align: center;
   color: white;
 }
@@ -333,7 +333,7 @@ body {
       <div class="slide-overlay"></div>
 
       <div class="slide-info">
-        <h3>{{ i.title }}</h3>
+        <h3 style="color: white;">{{ i.title }}</h3>
         <p>By {{ i.artist.name }}</p>
         <a href="{% url 'view_singleproduct' i.id %}">
           <button>View Artwork</button>
@@ -360,7 +360,7 @@ body {
 
 <!-- CTA -->
 <section class="cta">
-  <h2>Join ArtNexus Today</h2>
+  <h2 style="color: white;">Join ArtNexus Today</h2>
   <p>Be part of the creative community.</p>
 
   <a href="{% url 'register' %}">
