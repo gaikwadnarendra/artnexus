@@ -225,6 +225,24 @@
             transform: translateX(0);
         }
     }
+
+    /* ✅ MOBILE FIX FOR CHAT */
+    @media(max-width:768px){
+
+    #chat-btn {
+        bottom: 80px;   /* 👈 button upar */
+        right: 15px;
+    }
+
+    #chat-box {
+        bottom: 140px;  /* 👈 box bhi upar */
+        right: 10px;
+        width: 92%;
+        height: 60vh;   /* 👈 full screen jaisa feel */
+        border-radius: 12px;
+    }
+
+    }
     </style>
 
 </head>
