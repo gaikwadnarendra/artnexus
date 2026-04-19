@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from cloudinary.models import CloudinaryField
 
 class CustomUser(AbstractUser):
     USER ={
@@ -12,7 +13,8 @@ class CustomUser(AbstractUser):
     }
     user_type = models.CharField(choices=USER,max_length=50,default=1)
 
-    profile_pic = models.ImageField(upload_to='media/profile_pic')
+    # profile_pic = models.ImageField(upload_to='media/profile_pic')
+    images = CloudinaryField('image', folder='media/profile_pis')
 
 class Artist(models.Model):
     name = models.CharField(max_length=250)
@@ -21,7 +23,8 @@ class Artist(models.Model):
     email = models.EmailField(unique=True)
     edudetails = models.TextField()
     awarddetails = models.TextField()
-    images = models.ImageField(upload_to='media/artistprofile_pic')
+    # images = models.ImageField(upload_to='media/artistprofile_pic')
+    images = CloudinaryField('image', folder='media/artistprofile_pic')
     creationdate = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -38,11 +41,11 @@ class Artmedium(models.Model):
 class Artproducts(models.Model):
     referencenumber = models.IntegerField(default=0, unique=True)  # Ensure unique reference number
     title = models.CharField(max_length=250)
-    images = models.ImageField(upload_to='artpics/images')
-    image1 = models.ImageField(upload_to='artpics/images')
-    image2 = models.ImageField(upload_to='artpics/images')
-    image3 = models.ImageField(upload_to='artpics/images')
-    image4 = models.ImageField(upload_to='artpics/images')
+    images = CloudinaryField('image', folder='artnexus/images')
+    image1 = CloudinaryField('image', folder='artnexus/images')
+    image2 = CloudinaryField('image', folder='artnexus/images')
+    image3 = CloudinaryField('image', folder='artnexus/images')
+    image4 = CloudinaryField('image', folder='artnexus/images')
     dimension = models.CharField(max_length=250)
     orientation = models.CharField(max_length=250)
     size = models.CharField(max_length=250)
