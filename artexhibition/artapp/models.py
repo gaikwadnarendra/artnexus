@@ -14,7 +14,7 @@ class CustomUser(AbstractUser):
     user_type = models.CharField(choices=USER,max_length=50,default=1)
 
     # profile_pic = models.ImageField(upload_to='media/profile_pic')
-    images = CloudinaryField('image', folder='media/profile_pis')
+    profile_pic = CloudinaryField('image', folder='media/profile_pis')
 
 class Artist(models.Model):
     name = models.CharField(max_length=250)
