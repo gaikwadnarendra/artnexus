@@ -7,29 +7,20 @@ from django.contrib.auth import *
 from django.db import IntegrityError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import random
-from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
-from django.db.models import Q
-User = get_user_model()
-
-# for email
-from django.core.mail import send_mail
-from django.core.mail import EmailMultiAlternatives
+from django.db.models import *
+from django.core.mail import *
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
-
-# Chatbot using OpenRouter API
 import json
-import requests
 import re
-
+import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from artapp.models import Artproducts
 
+User = get_user_model()
 
 # #temporary
 # from django.contrib.auth import get_user_model
@@ -72,29 +63,40 @@ def chatbot(request):
         user_msg = messages[-1]["content"]
         user_lower = user_msg.lower()
 
-        # =========================================================
-        # 🔥 1. HYBRID INTENT DETECTION (FINAL FIX)
-        # =========================================================
-        search_keywords = [
-            "show", "art", "painting", "artwork",
-            "buy", "price", "under", "cheap", "find"
-        ]
+        # =====================================================
+        # 🧠 1. SMART INTENT DETECTION
+        # =====================================================
+        def detect_intent(msg):
+            msg = msg.lower()
 
-        intent = "chat"
+            if any(w in msg for w in ["show", "display", "list", "find", "buy"]):
+                return "search"
 
-        if any(word in user_lower for word in search_keywords):
-            intent = "search"
+            if any(w in msg for w in ["under", "price", "cheap", "cost"]):
+                return "search"
 
-        # ❗ override for question-type queries
-        if any(word in user_lower for word in ["what", "help", "explain", "meaning", "why"]):
-            intent = "chat"
+            if "artist" in msg or "by" in msg:
+                return "search"
 
-        # =========================================================
-        # 🎨 2. SEARCH FLOW (DB + AI FILTER)
-        # =========================================================
+            if "cart" in msg:
+                return "cart"
+
+            if "wishlist" in msg:
+                return "wishlist"
+
+            if "order" in msg:
+                return "order"
+
+            return "chat"
+
+        intent = detect_intent(user_msg)
+
+        # =====================================================
+        # 🎨 2. SEARCH FLOW
+        # =====================================================
         if intent == "search":
 
-            # 🔥 AI FILTER (optional but powerful)
+            # 🔥 AI FILTER EXTRACTION
             filter_prompt = f"""
             Extract filters from user query.
 
@@ -102,9 +104,17 @@ def chatbot(request):
             - artist
             - price_max
             - art_type
+            - medium
+            - sort (cheap, expensive, latest)
 
             Return ONLY JSON:
-            {{"artist": null, "price_max": null, "art_type": null}}
+            {{
+                "artist": null,
+                "price_max": null,
+                "art_type": null,
+                "medium": null,
+                "sort": null
+            }}
 
             Query: "{user_msg}"
             """
@@ -126,9 +136,6 @@ def chatbot(request):
                     timeout=10,
                 )
 
-                print(f"OpenRouter Status: {res.status_code}")
-                print(f"OpenRouter Response: {res.text}")
-
                 if res.status_code == 200:
                     content = res.json()["choices"][0]["message"]["content"]
                     filters = json.loads(content)
@@ -137,113 +144,189 @@ def chatbot(request):
                 filters = {}
 
             # =====================================================
-            # 🔥 DB QUERY
+            # 🗄️ DB QUERY
             # =====================================================
             products = Artproducts.objects.all()
 
+            # ALL ART
+            if "all" in user_lower:
+                products = products.order_by("-creationdate")
+
+            # ARTIST
             if filters.get("artist"):
                 products = products.filter(
                     artist__name__icontains=filters["artist"]
                 )
 
+            # PRICE
             if filters.get("price_max"):
                 products = products.filter(
                     sellingprice__lte=filters["price_max"]
                 )
 
+            # ART TYPE
             if filters.get("art_type"):
                 products = products.filter(
-                    arttype__name__icontains=filters["art_type"]
+                    arttype__arttype__icontains=filters["art_type"]
+                )
+
+            # MEDIUM
+            if filters.get("medium"):
+                products = products.filter(
+                    artmedium__artmedium__icontains=filters["medium"]
                 )
 
             # =====================================================
-            # 🔥 SMART SORTING
+            # 🔥 SORTING
             # =====================================================
-            if filters.get("artist"):
-                products = products.annotate(
-                    match_score=Case(
-                        When(artist__name__icontains=filters["artist"], then=Value(2)),
-                        default=Value(0),
-                        output_field=IntegerField(),
-                    )
-                ).order_by("-match_score", "sellingprice")
+            if filters.get("sort") == "cheap":
+                products = products.order_by("sellingprice")
+
+            elif filters.get("sort") == "expensive":
+                products = products.order_by("-sellingprice")
+
+            elif filters.get("sort") == "latest":
+                products = products.order_by("-creationdate")
+
             else:
                 products = products.order_by("sellingprice")
 
             products = products[:5]
 
             # =====================================================
-            # 🔥 RESPONSE + RECOMMENDATION
+            # 🎯 RESPONSE
             # =====================================================
             if products.exists():
-                reply = "🎨 Here are artworks:\n\n"
+                reply = "🎨 Here are some artworks:\n\n"
 
                 for p in products:
-                    reply += f"""• {p.title}
-                        Price: ${p.sellingprice}
-                        Artist: {p.artist.name}
-                    """
+                    reply += f"""
+                            🖼️ {p.title}
+                            👨‍🎨 {p.artist.name if p.artist else 'Unknown'}
+                            💰 ₹{p.sellingprice}
 
-                # 🔥 SIMILAR PRODUCTS
+                        """
+
+                # 🔥 RECOMMENDATION
                 first = products.first()
 
                 similar = Artproducts.objects.filter(
-                    arttype=first.arttype
+                    Q(arttype=first.arttype) |
+                    Q(artmedium=first.artmedium)
                 ).exclude(id=first.id)[:3]
 
                 if similar:
                     reply += "\n🔥 You may also like:\n\n"
                     for s in similar:
-                        reply += f"""• {s.title}
-                        Price: ${s.sellingprice}
-
-                        """
+                        reply += f"• {s.title} - ₹{s.sellingprice}\n"
 
             else:
-                reply = "😔 No matching artworks found."
+                reply = "😔 No artworks found."
 
             return JsonResponse({"reply": reply})
 
-        # =========================================================
-        # 🤖 3. NORMAL CHAT (AI)
-        # =========================================================
-        chat_prompt = f"""
-                        You are ArtNexus AI 🎨.
-                        Be friendly and helpful.
+        # =====================================================
+        # 🛒 3. CART FUNCTIONALITY
+        # =====================================================
+        elif intent == "cart":
+            if not request.user.is_authenticated:
+                return JsonResponse({"reply": "⚠️ Please login first."})
 
-                        User: {user_msg}
-                        """
+            # simple product detect (first match)
+            product = Artproducts.objects.filter(
+                title__icontains=user_msg
+            ).first()
 
-        res = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": "gryphe/mythomax-l2-13b",
-                "messages": [{"role": "user", "content": chat_prompt}],
-                "temperature": 0.7,
-                "max_tokens": 300,
-            },
-            timeout=20,
-        )
+            if product:
+                cart_item, created = Cart.objects.get_or_create(
+                    user=request.user,
+                    product=product
+                )
+                if not created:
+                    cart_item.quantity += 1
+                    cart_item.save()
 
-        reply = res.json()["choices"][0]["message"]["content"]
+                return JsonResponse({
+                    "reply": f"✅ Added {product.title} to cart."
+                })
 
-        return JsonResponse({"reply": reply})
+            return JsonResponse({"reply": "❌ Product not found."})
+
+        # =====================================================
+        # ❤️ 4. WISHLIST
+        # =====================================================
+        elif intent == "wishlist":
+            if not request.user.is_authenticated:
+                return JsonResponse({"reply": "⚠️ Please login first."})
+
+            product = Artproducts.objects.filter(
+                title__icontains=user_msg
+            ).first()
+
+            if product:
+                Wishlist.objects.get_or_create(
+                    user=request.user,
+                    product=product
+                )
+
+                return JsonResponse({
+                    "reply": f"❤️ Added {product.title} to wishlist."
+                })
+
+            return JsonResponse({"reply": "❌ Product not found."})
+
+        # =====================================================
+        # 📦 5. ORDER TRACK
+        # =====================================================
+        elif intent == "order":
+            if not request.user.is_authenticated:
+                return JsonResponse({"reply": "⚠️ Please login first."})
+
+            orders = Order.objects.filter(user=request.user).order_by("-created_at")[:3]
+
+            if orders:
+                reply = "📦 Your recent orders:\n\n"
+                for o in orders:
+                    reply += f"• Order #{o.id} - {o.status}\n"
+            else:
+                reply = "No orders found."
+
+            return JsonResponse({"reply": reply})
+
+        # =====================================================
+        # 🤖 6. NORMAL CHAT
+        # =====================================================
+        else:
+            chat_prompt = f"""
+            You are ArtNexus AI 🎨.
+            Be friendly and helpful.
+
+            User: {user_msg}
+            """
+
+            res = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": "gryphe/mythomax-l2-13b",
+                    "messages": [{"role": "user", "content": chat_prompt}],
+                    "temperature": 0.7,
+                },
+                timeout=20,
+            )
+
+            reply = res.json()["choices"][0]["message"]["content"]
+
+            return JsonResponse({"reply": reply})
 
     except Exception as e:
-        import traceback
-        error_detail = traceback.format_exc()
-        print(f"CHATBOT ERROR: {error_detail}")  # Render logs mein dikhega
-        return JsonResponse({"error": str(e), "detail": error_detail}, status=500)
+        return JsonResponse({"error": str(e)}, status=500)
+    
 # @csrf_exempt
 # def chatbot(request):
-#     """AI + Database Chatbot for ArtNexus"""
-
-#     print("API KEY:", settings.OPENROUTER_API_KEY)
-
 #     if request.method != "POST":
 #         return JsonResponse({"error": "POST request required"}, status=405)
 
@@ -254,105 +337,175 @@ def chatbot(request):
 #         if not messages:
 #             return JsonResponse({"error": "No messages provided"}, status=400)
 
-#         #Latest user message
-#         user_msg = messages[-1]["content"].lower()
+#         user_msg = messages[-1]["content"]
+#         user_lower = user_msg.lower()
 
-#         #1. OWNER / DEVELOPER RESPONSE
-#         if any(word in user_msg for word in ["developer", "owner", "creator", "who made", "who built"]):
-#             return JsonResponse({
-#                 "reply": "ArtNexus is proudly developed and owned by Narendra Gaikwad."
-#             })
-
-#         #2. SHOW ALL ARTWORKS
-#         if any(word in user_msg for word in ["art", "painting", "artwork"]):
-#             products = Artproducts.objects.all()[:5]
-
-#             if products:
-#                 reply = "🎨 Here are some artworks:\n\n"
-#                 for p in products:
-#                     reply += f"• {p.title}\n"
-#                     reply += f"   ,Price: ${p.sellingprice}\n"
-#                     reply += f"   ,Artist: {p.artist.name}\n\n"
-#                 return JsonResponse({"reply": reply})
-
-#         #3. BUDGET FILTER (e.g. "under 50")
-#         price_match = re.findall(r'\d+', user_msg)
-
-#         if "under" in user_msg and price_match:
-#             budget = int(price_match[0])
-
-#             products = Artproducts.objects.filter(sellingprice__lte=budget)[:5]
-
-#             if products:
-#                 reply = f"🎨 Art under ${budget}:\n\n"
-#                 for p in products:
-#                     reply += f"• {p.title}\n"
-#                     reply += f"   ,Price: ${p.sellingprice}\n"
-#                     reply += f"   ,Artist: {p.artist.name}\n\n"
-#                 return JsonResponse({"reply": reply})
-
-#         #4. FILTER BY ART TYPE (example: abstract)
-#         if "abstract" in user_msg:
-#             products = Artproducts.objects.filter(arttype__name__icontains="abstract")[:5]
-
-#             if products:
-#                 reply = "Abstract Art:\n\n"
-#                 for p in products:
-#                     reply += f"• {p.title}\n"
-#                     reply += f"   ,Price: ${p.sellingprice}\n"
-#                     reply += f"   ,Artist: {p.artist}\n\n"
-#                 return JsonResponse({"reply": reply})
-
-#         # 6. AI FALLBACK (OpenRouter)
-#         final_messages = [
-#             {
-#                 "role": "user",
-#                 "content": (
-#                     "You are ArtNexus AI, an expert in art and paintings. "
-#                     "Give short, helpful, and engaging answers. "
-#                     "Suggest artworks when possible.\n\n"
-#                     f"User: {messages[-1]['content']}"
-#                 )
-#             }
+#         # =========================================================
+#         # 🔥 1. HYBRID INTENT DETECTION (FINAL FIX)
+#         # =========================================================
+#         search_keywords = [
+#             "show", "art", "painting", "artwork",
+#             "buy", "price", "under", "cheap", "find"
 #         ]
 
-#         response = requests.post(
-#             url="https://openrouter.ai/api/v1/chat/completions",
+#         intent = "chat"
+
+#         if any(word in user_lower for word in search_keywords):
+#             intent = "search"
+
+#         # ❗ override for question-type queries
+#         if any(word in user_lower for word in ["what", "help", "explain", "meaning", "why"]):
+#             intent = "chat"
+
+#         # =========================================================
+#         # 🎨 2. SEARCH FLOW (DB + AI FILTER)
+#         # =========================================================
+#         if intent == "search":
+
+#             # 🔥 AI FILTER (optional but powerful)
+#             filter_prompt = f"""
+#             Extract filters from user query.
+
+#             Fields:
+#             - artist
+#             - price_max
+#             - art_type
+
+#             Return ONLY JSON:
+#             {{"artist": null, "price_max": null, "art_type": null}}
+
+#             Query: "{user_msg}"
+#             """
+
+#             filters = {}
+
+#             try:
+#                 res = requests.post(
+#                     "https://openrouter.ai/api/v1/chat/completions",
+#                     headers={
+#                         "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+#                         "Content-Type": "application/json",
+#                     },
+#                     json={
+#                         "model": "mistralai/mistral-7b-instruct",
+#                         "messages": [{"role": "user", "content": filter_prompt}],
+#                         "temperature": 0,
+#                     },
+#                     timeout=10,
+#                 )
+
+#                 print(f"OpenRouter Status: {res.status_code}")
+#                 print(f"OpenRouter Response: {res.text}")
+
+#                 if res.status_code == 200:
+#                     content = res.json()["choices"][0]["message"]["content"]
+#                     filters = json.loads(content)
+
+#             except:
+#                 filters = {}
+
+#             # =====================================================
+#             # 🔥 DB QUERY
+#             # =====================================================
+#             products = Artproducts.objects.all()
+
+#             if filters.get("artist"):
+#                 products = products.filter(
+#                     artist__name__icontains=filters["artist"]
+#                 )
+
+#             if filters.get("price_max"):
+#                 products = products.filter(
+#                     sellingprice__lte=filters["price_max"]
+#                 )
+
+#             if filters.get("art_type"):
+#                 products = products.filter(
+#                     arttype__name__icontains=filters["art_type"]
+#                 )
+
+#             # =====================================================
+#             # 🔥 SMART SORTING
+#             # =====================================================
+#             if filters.get("artist"):
+#                 products = products.annotate(
+#                     match_score=Case(
+#                         When(artist__name__icontains=filters["artist"], then=Value(2)),
+#                         default=Value(0),
+#                         output_field=IntegerField(),
+#                     )
+#                 ).order_by("-match_score", "sellingprice")
+#             else:
+#                 products = products.order_by("sellingprice")
+
+#             products = products[:5]
+
+#             # =====================================================
+#             # 🔥 RESPONSE + RECOMMENDATION
+#             # =====================================================
+#             if products.exists():
+#                 reply = "🎨 Here are artworks:\n\n"
+
+#                 for p in products:
+#                     reply += f"""• {p.title}
+#                         Price: ${p.sellingprice}
+#                         Artist: {p.artist.name}
+#                     """
+
+#                 # 🔥 SIMILAR PRODUCTS
+#                 first = products.first()
+
+#                 similar = Artproducts.objects.filter(
+#                     arttype=first.arttype
+#                 ).exclude(id=first.id)[:3]
+
+#                 if similar:
+#                     reply += "\n🔥 You may also like:\n\n"
+#                     for s in similar:
+#                         reply += f"""• {s.title}
+#                         Price: ${s.sellingprice}
+
+#                         """
+
+#             else:
+#                 reply = "😔 No matching artworks found."
+
+#             return JsonResponse({"reply": reply})
+
+#         # =========================================================
+#         # 🤖 3. NORMAL CHAT (AI)
+#         # =========================================================
+#         chat_prompt = f"""
+#                         You are ArtNexus AI 🎨.
+#                         Be friendly and helpful.
+
+#                         User: {user_msg}
+#                         """
+
+#         res = requests.post(
+#             "https://openrouter.ai/api/v1/chat/completions",
 #             headers={
 #                 "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
 #                 "Content-Type": "application/json",
 #             },
 #             json={
 #                 "model": "gryphe/mythomax-l2-13b",
-#                 "messages": final_messages,
-#                 "max_tokens": 500,
+#                 "messages": [{"role": "user", "content": chat_prompt}],
 #                 "temperature": 0.7,
+#                 "max_tokens": 300,
 #             },
-#             timeout=30,
+#             timeout=20,
 #         )
 
-#         #Debug logs
-#         print("Status Code:", response.status_code)
-#         print("Response Body:", response.text)
-
-#         response.raise_for_status()
-#         result = response.json()
-
-#         reply = result["choices"][0]["message"]["content"]
+#         reply = res.json()["choices"][0]["message"]["content"]
 
 #         return JsonResponse({"reply": reply})
 
-#     except requests.exceptions.Timeout:
-#         return JsonResponse({"error": "Request timeout"}, status=504)
-
-#     except requests.exceptions.RequestException as e:
-#         return JsonResponse({"error": f"API error: {str(e)}"}, status=502)
-
-#     except (KeyError, IndexError):
-#         return JsonResponse({"error": "Invalid response from AI"}, status=500)
-
-#     except json.JSONDecodeError:
-#         return JsonResponse({"error": "Invalid JSON"}, status=400)
+#     except Exception as e:
+#         import traceback
+#         error_detail = traceback.format_exc()
+#         print(f"CHATBOT ERROR: {error_detail}")  # Render logs mein dikhega
+#         return JsonResponse({"error": str(e), "detail": error_detail}, status=500)
     
 @csrf_exempt
 def chat_page(request):
