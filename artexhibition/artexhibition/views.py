@@ -1656,3 +1656,8 @@ def order_confirmation(request, order_id):
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'my_orders.html', {'orders': orders})
+
+def google_analytics(request):
+    return {
+        'GA_TRACKING_ID': settings.GOOGLE_ANALYTICS_ID
+    }
