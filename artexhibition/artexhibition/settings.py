@@ -204,3 +204,6 @@ LOGGING = {
 
 RAZORPAY_KEY_ID     = os.environ.get('RAZORPAY_KEY_ID')
 RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET')
+
+
+GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', '')

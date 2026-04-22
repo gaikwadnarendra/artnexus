@@ -1,5 +1,6 @@
 from .models import Arttype,Enquiry
 from django.conf import settings
+import os
 
 def arttypes_processor(request):
     arttypes = Arttype.objects.all()
