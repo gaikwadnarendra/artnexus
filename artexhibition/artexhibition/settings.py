@@ -71,7 +71,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'artapp.context_processors.arttypes_processor',
                 'artapp.context_processors.enquiry_processor',
-                'myapp.context_processors.google_analytics',
+                'artapp.context_processors.google_analytics',
             ],
         },
     },
