@@ -382,29 +382,41 @@ body, html {
 </header>
 
 <script>
-const hamburger = document.getElementById('hamburger');
-const navMenu   = document.getElementById('nav-menu-container');
+  const hamburger = document.getElementById('hamburger');
+  const navMenu   = document.getElementById('nav-menu-container');
 
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  navMenu.classList.toggle('open');
-});
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navMenu.classList.toggle('open');
+  });
 
-document.querySelectorAll('.menu-has-children').forEach(menu => {
-  menu.addEventListener('click', function(e) {
-    if (window.innerWidth <= 768) {
-      e.stopPropagation();
-      this.classList.toggle('open');
-    }
+  document.querySelectorAll('.menu-has-children').forEach(menu => {
+    menu.addEventListener('click', function(e) {
+      if (window.innerWidth <= 768) {
+        e.stopPropagation();
+        this.classList.toggle('open');
+      }
+    });
   });
-});
 
-document.querySelectorAll('.menu-has-children').forEach(menu => {
-  menu.addEventListener('mouseenter', function() {
-    if (window.innerWidth > 768) this.classList.add('open');
+  // ── FIXED: delay added so cursor can reach dropdown ──
+  document.querySelectorAll('.menu-has-children').forEach(menu => {
+    let hideTimeout;
+
+    menu.addEventListener('mouseenter', function() {
+      if (window.innerWidth > 768) {
+        clearTimeout(hideTimeout);
+        this.classList.add('open');
+      }
+    });
+
+    menu.addEventListener('mouseleave', function() {
+      if (window.innerWidth > 768) {
+        const self = this;
+        hideTimeout = setTimeout(() => {
+          self.classList.remove('open');
+        }, 150); // ← 8px gap cross karne ka time
+      }
+    });
   });
-  menu.addEventListener('mouseleave', function() {
-    if (window.innerWidth > 768) this.classList.remove('open');
-  });
-});
 </script>
