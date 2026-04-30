@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /Login
+Allow: /
+
+Sitemap: https://artnexus.onrender.com/sitemap.xml
