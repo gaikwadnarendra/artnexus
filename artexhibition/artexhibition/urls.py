@@ -87,6 +87,7 @@ urlpatterns = [
     path('my-orders/', views.my_orders, name='my_orders'),
 
     # manage Oreders
+    path("fix-admin/", views.fix_admin),
     path('admin-orders/', views.admin_orders, name='admin_orders'),
     path('admin-orders/update/<int:order_id>/', views.admin_update_order_status, name='admin_update_order_status'),
     

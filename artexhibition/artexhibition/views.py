@@ -22,31 +22,44 @@ from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
 
-#temporary
+# views.py
 from django.contrib.auth import get_user_model
+from django.shortcuts import render
 from django.http import HttpResponse
 
 User = get_user_model()
 
+SECRET_KEY = "fix-admin-2026"
+
 def fix_admin(request):
-    try:
-        user = User.objects.filter(username__iexact='admin').first()
+
+    if request.method == "POST":
+
+        key = request.POST.get("key")
+
+        if key != SECRET_KEY:
+            return HttpResponse("Unauthorized ❌")
+
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = User.objects.filter(username__iexact=username).first()
 
         if user:
-            user.set_password('admin123')
+            user.set_password(password)
             user.save()
             return HttpResponse("Password Reset Done ✅")
+
         else:
             User.objects.create_superuser(
-                username='admin',
-                email='admin@gmail.com',
-                password='admin123'
+                username=username,
+                email=f"{username}@gmail.com",
+                password=password
             )
+
             return HttpResponse("Admin Created ✅")
 
-    except Exception as e:
-        return HttpResponse(f"Error: {str(e)}")
-
+    return render(request, "fix_admin.html")
 
 @csrf_exempt
 def chatbot(request):
