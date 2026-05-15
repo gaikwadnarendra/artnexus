@@ -107,6 +107,10 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+import os
+
+SECRET_KEY = os.getenv("ADMIN_FIX_KEY")
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

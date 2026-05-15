@@ -26,10 +26,11 @@ User = get_user_model()
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from django.http import HttpResponse
+import os
 
 User = get_user_model()
 
-SECRET_KEY = "fix-admin-2026"
+SECRET_KEY = os.getenv("ADMIN_FIX_KEY")
 
 def fix_admin(request):
 
