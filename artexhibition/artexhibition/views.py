@@ -22,30 +22,30 @@ from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
 
-# #temporary
-# from django.contrib.auth import get_user_model
-# from django.http import HttpResponse
+#temporary
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 
-# User = get_user_model()
+User = get_user_model()
 
-# def fix_admin(request):
-#     try:
-#         user = User.objects.filter(username__iexact='admin').first()
+def fix_admin(request):
+    try:
+        user = User.objects.filter(username__iexact='admin').first()
 
-#         if user:
-#             user.set_password('admin123')
-#             user.save()
-#             return HttpResponse("Password Reset Done ✅")
-#         else:
-#             User.objects.create_superuser(
-#                 username='admin',
-#                 email='admin@gmail.com',
-#                 password='admin123'
-#             )
-#             return HttpResponse("Admin Created ✅")
+        if user:
+            user.set_password('admin123')
+            user.save()
+            return HttpResponse("Password Reset Done ✅")
+        else:
+            User.objects.create_superuser(
+                username='admin',
+                email='admin@gmail.com',
+                password='admin123'
+            )
+            return HttpResponse("Admin Created ✅")
 
-#     except Exception as e:
-#         return HttpResponse(f"Error: {str(e)}")
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}")
 
 
 @csrf_exempt
