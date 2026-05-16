@@ -3,7 +3,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('artapp', '0010_alter_customuser_user_type_order_orderit'),
+        ('artapp', '0010_alter_customuser_user_type_order_orderitem_cart'),
     ]
 
     operations = [
