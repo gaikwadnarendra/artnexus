@@ -62,7 +62,7 @@ class Page(models.Model):
     address = models.CharField(max_length=250)
     aboutus = models.TextField()
     email = models.EmailField(max_length=200)
-    mobilenumber = models.IntegerField(default=0)
+    mobilenumber = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
