@@ -1218,10 +1218,20 @@ def EDIT_ARTPRODUCTS(request):
 
 @login_required(login_url='/')
 def WEBSITE_UPDATE(request):
+    # Automatically ek record banega agar nahi hai to
+    page, created = Page.objects.get_or_create(
+        id=1,
+        defaults={
+            'pagetitle': 'ArtNexus',
+            'address': 'Pune, Maharashtra, India',
+            'aboutus': 'ArtNexus is an AI-enabled online art exhibition platform.',
+            'email': 'support@artnexus.com',
+            'mobilenumber': 7558359029
+        }
+    )
+
     if request.method == "POST":
         try:
-            web_id = request.POST.get('web_id')
-            page = Page.objects.get(id=web_id)
             page.pagetitle = request.POST.get('pagetitle')
             page.address = request.POST.get('address')
             page.aboutus = request.POST.get('aboutus')
@@ -1230,16 +1240,12 @@ def WEBSITE_UPDATE(request):
             page.save()
             messages.success(request, "Page has been updated successfully")
             return redirect('website_update')
-        except Page.DoesNotExist:
-            messages.error(request, "Page does not exist")
-            return redirect('website_update')
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
             return redirect('website_update')
-    
-    pages = Page.objects.all()
+
     context = {
-        "pages": pages,
+        "pages": [page],  # list mein wrap kiya hai
     }
     return render(request, 'website.html', context)
 
