@@ -1226,7 +1226,7 @@ def WEBSITE_UPDATE(request):
             'address': 'Pune, Maharashtra, India',
             'aboutus': 'ArtNexus is an AI-enabled online art exhibition platform.',
             'email': 'support@artnexus.com',
-            'mobilenumber': 7558359029
+            'mobilenumber': '0'
         }
     )
 
